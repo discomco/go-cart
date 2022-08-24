@@ -1,0 +1,11 @@
+package envars
+
+const (
+	ESDB_CONNECTION_STRING = "ESDB_CONNECTION_STRING"
+	ESDB_DISABLE_TLS       = "ESDB_DISABLE_TLS"
+	ESDB_ADMIN_PWD         = "ESDB_ADMIN_PWD"
+	ESDB_OPS_PWD           = "ESDB_OPS_PWD"
+	ESDB_ADMIN             = "ESDB_ADMIN"
+	ESDB_OPS               = "ESDB_OPS"
+	ESDB_ADDRESS           = "ESDB_ADDRESS"
+)

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package sdk;
+
+message Identity {
+  string Prefix =1;
+  string Value = 2;
+}
+
+message Error {
+  string Code = 1;
+  string Message = 2;
+}
+
+message Warning {
+  string Code = 1;
+  string Message = 2;
+}
+
+message Feedback {
+  string AggregateId = 1;
+  repeated Error Errors = 2;
+  repeated  Warning Warnings = 3;
+  repeated  string Info = 4;
+}
