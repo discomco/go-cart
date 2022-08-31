@@ -3,9 +3,8 @@ package probes
 import (
 	"context"
 	"fmt"
-
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus"

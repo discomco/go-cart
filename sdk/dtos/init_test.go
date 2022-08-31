@@ -1,8 +1,8 @@
 package dtos
 
 import (
-	"github.com/discomco/go-cart/core"
-	"github.com/discomco/go-cart/test"
+	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/test"
 )
 
 var (

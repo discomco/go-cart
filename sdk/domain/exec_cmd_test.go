@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/discomco/go-cart/dtos"
+	"github.com/discomco/go-cart/sdk/dtos"
 	"golang.org/x/net/context"
 )
 

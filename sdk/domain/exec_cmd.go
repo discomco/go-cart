@@ -2,8 +2,7 @@ package domain
 
 import (
 	"context"
-
-	"github.com/discomco/go-cart/dtos"
+	"github.com/discomco/go-cart/sdk/dtos"
 )
 
 type raiseFunc func(context.Context, ICmd) (IEvt, dtos.IFbk)

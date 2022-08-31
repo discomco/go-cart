@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/discomco/go-cart/core/mediator/bogus"
+	"github.com/discomco/go-cart/sdk/core/mediator/bogus"
 	"github.com/stretchr/testify/assert"
 )
 

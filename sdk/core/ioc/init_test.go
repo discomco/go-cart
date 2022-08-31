@@ -1,8 +1,8 @@
 package ioc
 
 import (
-	"github.com/discomco/go-cart/model"
-	"github.com/discomco/go-cart/test/bogus"
+	"github.com/discomco/go-cart/sdk/model"
+	"github.com/discomco/go-cart/sdk/test/bogus"
 )
 
 var (

@@ -3,15 +3,15 @@ package nats
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/discomco/go-cart/core/ioc"
-	"github.com/discomco/go-cart/core/utils/convert"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/dtos"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/core/utils/convert"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/nats-io/nats.go"
 	"golang.org/x/net/context"
 	"golang.org/x/sync/errgroup"
+	"sync"
 )
 
 type INATSResponder[THope dtos.IHope, TCmd domain.ICmd] interface {
@@ -24,6 +24,11 @@ type Responder[THope dtos.IHope, TCmd domain.ICmd] struct {
 	natsBus       INATSBus
 	newCmdHandler features.CmdHandlerFtor
 	hope2Cmd      domain.Hope2CmdFunc[THope, TCmd]
+	mMutex        *sync.Mutex
+}
+
+func (r *Responder[THope, TCmd]) GetHopeType() dtos.HopeType {
+	return dtos.HopeType(r.Topic)
 }
 
 func (r *Responder[THope, TCmd]) IAmHopeResponder() {}
@@ -69,7 +74,8 @@ func newResponder[THope dtos.IHope, TCmd domain.ICmd](
 ) (*Responder[THope, TCmd], error) {
 	name := fmt.Sprintf(ResponderFmt, topic)
 	r := &Responder[THope, TCmd]{
-		Topic: topic,
+		Topic:  topic,
+		mMutex: &sync.Mutex{},
 	}
 	c := features.NewAppComponent(features.Name(name))
 	dig := ioc.SingleIoC()
@@ -92,6 +98,12 @@ func (r *Responder[THope, TCmd]) Activate(ctx context.Context) error {
 	g.Go(r.worker(ctx))
 	r.GetLogger().Infof("%+v activated", r.GetName())
 	return g.Wait()
+}
+
+func (r *Responder[THope, TCmd]) mapHope2Cmd(hope *dtos.Dto) (TCmd, error) {
+	r.mMutex.Lock()
+	defer r.mMutex.Unlock()
+	return r.hope2Cmd(hope)
 }
 
 func (r *Responder[THope, TCmd]) worker(ctx context.Context) func() error {
@@ -130,8 +142,7 @@ func (r *Responder[THope, TCmd]) worker(ctx context.Context) func() error {
 					r.handleError(err, fbk, msg)
 					continue
 				}
-
-				cmd, err := r.hope2Cmd(&dto)
+				cmd, err := r.mapHope2Cmd(&dto)
 				if err != nil {
 					r.handleError(err, fbk, msg)
 					continue

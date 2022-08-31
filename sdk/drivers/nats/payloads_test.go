@@ -1,8 +1,8 @@
 package nats
 
 import (
-	"github.com/discomco/go-cart/dtos"
-	"github.com/discomco/go-cart/test/bogus"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/test/bogus"
 )
 
 type IHope interface {

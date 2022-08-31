@@ -2,12 +2,11 @@ package kafka
 
 import (
 	"context"
-
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/discomco/go-cart/core/ioc"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/dtos"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 )

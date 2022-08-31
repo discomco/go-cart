@@ -2,8 +2,7 @@ package features
 
 import (
 	"fmt"
-
-	"github.com/discomco/go-cart/domain"
+	"github.com/discomco/go-cart/sdk/domain"
 	"golang.org/x/net/context"
 )
 

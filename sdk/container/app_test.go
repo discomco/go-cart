@@ -2,7 +2,7 @@ package container
 
 import (
 	"fmt"
-	"github.com/discomco/go-cart/config"
+	"github.com/discomco/go-cart/sdk/config"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

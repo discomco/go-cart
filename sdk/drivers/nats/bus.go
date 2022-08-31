@@ -3,13 +3,12 @@ package nats
 import (
 	"context"
 	"fmt"
-	"sync"
-	"time"
-
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/nats-io/nats.go"
 	"golang.org/x/sync/errgroup"
+	"sync"
+	"time"
 )
 
 // INATSBus is the Injector that hides driver specifics from the application.

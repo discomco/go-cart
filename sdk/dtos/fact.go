@@ -1,7 +1,7 @@
 package dtos
 
 import (
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/model"
 )
 
 //IFact is the injector for DI type discrimination based on Facts

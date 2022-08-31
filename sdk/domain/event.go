@@ -3,10 +3,9 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
-	"time"
-
-	"github.com/discomco/go-cart/core"
+	"github.com/discomco/go-cart/sdk/core"
 	uuid "github.com/satori/go.uuid"
+	"time"
 )
 
 type EventType string
@@ -41,7 +40,7 @@ func newEvent(aggregate IAggregate, eventType EventType) *Event {
 	if aggregate.GetID() != nil {
 		id = aggregate.GetID().Id()
 	}
-	eID := uuid.NewV4()
+	eID, _ := uuid.NewV4()
 	return &Event{
 		EventID:       eID.String(),
 		AggregateType: aggregate.GetAggregateType(),

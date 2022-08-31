@@ -1,12 +1,12 @@
 package container
 
 import (
-	"github.com/discomco/go-cart/core/builder"
-	"github.com/discomco/go-cart/core/ioc"
-	"github.com/discomco/go-cart/drivers/eventstore_db"
-	"github.com/discomco/go-cart/drivers/nats"
-	"github.com/discomco/go-cart/drivers/tirol"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/core/builder"
+	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/drivers/eventstore_db"
+	"github.com/discomco/go-cart/sdk/drivers/nats"
+	"github.com/discomco/go-cart/sdk/drivers/tirol"
+	"github.com/discomco/go-cart/sdk/features"
 )
 
 //DefaultCMD creates a basic Container that injects the infrastructure for

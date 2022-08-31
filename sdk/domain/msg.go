@@ -1,8 +1,8 @@
 package domain
 
 import (
-	"github.com/discomco/go-cart/core"
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/model"
 )
 
 type domainMsg[TID core.IIdentity, TP model.IPayload] struct {

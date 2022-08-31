@@ -2,14 +2,13 @@ package redis
 
 import (
 	"encoding/json"
-	"log"
-	"sync"
-
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/model"
 	"github.com/go-redis/redis/v9"
 	"golang.org/x/net/context"
+	"log"
+	"sync"
 )
 
 var cMutex = &sync.Mutex{}

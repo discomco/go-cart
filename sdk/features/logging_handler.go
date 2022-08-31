@@ -3,8 +3,7 @@ package features
 import (
 	"context"
 	"fmt"
-
-	"github.com/discomco/go-cart/domain"
+	"github.com/discomco/go-cart/sdk/domain"
 )
 
 type MediatorLoggerFtor func() IMediatorLogger

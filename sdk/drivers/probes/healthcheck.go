@@ -1,6 +1,6 @@
 package probes
 
-import "github.com/discomco/go-cart/features"
+import "github.com/discomco/go-cart/sdk/features"
 
 type IHealthcheck interface {
 	features.IFeature

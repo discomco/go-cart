@@ -2,13 +2,12 @@ package tirol
 
 import (
 	context2 "context"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/labstack/echo/v4"
+	"golang.org/x/net/http2"
 	"io/fs"
 	"net"
 	"net/http"
-
-	"github.com/discomco/go-cart/config"
-	"github.com/labstack/echo/v4"
-	"golang.org/x/net/http2"
 )
 
 type ITirol interface {

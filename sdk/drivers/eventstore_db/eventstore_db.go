@@ -2,12 +2,11 @@ package eventstore_db
 
 import (
 	"fmt"
+	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/core/errors"
 	"log"
 	"sync"
-
-	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/core/errors"
 )
 
 // EventStoreDBFtor is a functor that returns an EventStoreDB client

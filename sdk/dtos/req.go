@@ -1,6 +1,6 @@
 package dtos
 
-import "github.com/discomco/go-cart/model"
+import "github.com/discomco/go-cart/sdk/model"
 
 type IReq interface {
 	IDto

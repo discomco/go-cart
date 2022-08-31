@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/model"
 	"golang.org/x/net/context"
 )
 

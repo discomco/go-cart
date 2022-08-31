@@ -2,9 +2,8 @@ package mongo_db
 
 import (
 	"fmt"
-
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/net/context"

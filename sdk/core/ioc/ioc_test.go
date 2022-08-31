@@ -30,7 +30,7 @@ func TestShouldBeSameStruct(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, agg1)
 	var agg2 *myStructure
-	ioc.Invoke(func(a *myStructure) {
+	_ = ioc.Invoke(func(a *myStructure) {
 		agg2 = a
 	})
 	assert.NotNil(t, agg2)

@@ -2,12 +2,11 @@ package kafka
 
 import (
 	"context"
-
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/discomco/go-cart/core/ioc"
-	"github.com/discomco/go-cart/core/utils/convert"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/core/utils/convert"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/pkg/errors"
 )
 
@@ -24,7 +23,10 @@ type emitter struct {
 func (e *emitter) IAmEmitter() {}
 
 func (e *emitter) emit(ctx context.Context, evt domain.IEvt) error {
-	fact := e.evt2Fact(evt)
+	fact, err := e.evt2Fact(evt)
+	if err != nil {
+		return errors.Wrapf(err, "(%+v) could not convert event to fact", e.GetName())
+	}
 	data, err := convert.Any2Data(fact)
 	if err != nil {
 		return errors.Wrapf(err, "Failed to convert Fact %+v", err)
@@ -37,6 +39,7 @@ func (e *emitter) emit(ctx context.Context, evt domain.IEvt) error {
 		},
 		Value: data,
 	}, nil)
+	e.GetLogger().Infof("[%+v] emitted fact [%+v, %+v]", e.GetName(), e.GetEventType(), fact.GetId())
 	return nil
 }
 

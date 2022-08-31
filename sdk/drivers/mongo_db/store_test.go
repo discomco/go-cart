@@ -2,8 +2,8 @@ package mongo_db
 
 import (
 	"context"
-	"github.com/discomco/go-cart/core/builder"
-	"github.com/discomco/go-cart/test/bogus"
+	"github.com/discomco/go-cart/sdk/core/builder"
+	"github.com/discomco/go-cart/sdk/test/bogus"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/mongo"
 	"testing"

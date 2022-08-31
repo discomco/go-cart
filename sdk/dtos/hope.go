@@ -2,14 +2,15 @@ package dtos
 
 import (
 	"encoding/json"
+	"github.com/discomco/go-cart/sdk/model"
 	"sync"
-
-	"github.com/discomco/go-cart/model"
 )
 
 type Data2HopeFunc func(data []byte) (IHope, error)
 
 type GenData2HopeFunc[THope IHope] func([]byte) (THope, error)
+
+type HopeType string
 
 type IHope interface {
 	IDto

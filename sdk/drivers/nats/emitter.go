@@ -1,10 +1,10 @@
 package nats
 
 import (
-	"github.com/discomco/go-cart/core/ioc"
-	"github.com/discomco/go-cart/core/mediator"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/core/mediator"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/nats-io/nats.go"
 )
 

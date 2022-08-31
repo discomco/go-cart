@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/discomco/go-cart/test"
+	"github.com/discomco/go-cart/sdk/test"
 	"github.com/stretchr/testify/assert"
 )
 

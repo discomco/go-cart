@@ -1,10 +1,9 @@
 package kafka
 
 import (
-	"time"
-
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/features"
+	"time"
 )
 
 type IKafkaBus interface {

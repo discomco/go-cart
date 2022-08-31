@@ -3,13 +3,12 @@ package nats
 import (
 	"context"
 	"fmt"
-	"time"
-
-	"github.com/discomco/go-cart/core/ioc"
-	"github.com/discomco/go-cart/core/utils/convert"
-	"github.com/discomco/go-cart/dtos"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/core/utils/convert"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/features"
 	"golang.org/x/sync/errgroup"
+	"time"
 )
 
 type INATSRequester[THope dtos.IHope] interface {
@@ -22,11 +21,15 @@ type Requester[THope dtos.IHope] struct {
 	Topic string
 }
 
-func (r *Requester[THope]) IAmHopeRequester() {}
-
 const (
 	RequesterFmt = "[%+v].NATSRequester"
 )
+
+func (r *Requester[THope]) GetHopeType() dtos.HopeType {
+	return dtos.HopeType(r.Topic)
+}
+
+func (r *Requester[THope]) IAmHopeRequester() {}
 
 func newRequester[THope dtos.IHope](topic string) (*Requester[THope], error) {
 	name := fmt.Sprintf(RequesterFmt, topic)
@@ -66,7 +69,7 @@ func (r *Requester[THope]) requestRawAsync(ctx context.Context, topic string, da
 	return <-responses, gr.Wait()
 }
 
-func (r *Requester[THope]) RequestAsync(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk {
+func (r *Requester[THope]) GenRequestAsync(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk {
 	fbk := dtos.NewFbk(hope.GetId(), -1, "")
 	data, err := convert.Any2Data(hope)
 	if err != nil {
@@ -86,7 +89,47 @@ func (r *Requester[THope]) RequestAsync(ctx context.Context, hope THope, timeout
 	return fbk
 }
 
-func (r *Requester[THope]) Request(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk {
+func (r *Requester[THope]) RequestAsync(ctx context.Context, hope dtos.IHope, timeout time.Duration) dtos.IFbk {
+	fbk := dtos.NewFbk(hope.GetId(), -1, "")
+	data, err := convert.Any2Data(hope)
+	if err != nil {
+		fbk.SetError(err.Error())
+		return fbk
+	}
+	f, err := r.requestRawAsync(ctx, r.Topic, data, timeout)
+	if err != nil {
+		fbk.SetError(err.Error())
+		return fbk
+	}
+	err = convert.Data2Any(f, &fbk)
+	if err != nil {
+		fbk.SetError(err.Error())
+		return fbk
+	}
+	return fbk
+}
+
+func (r *Requester[THope]) GenRequest(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk {
+	fbk := dtos.NewFbk(hope.GetId(), -1, "")
+	data, err := convert.Any2Data(hope)
+	if err != nil {
+		fbk.SetError(err.Error())
+		return fbk
+	}
+	f, err := r.requestRaw(ctx, r.Topic, data, timeout)
+	if err != nil {
+		fbk.SetError(err.Error())
+		return fbk
+	}
+	err = convert.Data2Any(f, &fbk)
+	if err != nil {
+		fbk.SetError(err.Error())
+		return fbk
+	}
+	return fbk
+}
+
+func (r *Requester[THope]) Request(ctx context.Context, hope dtos.IHope, timeout time.Duration) dtos.IFbk {
 	fbk := dtos.NewFbk(hope.GetId(), -1, "")
 	data, err := convert.Any2Data(hope)
 	if err != nil {

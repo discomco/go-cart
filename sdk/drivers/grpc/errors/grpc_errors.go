@@ -3,12 +3,11 @@ package errors
 import (
 	"context"
 	"database/sql"
-	"strings"
-
-	"github.com/discomco/go-cart/core/constants"
+	"github.com/discomco/go-cart/sdk/core/constants"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"strings"
 )
 
 var ErrNoCtxMetaData = errors.New("No ctx metadata")

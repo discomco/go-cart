@@ -1,14 +1,13 @@
 package logger
 
 import (
-	"os"
-	"time"
-
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/core/constants"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/core/constants"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"os"
+	"time"
 )
 
 // IAppLogger methods interface

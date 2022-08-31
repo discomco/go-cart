@@ -1,6 +1,6 @@
 package mongo_db
 
-import "github.com/discomco/go-cart/model"
+import "github.com/discomco/go-cart/sdk/model"
 
 type doc[T model.IReadModel] struct {
 	_id  string `bson:"_id"`

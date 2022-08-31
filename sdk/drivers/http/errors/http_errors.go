@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/discomco/go-cart/core/constants"
+	"github.com/discomco/go-cart/sdk/core/constants"
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 
@@ -20,7 +20,7 @@ const (
 	ErrBadRequest          = "Bad request"
 	ErrNotFound            = "Not Found"
 	ErrUnauthorized        = "Unauthorized"
-	ErrRequestTimeout      = "Request Timeout"
+	ErrRequestTimeout      = "GenRequest Timeout"
 	ErrInvalidEmail        = "Invalid email"
 	ErrInvalidPassword     = "Invalid password"
 	ErrInvalidField        = "Invalid field"
@@ -104,7 +104,7 @@ func NewRestErrorFromBytes(bytes []byte) (RestErr, error) {
 	return apiErr, nil
 }
 
-// NewBadRequestError New Bad Request Error
+// NewBadRequestError New Bad GenRequest Error
 func NewBadRequestError(ctx echo.Context, causes interface{}, debug bool) error {
 	restError := RestError{
 		ErrStatus: http.StatusBadRequest,

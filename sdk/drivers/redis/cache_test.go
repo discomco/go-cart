@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"github.com/discomco/go-cart/config"
+	"github.com/discomco/go-cart/sdk/config"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 	"testing"

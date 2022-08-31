@@ -3,10 +3,9 @@ package domain
 import (
 	"context"
 	"fmt"
-
-	"github.com/discomco/go-cart/core"
-	"github.com/discomco/go-cart/dtos"
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/model"
 )
 
 const (
@@ -51,7 +50,7 @@ type ITryCmd interface {
 // The Aggregate can be considered as the heart of an ES system, that unites State with Behavior.
 // Its main responsibilities are:
 //  1. to build a (volatile) State from an ordered list of previously committed Events, that are sourced from the Event Stream that is identified by the Id.
-//  2. Accept Command requests and applying business logic that checks whether the Command (ICmd) is allowed to be executed or not,
+//  2. CanAcceptName Command requests and applying business logic that checks whether the Command (ICmd) is allowed to be executed or not,
 //     according to a number of Specifications, the Current State (see 1.) and the Command's Payload
 //  3. If Command execution is allowed, Raise a new Event and ApplyEvent it to itself, as to update the Current State to the New State.
 // Specifically for GO-SCREAM CMD Applications, given their modular nature, we rely on Aggregate Composition.
@@ -274,6 +273,8 @@ func (a *aggregate) TryCommand(ctx context.Context, cmd ICmd) (IEvt, dtos.IFbk) 
 	if er != nil {
 		f.SetError(er.Error())
 	}
+	// With payload
+	f.SetJsonData(a.GetState())
 	return e, f
 
 }

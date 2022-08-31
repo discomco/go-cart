@@ -10,6 +10,7 @@ var (
 	cMutex = &sync.Mutex{}
 	pMutex = &sync.Mutex{}
 	sMutex = &sync.Mutex{}
+	rMutex = &sync.Mutex{}
 )
 
 type mediator struct {
@@ -53,11 +54,15 @@ func (b *mediator) setSubscription(topic string, fn interface{}) {
 }
 
 func (b *mediator) Register(topic string, fn interface{}) error {
+	rMutex.Lock()
+	defer rMutex.Unlock()
 	b.setSubscription(topic, fn)
 	return b.bus.Subscribe(topic, fn)
 }
 
 func (b *mediator) unsetSubscription(topic string) {
+	sMutex.Lock()
+	defer sMutex.Unlock()
 	if b.knownTopics[topic] == nil {
 		return
 	}
@@ -84,6 +89,8 @@ func (b *mediator) Broadcast(topic string, msg ...interface{}) {
 }
 
 func (b *mediator) RegisterAsync(topic string, fn interface{}, transactional bool) error {
+	rMutex.Lock()
+	defer rMutex.Unlock()
 	b.setSubscription(topic, fn)
 	err := b.bus.SubscribeAsync(topic, fn, transactional)
 	if err != nil {
@@ -95,6 +102,8 @@ func (b *mediator) RegisterAsync(topic string, fn interface{}, transactional boo
 }
 
 func (b *mediator) RegisterOnceAsync(topic string, fn interface{}) error {
+	rMutex.Lock()
+	defer rMutex.Unlock()
 	return b.bus.SubscribeOnceAsync(topic, fn)
 }
 

@@ -1,9 +1,9 @@
 package eventstore_db
 
 import (
-	"github.com/discomco/go-cart/core"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 	"golang.org/x/sync/errgroup"

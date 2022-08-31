@@ -1,8 +1,8 @@
 package cmd_must
 
 import (
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/dtos"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/dtos"
 )
 
 func HaveAggregateID(cmd domain.ICmd, fbk dtos.IFbk) {

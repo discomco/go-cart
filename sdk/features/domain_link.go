@@ -1,7 +1,7 @@
 package features
 
 import (
-	"github.com/discomco/go-cart/domain"
+	"github.com/discomco/go-cart/sdk/domain"
 )
 
 type DomainLink struct {

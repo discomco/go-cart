@@ -2,8 +2,7 @@ package domain
 
 import (
 	"fmt"
-
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/model"
 )
 
 const (

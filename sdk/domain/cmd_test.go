@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/discomco/go-cart/core"
+import "github.com/discomco/go-cart/sdk/core"
 
 // ITestCmd is the injector for our test domain ICmd
 type ITestCmd interface {

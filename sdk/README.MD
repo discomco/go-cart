@@ -37,13 +37,26 @@
     - [Dtos [/dtos/{feature}]](#dtos-dtosfeature)
     - [Containers [/containers/{feature}]](#containers-containersfeature)
     - [Drivers [/drivers/{tech}]](#drivers-driverstech)
+  - [Sequences](#sequences)
+    - [Command Sequence (CMD)](#command-sequence-cmd)
+      - [Choice of Technology](#choice-of-technology)
+      - [Definition of Feature](#definition-of-feature)
+      - [Step 1: Request](#step-1-request)
+      - [Step 2: Receiving the IHope request](#step-2-receiving-the-ihope-request)
+      - [Step 3: Handling the ICmd](#step-3-handling-the-icmd)
+        - [A few words on Idempotency](#a-few-words-on-idempotency)
+      - [Internal Event Processing](#internal-event-processing)
+        - [Domain Links](#domain-links)
+        - [Emitters](#emitters)
+      - [Integrations](#integrations)
+    - [Projection Sequence](#projection-sequence)
+      - [Step 1: Extraction](#step-1-extraction)
+      - [Step 2: Transformation](#step-2-transformation)
+      - [Step 3: Load](#step-3-load)
   - [DEVELOPING GO-SCREAM Applications](#developing-go-scream-applications)
     - [Setting up the local development environment](#setting-up-the-local-development-environment)
-    - [Developing CMD Applications](#developing-cmd-applications)
-    - [Developing PRJ Applications](#developing-prj-applications)
-    - [Developing QRY Applications](#developing-qry-applications)
   - [SOME REFERENCES](#some-references)
-  - [SERVERLESS DEPLOYMENT?](#serverless-deployment)
+  - [SERVERLESS DEPLOYMENT](#serverless-deployment)
 
 ## DESCRIPTION
 This SDK provides a basis for developing modular applications for EventSourcing/CQRS in Golang
@@ -284,7 +297,154 @@ The **Dtos** shell contains the *Data Transfer Objects*, these are the objects t
 ### Drivers [/drivers/{tech}]
 - Is the umbrella term for actors outside of the application boundaries.
 - We indicate GO-SCREAM applications, external services, specialized backend services like for instance databases, message brokers and even user interfaces.
-- 
+
+
+## Sequences
+Since GO-SCREAM applications are based on Event Sourcing/CQRS, there are 3 relevant sequences in the system:
+the Command Sequence, the Projection Sequence and the Query Sequence. 
+Due to the choice by UW for GraphQL in the frontend API service, we did not implement a separate Query application, 
+so there will be no further mention of it here.
+
+### Command Sequence (CMD)
+#### Choice of Technology
+Enabling service consumption requires communication channels to the service. 
+For this, we can choose either direct (gRPC, HTTP/REST) or indirect coupling (topic-based async request/reply). Direct coupling for backend services is considered an anti-pattern since it leads to so-called *"Distributed Monolith"*. For this reason, we opted for **topic-based async request/reply**, using Core NATS.  
+
+#### Definition of Feature
+> For Go-SCREAM Command services, a Feature is defined by the ICmd it processes and is conposed of the following parts:
+> - CommandHandler (exactly one, required)
+> - Responder (at least 1, required)
+> - Requester (at least 1, optional)
+> - Emitters (optional, can be many)
+> - Listeners (optional, can be many)
+
+![Command Sequence](image/README/1661841968357.png)
+
+The above diagram describes a typical sequence for write actions in a ES/CQRS application and is by far the most complex flow in such system. 
+Let's explore each step in a little more detail.
+
+#### Step 1: Request
+Every CMD Sequence starts with a request, initated by an Actor, who interacts with some interface. 
+In the diagram, this interface is depicted as an API that has a number of endpoints and that contains a **Requester** component for each endpoint. It serves as the client for a particular **Responder** and is defined by 2 aspects: 
+- the *IHope* it sends to the Responder (an IHope is the serializable equivalent of an ICmd)
+- the *Topic* it will use to send its request.
+Its sole responsibility is to send the IHope to the correct topic on the async request/reply infrastructure an receive the *IFbk* (feedback).
+
+This is what a typical **Requester** implementation looks like:
+
+![1661853912636](image/README/1661853912636.png)
+
+More code samples can be found under any `<Context>/command/client` folder.
+
+
+#### Step 2: Receiving the IHope request
+A CMD Service implements a behavior-centric bounded context, as opposed to many so-called micro-services that chose a data-centric approach. This means that a GO-SCREAM CMD Service supports a well-defined business process end-to-end. Such a business process (or behavior) is a complex sequence of actions ("commands"), that trigger at least one event each. A CMD service considers these commands as the entry points of the process and exposes these entry points by means of **Responders**. 
+> As the counterpart for a *Requester*, a Responder is an active component, in the sense that it is *activated* at startup of the CMD Service, and *subscribes* to one specific topic on the async request/reply infrastructure.
+
+Whenever a IHope request appears on this topic, the Responder will translate this IHope structure into an (internal) *ICmd* and instantiate a CommandHandler that will process the Icmd and return an IFbk structure as a result. Since a Responder processes a IHope, and creates a ICmd, it is discriminated for DI by these types, corresponding to the feature.
+
+Please find below a typical implementation of a **Responder**
+
+![1661854322128](image/README/1661854322128.png)
+
+More code samples can be found under any `<Context>/command/features` directory.
+
+
+#### Step 3: Handling the ICmd
+>Processing of the internal ICmd structures is done by a **CommandHandler**. This is a transient component that is instantiated by the *Responder* and has the following responsibilities:
+> - Accepting and Validating the incomming ICmd
+> - from the ICmd's AggregateID, **source** all the events from the corresponding event stream (this is where the term 'Event Sourcing' originates from)
+> - from this ordered collection of events, **build the current state**
+> - using this current state, and combined with the aggregate's specifications, determine if the command is allowed to be executed
+> - if yes, **execute the command**, which results in a *new* event that is 
+> (a) *appended* to the event stream, 
+> (b) *published* to the in-memory pub/sub infrastructure (*the mediator*) where it can be picked up by other feature-specific components.
+> (c) *applied* to the current state
+> - Finally, the new state is added to the IFbk as a Payload
+
+GO-SCREAM applications are *feature*-sliced. This means that for each feature, we need to implement 2 artifacts: a *TryCmd* function and an *ApplyEvt* function
+
+Please find below examples of these artifacts for *raiseEvent* (in try_cmd.go) and *applyEvt* (in apply_evt.go) respectively:
+
+![1661855757479](image/README/1661855757479.png)
+
+![1661855869051](image/README/1661855869051.png)
+
+Further code samples can be found in the `<Context>/command/domain/<feature>` directories.
+
+##### A few words on Idempotency
+An Aggregate in ES is basically a state machine and its status is an important factor on whether an ICmd can be executed or not. When implementing a try_cmd.go component, it is important to check the aggregate's Root "Status" field, as a first enabler to implement idempotency for incomming commands. 
+If so required by the use case, of course additional checks can be implemented.
+
+
+#### Internal Event Processing
+In the previous step, we described how a new event is also published to the mediator.
+This offers us the option for additional processing of these events, using a family of components called **EventHandlers**.
+
+##### Domain Links
+These are **EventHandlers**, that *subscribe to mediator topics* and that allow us to process domain events, by triggering other command handlers. These domain links represent the internal connectors in the behavioral diagram. A **DomainLink** accepts an IEvt, translates it into an ICmd and instantiates a CommandHandler to process this command.
+Here is an example of such a DomainLink
+
+![1661856948717](image/README/1661856948717.png)
+
+Additional code samples can be found in the `<Context>/command/features/<feature>` folders.
+
+##### Emitters
+Another type of component that can be useful, particularly for integration purposes, are **Emitters**. These are EventHandlers that subscribe to selected Mediator topics and translate the internal IEvt structs, to serializable IFact structs, which can then be published to other infrastructure. (i.e. Kafka)
+
+Please find below an example of such an Emitter.
+
+![1661857357274](image/README/1661857357274.png)
+
+Additional sample code can be found in `<Context>/command/features/<feature>` directories.
+
+
+#### Integrations
+For integrating with external services or infrastructure, we propose the introduction of **Listeners**. These active components can subscribe to topics on some integration infrastructure, translate the received artifacts into ICmd structures and process these using the previously described *CommanHandler*.
+At this point, we have no Listeners, so we cannot show any code samples, but should they appear, they will belong in the `<context>/command/features/<feature>` directories.
+
+
+### Projection Sequence
+Projections are an integral part of an ES/CQRS system and serve the purpose of interpreting events and mapping these to a desired *ReadModel*, usually by filling a database or a cache, that is optimized for reading. In our implementation, we use Redis, but given extra effort, any other type of database can be provisioned with data.
+
+![1661857798065](image/README/1661857798065.png)
+
+Here follows a description of what is happening in the diagram above.
+
+#### Step 1: Extraction
+A Go-SCREAM PRJ service includes the *MediatorProjector* component, that subscribes to EventStoreDB's event bus functionality and that listens for events. 
+It's responsibilities are to manage the subscriptions and to publish inbound events to the Mediator.
+
+#### Step 2: Transformation
+The PRJ service implements a number of *Projection* components. These are active components, that subscribe to topics on the Mediator (one topic per Event) and map (transform) these events onto manipulations of the ReadModel.
+A **Projection** has 3 dependencies: The extracted IEvt, the target ReadModel and the target infrastructure. 
+**Transformations** are independent of the infrastructure but can be shared, so there housed in the *domain* shell.  
+> Since we are using a Redis database, our basic building blocks are K/V pairs, 
+> while an IReadModel is usually a document that describes a complex data structure.
+> 
+> Where a RBMS would require additional complexity to map this data structure 
+> onto database tables, NoSQL -in this case a K/V store- offers a more direct approach, 
+> which results in maintaining **Evt2Doc** and **Evt2List** transformations.
+
+Here are examples of both.
+
+![1661924268790](image/README/1661924268790.png)
+
+![1661924316406](image/README/1661924316406.png)
+
+More code samples can be found in the `<context>/projection/domain/<feature>` directories.
+
+#### Step 3: Load
+It is important to remember, that a *Projection* has a dependency on the target infrastructure. This means that one will have to be injected for each target.
+
+Here is a *Projection* implementation code sample.
+
+![1661925011411](image/README/1661925011411.png)
+
+More examples may be found in the `<context>/projection/features/<feature>` directories.
+
+
+
 
 ## DEVELOPING GO-SCREAM Applications
 
@@ -298,21 +458,11 @@ git clone https://github.com/rgfaber/compose-dev-stack
 ./run-minimal.sh -d
 ```
 
-### Developing CMD Applications
-
-
-### Developing PRJ Applications
-
-### Developing QRY Applications
-
-
-
 ## SOME REFERENCES
 - [Event Sourcing/CQRS - Greg Young](https://youtu.be/8JKjvY4etTY)
 - [Event Storming - Alberto Brandolini](https://youtu.be/mLXQIYEwK24)
 - [Microservices - Allard Buijze](https://youtu.be/jrbWIS7BH70)
 
 
-
-## SERVERLESS DEPLOYMENT?
+## SERVERLESS DEPLOYMENT
 One may notice that this architecture, due to its decoupled and modular nature, has many similarities with the concept of **Functions as a Service** (FaaS). One of the major issues that FaaS platforms struggle with is how to implement event sourced systems. This architecture does not pretend to have the solution for this problem, but **Agregate Composition** may offer a path forward. Should decomposing the Screaming Monolith into functional nanoservices become an option or a necessity one day, packaging each feature as a function and deploying it to a "serverless" infrastructure like OpenFaaS, should require minimal effort.

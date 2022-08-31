@@ -1,11 +1,11 @@
 package features
 
 import (
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/core/errors"
-	"github.com/discomco/go-cart/core/ioc"
-	"github.com/discomco/go-cart/core/logger"
-	"github.com/discomco/go-cart/core/mediator"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/core/errors"
+	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/core/logger"
+	"github.com/discomco/go-cart/sdk/core/mediator"
 )
 
 type Name string

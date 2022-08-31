@@ -2,20 +2,19 @@ package eventstore_db
 
 import (
 	"context"
+	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
+	"github.com/discomco/go-cart/sdk/core/constants"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/drivers/convert"
+	"github.com/discomco/go-cart/sdk/drivers/jaeger"
+	"github.com/discomco/go-cart/sdk/features"
+	"github.com/opentracing/opentracing-go/log"
+	"github.com/pkg/errors"
+	"golang.org/x/sync/errgroup"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
-
-	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
-	"github.com/discomco/go-cart/core/constants"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/drivers/convert"
-	"github.com/discomco/go-cart/drivers/jaeger"
-	"github.com/discomco/go-cart/features"
-	"github.com/opentracing/opentracing-go/log"
-	"github.com/pkg/errors"
-	"golang.org/x/sync/errgroup"
 )
 
 type ProjectionWorkerFunc func(ctx context.Context, stream *esdb.PersistentSubscription, workerID int) error

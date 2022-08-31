@@ -3,13 +3,12 @@ package features
 import (
 	"context"
 	"fmt"
-
-	"github.com/discomco/go-cart/core"
-	sdk_errors "github.com/discomco/go-cart/core/errors"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/dtos"
-	"github.com/discomco/go-cart/features/-specs/allow"
-	"github.com/discomco/go-cart/features/-specs/cmd_must"
+	"github.com/discomco/go-cart/sdk/core"
+	sdk_errors "github.com/discomco/go-cart/sdk/core/errors"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/features/-specs/allow"
+	"github.com/discomco/go-cart/sdk/features/-specs/cmd_must"
 	"github.com/opentracing/opentracing-go"
 	opentracing_log "github.com/opentracing/opentracing-go/log"
 )

@@ -1,7 +1,7 @@
 package dtos
 
 import (
-	"github.com/discomco/go-cart/core"
+	"github.com/discomco/go-cart/sdk/core"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"

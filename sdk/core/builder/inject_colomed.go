@@ -1,10 +1,10 @@
 package builder
 
 import (
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/core/ioc"
-	"github.com/discomco/go-cart/core/logger"
-	"github.com/discomco/go-cart/core/mediator"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/core/logger"
+	"github.com/discomco/go-cart/sdk/core/mediator"
 )
 
 // InjectCoLoMed creates a basic DI Container that offers Configuration, Logging and a mediator

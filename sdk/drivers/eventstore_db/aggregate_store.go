@@ -2,20 +2,19 @@ package eventstore_db
 
 import (
 	"context"
-	"io"
-	"math"
-	"sync"
-
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
-	sdk_errors "github.com/discomco/go-cart/core/errors"
-	"github.com/discomco/go-cart/core/logger"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/drivers/convert"
-	"github.com/discomco/go-cart/drivers/jaeger"
-	"github.com/discomco/go-cart/features"
+	sdk_errors "github.com/discomco/go-cart/sdk/core/errors"
+	"github.com/discomco/go-cart/sdk/core/logger"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/drivers/convert"
+	"github.com/discomco/go-cart/sdk/drivers/jaeger"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
+	"io"
+	"math"
+	"sync"
 )
 
 const (

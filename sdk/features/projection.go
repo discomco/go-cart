@@ -2,12 +2,11 @@ package features
 
 import (
 	"context"
-	"sync"
-
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/model"
 	"github.com/go-redis/redis/v9"
 	"github.com/pkg/errors"
+	"sync"
 )
 
 type ProjFtor[TEvt domain.IEvt, TState model.IReadModel] func() IProjection
@@ -17,10 +16,6 @@ type IProjection interface {
 	IMediatorSubscriber
 	IAmProjection()
 }
-
-type DocFtor[TDoc model.IReadModel] func() *TDoc
-
-type GetDocKeyFunc func() string
 
 type GenProjection[TEvt domain.IEvt, TState model.IReadModel] struct {
 	*EventHandler

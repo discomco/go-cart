@@ -1,20 +1,19 @@
 package domain
 
 import (
+	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/model"
+	"github.com/satori/go.uuid"
 	"time"
-
-	"github.com/discomco/go-cart/core"
-	"github.com/discomco/go-cart/dtos"
-	"github.com/discomco/go-cart/model"
-	uuid "github.com/satori/go.uuid"
 )
 
 type Evt2ModelFtor[TEvt IEvt, TReadModel model.IReadModel] func() Evt2ModelFunc[TEvt, TReadModel]
 
 type Evt2ModelFunc[TEvt IEvt, TReadModel model.IReadModel] func(evt TEvt, model *TReadModel) error
-type Evt2CmdFunc func(evt IEvt) ICmd
-type Evt2FactFunc func(evt IEvt) dtos.IFact
-type GenEvt2FactFunc[TFact dtos.IFact] func(evt IEvt) TFact
+type Evt2CmdFunc func(evt IEvt) (ICmd, error)
+type Evt2FactFunc func(evt IEvt) (dtos.IFact, error)
+type GenEvt2FactFunc[TFact dtos.IFact] func(evt IEvt) (TFact, error)
 
 type IEvt interface {
 	EvtTypeGetter

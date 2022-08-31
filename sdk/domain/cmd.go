@@ -2,13 +2,12 @@ package domain
 
 import (
 	"encoding/json"
-
-	"github.com/discomco/go-cart/core"
-	"github.com/discomco/go-cart/dtos"
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/model"
 )
 
-type Fact2CmdFunc[TFact dtos.IFact, TCmd ICmd] func(fact *dtos.Dto) TCmd
+type Fact2CmdFunc[TFact dtos.IFact, TCmd ICmd] func(fact *dtos.Dto) (TCmd, error)
 type Hope2CmdFunc[THope dtos.IHope, TCmd ICmd] func(hope *dtos.Dto) (TCmd, error)
 type GenData2CmdFunc[TCmd ICmd] func([]byte) (TCmd, error)
 

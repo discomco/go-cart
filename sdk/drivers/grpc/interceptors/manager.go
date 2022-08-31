@@ -2,9 +2,8 @@ package interceptors
 
 import (
 	"context"
+	"github.com/discomco/go-cart/sdk/core/logger"
 	"time"
-
-	"github.com/discomco/go-cart/core/logger"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"

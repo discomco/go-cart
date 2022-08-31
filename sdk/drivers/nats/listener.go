@@ -3,11 +3,10 @@ package nats
 import (
 	"context"
 	"fmt"
-
-	"github.com/discomco/go-cart/core/ioc"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/dtos"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/nats-io/nats.go"
 	"golang.org/x/sync/errgroup"
 )

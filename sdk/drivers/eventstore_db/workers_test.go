@@ -3,8 +3,8 @@ package eventstore_db
 import (
 	"context"
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/drivers/convert"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/drivers/convert"
 	uuid2 "github.com/gofrs/uuid"
 	"math/rand"
 	"time"

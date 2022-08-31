@@ -1,21 +1,23 @@
 package features
 
 import (
-	"time"
-
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/core"
-	"github.com/discomco/go-cart/core/logger"
-	"github.com/discomco/go-cart/core/mediator"
-	"github.com/discomco/go-cart/domain"
-	"github.com/discomco/go-cart/dtos"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/core/logger"
+	"github.com/discomco/go-cart/sdk/core/mediator"
+	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/model"
 	"golang.org/x/net/context"
+	"time"
 )
 
 type ESFtor func() IEventStore
 type ASFtor func() IAggregateStore
 type EventProjectorFtor func() IEventProjector
 type EventProjectorBuilder func(newProj EventProjectorFtor) IEventProjector
+type DocFtor[TModel model.IReadModel] func() *TModel
+type GetDocKeyFunc func() string
 
 type IComponent interface {
 	GetMediator() mediator.IMediator
@@ -146,18 +148,22 @@ type IEventProjector interface {
 type IHopeResponder interface {
 	IFeaturePlugin
 	IAmHopeResponder()
+	GetHopeType() dtos.HopeType
 }
 
 //IHopeReqHandler is an Injector to a Hope Request Handler.
 type IGenHopeRequester[THope dtos.IHope] interface {
 	IHopeRequester
-	Request(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk
-	RequestAsync(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk
+	GenRequest(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk
+	GenRequestAsync(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk
 }
 
 type IHopeRequester interface {
 	IComponent
 	IAmHopeRequester()
+	GetHopeType() dtos.HopeType
+	Request(ctx context.Context, hope dtos.IHope, timeout time.Duration) dtos.IFbk
+	RequestAsync(ctx context.Context, hope dtos.IHope, timeout time.Duration) dtos.IFbk
 }
 
 type HopeRequesterFtor func() (IHopeRequester, error)

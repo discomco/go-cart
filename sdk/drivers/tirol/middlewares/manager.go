@@ -1,11 +1,10 @@
 package middlewares
 
 import (
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/core/logger"
 	"strings"
 	"time"
-
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/core/logger"
 
 	"github.com/labstack/echo/v4"
 )

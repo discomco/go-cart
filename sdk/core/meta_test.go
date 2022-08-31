@@ -3,7 +3,7 @@ package core
 import (
 	"testing"
 
-	core_mocks "github.com/discomco/go-cart/test"
+	core_mocks "github.com/discomco/go-cart/sdk/test"
 	"github.com/stretchr/testify/assert"
 )
 

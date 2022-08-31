@@ -2,14 +2,13 @@ package mongo_db
 
 import (
 	"context"
-	"log"
-	"sync"
-	"time"
-
-	"github.com/discomco/go-cart/config"
+	"github.com/discomco/go-cart/sdk/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"log"
+	"sync"
+	"time"
 )
 
 type MongoDbClientFtor func() *mongo.Client

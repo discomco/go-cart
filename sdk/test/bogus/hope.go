@@ -1,6 +1,6 @@
 package bogus
 
-import "github.com/discomco/go-cart/dtos"
+import "github.com/discomco/go-cart/sdk/dtos"
 
 type IHope interface {
 	dtos.IHope

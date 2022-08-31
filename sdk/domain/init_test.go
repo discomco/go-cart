@@ -1,10 +1,10 @@
 package domain
 
 import (
-	"github.com/discomco/go-cart/core/builder"
-	"github.com/discomco/go-cart/core/ioc"
+	"github.com/discomco/go-cart/sdk/core/builder"
+	"github.com/discomco/go-cart/sdk/core/ioc"
 
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/model"
 )
 
 var testEnv ioc.IDig

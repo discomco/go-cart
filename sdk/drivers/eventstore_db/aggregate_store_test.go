@@ -1,8 +1,8 @@
 package eventstore_db
 
 import (
-	"github.com/discomco/go-cart/core/logger"
-	"github.com/discomco/go-cart/features"
+	"github.com/discomco/go-cart/sdk/core/logger"
+	"github.com/discomco/go-cart/sdk/features"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

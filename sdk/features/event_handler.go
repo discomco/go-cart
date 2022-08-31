@@ -3,12 +3,11 @@ package features
 import (
 	"context"
 	"fmt"
-	"sync"
-
-	"github.com/discomco/go-cart/core/mediator"
-	"github.com/discomco/go-cart/domain"
+	"github.com/discomco/go-cart/sdk/core/mediator"
+	"github.com/discomco/go-cart/sdk/domain"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
+	"sync"
 )
 
 type OnEvtFunc func(ctx context.Context, evt domain.IEvt) error
@@ -74,6 +73,9 @@ func (h *EventHandler) GetEventType() domain.EventType {
 }
 
 func (h *EventHandler) When(ctx context.Context, evt domain.IEvt) error {
+	if h.onEvt == nil {
+		return nil
+	}
 	h.whenMutex.Lock()
 	defer h.whenMutex.Unlock()
 	h.GetLogger().Infof("[%+v] received [%+v]", h.GetName(), evt.GetEventType())

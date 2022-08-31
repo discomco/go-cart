@@ -1,7 +1,7 @@
 package tirol
 
 import (
-	"github.com/discomco/go-cart/config"
+	"github.com/discomco/go-cart/sdk/config"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )

@@ -2,8 +2,7 @@ package features
 
 import (
 	"context"
-
-	"github.com/discomco/go-cart/dtos"
+	"github.com/discomco/go-cart/sdk/dtos"
 )
 
 type IQueryProvider interface {

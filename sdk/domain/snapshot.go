@@ -2,8 +2,7 @@ package domain
 
 import (
 	"encoding/json"
-
-	"github.com/discomco/go-cart/model"
+	"github.com/discomco/go-cart/sdk/model"
 )
 
 // Snapshot Event Sourcing Snapshotting is an optimisation that reduces time spent on reading event from an event store.

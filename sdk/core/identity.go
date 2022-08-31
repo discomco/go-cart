@@ -2,13 +2,12 @@ package core
 
 import (
 	"fmt"
+	"github.com/discomco/go-cart/sdk/core/constants"
+	"github.com/pkg/errors"
 	"regexp"
 	"strings"
 
-	"github.com/discomco/go-cart/core/constants"
-	"github.com/pkg/errors"
-
-	"github.com/discomco/go-cart/test"
+	"github.com/discomco/go-cart/sdk/test"
 	"github.com/google/uuid"
 )
 

@@ -2,20 +2,19 @@ package container
 
 import (
 	"context"
+	"github.com/discomco/go-cart/sdk/config"
+	"github.com/discomco/go-cart/sdk/core/errors"
+	"github.com/discomco/go-cart/sdk/drivers/jaeger"
+	"github.com/discomco/go-cart/sdk/features"
+	"github.com/go-playground/validator"
+	"github.com/labstack/echo/v4"
+	"github.com/opentracing/opentracing-go"
+	"golang.org/x/sync/errgroup"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 	"time"
-
-	"github.com/discomco/go-cart/config"
-	"github.com/discomco/go-cart/core/errors"
-	"github.com/discomco/go-cart/drivers/jaeger"
-	"github.com/discomco/go-cart/features"
-	"github.com/go-playground/validator"
-	"github.com/labstack/echo/v4"
-	"github.com/opentracing/opentracing-go"
-	"golang.org/x/sync/errgroup"
 )
 
 type (

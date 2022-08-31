@@ -2,8 +2,7 @@ package features
 
 import (
 	"context"
-
-	"github.com/discomco/go-cart/core/ioc"
+	"github.com/discomco/go-cart/sdk/core/ioc"
 )
 
 type (

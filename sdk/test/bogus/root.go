@@ -1,7 +1,7 @@
 package bogus
 
 import (
-	"github.com/discomco/go-cart/core"
+	"github.com/discomco/go-cart/sdk/core"
 )
 
 const (

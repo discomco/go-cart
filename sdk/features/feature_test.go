@@ -1,7 +1,7 @@
 package features
 
 import (
-	"github.com/discomco/go-cart/core/builder"
+	"github.com/discomco/go-cart/sdk/core/builder"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

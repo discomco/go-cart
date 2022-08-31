@@ -1,12 +1,11 @@
 package jaeger
 
 import (
-	"io"
-
-	sdk_config "github.com/discomco/go-cart/config"
+	sdk_config "github.com/discomco/go-cart/sdk/config"
 	"github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"
 	jaeger_config "github.com/uber/jaeger-client-go/config"
+	"io"
 )
 
 func NewJaegerTracer(tracerConfig sdk_config.IJaegerConfig) (opentracing.Tracer, io.Closer, error) {

@@ -1,6 +1,6 @@
 package builder
 
-import "github.com/discomco/go-cart/core/ioc"
+import "github.com/discomco/go-cart/sdk/core/ioc"
 
 const (
 	CFG_PATH = "../../config/config.yaml"

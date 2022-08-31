@@ -1,10 +1,9 @@
 package kafka
 
 import (
-	"sync"
-
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/discomco/go-cart/config"
+	"github.com/discomco/go-cart/sdk/config"
+	"sync"
 )
 
 type IConsumer interface {

@@ -1,8 +1,8 @@
 package allow
 
 import (
-	sdk_errors "github.com/discomco/go-cart/core/errors"
-	"github.com/discomco/go-cart/dtos"
+	sdk_errors "github.com/discomco/go-cart/sdk/core/errors"
+	"github.com/discomco/go-cart/sdk/dtos"
 	"github.com/pkg/errors"
 )
 

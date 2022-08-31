@@ -49,7 +49,7 @@ func (f *Fbk) GetAggregateStatus() int {
 	return f.AggregateStatus
 }
 
-func NewFbk(aggregateId string, status int, err string) *Fbk {
+func NewFbk(aggregateId string, status int, err string) IFbk {
 	d := newDto(aggregateId)
 	result := &Fbk{
 		AggregateStatus: status,

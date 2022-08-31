@@ -2,7 +2,7 @@ package kafka
 
 import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/discomco/go-cart/config"
+	"github.com/discomco/go-cart/sdk/config"
 	"github.com/pkg/errors"
 )
 
