@@ -83,7 +83,7 @@ type ISimpleAggregate interface {
 }
 
 type AggFtor func() IAggregate
-type GenAggFtor[TDoc model.IReadModel] func(ftor model.DocFtor[TDoc]) IAggregate
+type GenAggFtor[TDoc model.IReadModel] func() IAggregate
 type AggBuilder func() IAggregate
 type AggPluginFtor func() IAggPlugin
 

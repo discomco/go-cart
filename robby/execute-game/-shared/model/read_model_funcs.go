@@ -1,10 +1,12 @@
 package model
 
 import (
-	"github.com/discomco/go-cart/sdk/model"
+	sdk_model "github.com/discomco/go-cart/sdk/model"
 )
 
-func RootFtor() model.DocFtor[Root] {
+type DocFtor sdk_model.DocFtor[Root]
+
+func RootFtor() DocFtor {
 	return func() *Root {
 		return newRoot()
 	}
@@ -17,6 +19,20 @@ func NewRoot() *Root {
 func newRoot() *Root {
 	return &Root{
 		ID:      nil,
-		Details: nil,
+		Details: NewDetails("New Game"),
+	}
+}
+
+func NewDetails(name string) *Details {
+	return &Details{
+		Name: name,
+	}
+}
+
+func NewDimensions(x, y, z int) *Dimensions {
+	return &Dimensions{
+		X: x,
+		Y: y,
+		Z: z,
 	}
 }

@@ -1,9 +1,7 @@
-package domain
+package dtos
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/-shared/model"
-	"github.com/discomco/go-cart/robby/execute-game/containers/command/-comp/domain"
-	"github.com/discomco/go-cart/sdk/container"
+	"github.com/discomco/go-cart/sdk/core/builder"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
 	"log"
@@ -23,11 +21,7 @@ func init() {
 }
 
 func buildTestEnv() ioc.IDig {
-	dig := container.DefaultCMD(ConfigPath)
-	dig.Inject(dig,
-		model.RootFtor,
-		domain.NewAgg,
-	)
+	dig := builder.InjectCoLoMed(ConfigPath)
 	return resolveTestEnv(dig)
 }
 

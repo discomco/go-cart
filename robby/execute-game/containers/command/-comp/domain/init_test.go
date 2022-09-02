@@ -2,7 +2,6 @@ package domain
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/-shared/model"
-	"github.com/discomco/go-cart/robby/execute-game/containers/command/-comp/domain"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
@@ -10,7 +9,7 @@ import (
 )
 
 const (
-	ConfigPath = "../../../-shared/config/config.yaml"
+	ConfigPath = "../../../../-shared/config/config.yaml"
 )
 
 var (
@@ -26,7 +25,7 @@ func buildTestEnv() ioc.IDig {
 	dig := container.DefaultCMD(ConfigPath)
 	dig.Inject(dig,
 		model.RootFtor,
-		domain.NewAgg,
+		NewAgg,
 	)
 	return resolveTestEnv(dig)
 }
