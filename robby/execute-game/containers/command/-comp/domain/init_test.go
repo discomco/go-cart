@@ -25,7 +25,9 @@ func buildTestEnv() ioc.IDig {
 	dig := container.DefaultCMD(ConfigPath)
 	dig.Inject(dig,
 		model.RootFtor,
+	).Inject(dig,
 		NewAgg,
+		AggBuilder,
 	)
 	return resolveTestEnv(dig)
 }
