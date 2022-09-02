@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test_That_We_Can_Register_An_Actor(t *testing.T) {
+func TestThatWeCanRegisterAnActor(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
 	// AND
@@ -22,7 +22,7 @@ func Test_That_We_Can_Register_An_Actor(t *testing.T) {
 	assert.NotNil(t, agg)
 }
 
-func Test_That_We_Can_Check_Aggregate_Capabilities(t *testing.T) {
+func TestThatWeCanCheckAggregateCapabilities(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
 	// AND

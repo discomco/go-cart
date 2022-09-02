@@ -7,7 +7,6 @@ import (
 	"github.com/discomco/go-cart/sdk/core/mediator"
 	"github.com/discomco/go-cart/sdk/domain"
 	"github.com/discomco/go-cart/sdk/dtos"
-	"github.com/discomco/go-cart/sdk/model"
 	"golang.org/x/net/context"
 	"time"
 )
@@ -16,8 +15,6 @@ type ESFtor func() IEventStore
 type ASFtor func() IAggregateStore
 type EventProjectorFtor func() IEventProjector
 type EventProjectorBuilder func(newProj EventProjectorFtor) IEventProjector
-type DocFtor[TModel model.IReadModel] func() *TModel
-type GetDocKeyFunc func() string
 
 type IComponent interface {
 	GetMediator() mediator.IMediator

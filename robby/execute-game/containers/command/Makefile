@@ -26,5 +26,5 @@ help: ## Show this help
 
 .PHONY: build-dev
 build-dev: ## Build the project
-	go build -o ~/work/apps/logatron/cmd/ce-cmd ./cmd  &&\
-    cp -r ./config ~/work/apps/logatron/cmd/
+	go build -o ~/work/apps/ce/cmd/ce-cmd ./cmd  &&\
+    cp -r ./config ~/work/apps/ce/cmd/

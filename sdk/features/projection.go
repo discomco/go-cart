@@ -21,8 +21,8 @@ type GenProjection[TEvt domain.IEvt, TState model.IReadModel] struct {
 	*EventHandler
 	store     domain.IReadModelStore[TState]
 	evt2Doc   domain.Evt2ModelFunc[TEvt, TState]
-	newDoc    DocFtor[TState]
-	getDocKey GetDocKeyFunc
+	newDoc    model.DocFtor[TState]
+	getDocKey model.GetDocKeyFunc
 }
 
 var cMutex = &sync.Mutex{}
@@ -32,8 +32,8 @@ func newGenProjection[TEvt domain.IEvt, TState model.IReadModel](
 	eventType domain.EventType,
 	store domain.IReadModelStore[TState],
 	evt2doc domain.Evt2ModelFunc[TEvt, TState],
-	newDoc DocFtor[TState],
-	getDocKey GetDocKeyFunc,
+	newDoc model.DocFtor[TState],
+	getDocKey model.GetDocKeyFunc,
 ) *GenProjection[TEvt, TState] {
 	h := &GenProjection[TEvt, TState]{
 		evt2Doc:   evt2doc,
@@ -81,8 +81,8 @@ func NewProjection[TEvt domain.IEvt, TState model.IReadModel](
 	eventType domain.EventType,
 	newStore domain.StoreFtor[TState],
 	evt2Doc domain.Evt2ModelFunc[TEvt, TState],
-	newDoc DocFtor[TState],
-	getDocKey GetDocKeyFunc) *GenProjection[TEvt, TState] {
+	newDoc model.DocFtor[TState],
+	getDocKey model.GetDocKeyFunc) *GenProjection[TEvt, TState] {
 	return newGenProjection[TEvt, TState](
 		name,
 		eventType,
