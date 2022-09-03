@@ -9,6 +9,7 @@ type IFbk interface {
 	SetError(s string)
 	SetWarning(s string)
 	SetInfo(s string)
+	SetStatus(s int) int
 }
 
 type Fbk2DataFunc func(fbk IFbk) ([]byte, error)
@@ -19,6 +20,11 @@ type Fbk struct {
 	Errors          []string `json:"errors"`
 	Warnings        []string `json:"warnings"`
 	Infos           []string `json:"infos"`
+}
+
+func (f *Fbk) SetStatus(s int) int {
+	f.AggregateStatus = s
+	return f.AggregateStatus
 }
 
 func (f *Fbk) GetAggregateId() string {

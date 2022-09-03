@@ -1,4 +1,4 @@
-package domain
+package builder
 
 import (
 	"github.com/discomco/go-cart/sdk/domain"

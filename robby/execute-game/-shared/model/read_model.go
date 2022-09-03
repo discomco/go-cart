@@ -2,12 +2,14 @@ package model
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/-shared/model/avatar"
+	"github.com/discomco/go-cart/robby/execute-game/-shared/model/root"
 	"github.com/discomco/go-cart/sdk/core"
 )
 
 type Root struct {
 	ID      *core.Identity `json:"id,omitempty"`
-	Details *Details
+	Details *Details       `json:"details"`
+	Status  root.Status    `json:"status"`
 }
 
 type Details struct {

@@ -6,6 +6,10 @@ import (
 
 type DocFtor sdk_model.DocFtor[Root]
 
+func (r *Root) GetStatus() int {
+	return int(r.Status)
+}
+
 func RootFtor() DocFtor {
 	return func() *Root {
 		return newRoot()

@@ -275,6 +275,7 @@ func (a *aggregate) TryCommand(ctx context.Context, cmd ICmd) (IEvt, dtos.IFbk) 
 		f.SetError(er.Error())
 	}
 	// With payload
+	f.SetStatus(a.GetState().GetStatus())
 	f.SetJsonData(a.GetState())
 	return e, f
 

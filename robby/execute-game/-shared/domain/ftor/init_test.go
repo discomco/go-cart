@@ -1,4 +1,4 @@
-package domain
+package ftor
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/-shared/model"
@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	ConfigPath = "../../../../-shared/config/config.yaml"
+	ConfigPath = "../../config/config.yaml"
 )
 
 var (
@@ -26,8 +26,7 @@ func buildTestEnv() ioc.IDig {
 	dig.Inject(dig,
 		model.RootFtor,
 	).Inject(dig,
-		NewAgg,
-		AggBuilder,
+		AggFtor,
 	)
 	return resolveTestEnv(dig)
 }
