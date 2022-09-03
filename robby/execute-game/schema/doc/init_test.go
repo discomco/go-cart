@@ -1,4 +1,4 @@
-package root
+package doc
 
 import (
 	"github.com/discomco/go-cart/sdk/core/builder"

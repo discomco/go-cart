@@ -1,7 +1,7 @@
 package contract
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema/root"
+	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/sdk/test"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -12,7 +12,7 @@ func TestThatWeCanCreateAnInitializePayload(t *testing.T) {
 	assert.NotNil(t, testEnv)
 	assert.NotNil(t, testLogger)
 	// WHEN
-	ID, err := root.NewRootIDFromString(test.CLEAN_TEST_UUID)
+	ID, err := doc.NewGameIDFromString(test.CLEAN_TEST_UUID)
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)
 	gameName := "Hello, Robby"

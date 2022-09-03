@@ -1,9 +1,9 @@
 package spoke
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/-shared/behavior/builder"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/behavior/ftor"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema"
+	"github.com/discomco/go-cart/robby/execute-game/behavior/builder"
+	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
+	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/actors"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
 	"github.com/discomco/go-cart/sdk/config"
@@ -24,7 +24,7 @@ func newSpoke() ISpoke {
 func Spoke(cfgPath config.Path) ISpoke {
 	dig := container.DefaultCMD(string(cfgPath))
 	dig.Inject(dig,
-		schema.RootFtor,
+		schema.GameDocFtor,
 	).Inject(dig,
 		ftor.BehaviorFtor,
 		builder.BehaviorBuilder,
@@ -36,19 +36,19 @@ func Spoke(cfgPath config.Path) ISpoke {
 }
 
 func resolve(dig ioc.IDig) ISpoke {
-	m := newSpoke()
+	spoke := newSpoke()
 	var responder actors.IResponder
 	err := dig.Invoke(func(
 		r actors.IResponder,
 	) {
 		responder = r
 	})
-	m.Inject(
+	spoke.Inject(
 		responder,
 	)
 	if err != nil {
 		log.Fatal(err)
 		panic(err)
 	}
-	return m
+	return spoke
 }

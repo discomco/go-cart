@@ -1,4 +1,4 @@
-package root
+package doc
 
 type Status int
 

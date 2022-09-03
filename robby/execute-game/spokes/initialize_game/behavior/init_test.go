@@ -1,8 +1,8 @@
 package behavior
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/-shared/behavior/ftor"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema"
+	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
+	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/sdk/core/builder"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
@@ -24,7 +24,7 @@ func init() {
 	testEnv = buildTestEnv()
 }
 
-func localBuilder(ftor domain2.GenAggFtor[schema.Root]) domain2.AggBuilder {
+func localBuilder(ftor domain2.GenAggFtor[schema.GameDoc]) domain2.AggBuilder {
 	return func() domain2.IAggregate {
 		agg := ftor()
 		agg.Inject(agg,
@@ -39,7 +39,7 @@ func localBuilder(ftor domain2.GenAggFtor[schema.Root]) domain2.AggBuilder {
 func buildTestEnv() ioc.IDig {
 	dig := builder.InjectCoLoMed(ConfigPath)
 	dig.Inject(dig,
-		schema.RootFtor,
+		schema.GameDocFtor,
 		ftor.BehaviorFtor,
 		localBuilder,
 	)

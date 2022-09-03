@@ -1,9 +1,9 @@
 package cartwheel
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/-shared/behavior/builder"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/behavior/ftor"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema"
+	"github.com/discomco/go-cart/robby/execute-game/behavior/builder"
+	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
+	"github.com/discomco/go-cart/robby/execute-game/schema"
 	initialize_game "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/spoke"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
@@ -15,7 +15,7 @@ func BuildCartWheel(cfgPath string) ioc.IDig {
 	dig = dig.Inject(dig,
 		SingleApp,
 	).Inject(dig,
-		schema.RootFtor,
+		schema.GameDocFtor,
 	).Inject(dig,
 		ftor.BehaviorFtor,
 		builder.BehaviorBuilder,

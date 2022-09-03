@@ -2,8 +2,8 @@ package behavior
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema/root"
+	"github.com/discomco/go-cart/robby/execute-game/schema"
+	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/test"
 	"github.com/stretchr/testify/assert"
@@ -18,18 +18,18 @@ func TestThatWeCanInitializeAnAggregate(t *testing.T) {
 	agg := newTestAgg()
 	assert.NotNil(t, agg)
 
-	ID, err := root.NewRootIDFromString(test.CLEAN_TEST_UUID)
+	ID, err := doc.NewGameIDFromString(test.CLEAN_TEST_UUID)
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)
 	agg.SetID(ID)
 
 	ctx, expired := context.WithTimeout(context.Background(), 10*time.Second)
 	defer expired()
-	pl := contract.NewPayload(ID.Id(), "New Game", 42, 42, 42, 12)
+	pl := contract.NewPayload(ID.Id(), "New GameDoc", 42, 42, 42, 12)
 	initCmd, err := NewCmd(ID, *pl)
 
 	evt, fbk := agg.TryCommand(ctx, initCmd)
-	state := agg.GetState().(*schema.Root)
+	state := agg.GetState().(*schema.GameDoc)
 
 	assert.NotNil(t, evt)
 	assert.NotNil(t, fbk)

@@ -1,8 +1,8 @@
 package behavior
 
 import (
-	read_model "github.com/discomco/go-cart/robby/execute-game/-shared/schema"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema/root"
+	read_model "github.com/discomco/go-cart/robby/execute-game/schema"
+	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/core"
 	"github.com/discomco/go-cart/sdk/core/utils/status"
@@ -26,11 +26,11 @@ func (a *apply) applyEvt(evt domain.IEvt, state model.IWriteModel) error {
 	if err != nil {
 		return errors.Wrapf(err, "(applyEvent) could not extract payload")
 	}
-	s := state.(*read_model.Root)
+	s := state.(*read_model.GameDoc)
 	ID, _ := evt.GetAggregateID()
 	s.ID = ID.(*core.Identity)
 	s.Details = pl.Details
-	status.SetFlag(&s.Status, root.Initialized)
+	status.SetFlag(&s.Status, doc.Initialized)
 	return err
 }
 

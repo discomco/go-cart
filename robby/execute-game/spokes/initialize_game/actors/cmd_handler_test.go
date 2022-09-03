@@ -2,7 +2,7 @@ package actors
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema/root"
+	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/features"
@@ -28,8 +28,8 @@ func TestThatWeCanExecuteAnInitializeCmd(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, newTestCmdHandler)
 	// AND
-	//	ID, err := root.NewRootIDFromString(test.CLEAN_TEST_UUID)
-	ID, err := root.NewRootID()
+	//	ID, err := root.NewGameIDFromString(test.CLEAN_TEST_UUID)
+	ID, err := doc.NewGameID()
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)
 	// AND
@@ -52,6 +52,6 @@ func TestThatWeCanExecuteAnInitializeCmd(t *testing.T) {
 	// THEN
 	assert.NotNil(t, fbk)
 	assert.True(t, fbk.IsSuccess())
-	assert.Equal(t, int(root.Initialized), fbk.GetAggregateStatus())
+	assert.Equal(t, int(doc.Initialized), fbk.GetAggregateStatus())
 
 }

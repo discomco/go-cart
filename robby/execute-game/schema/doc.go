@@ -1,15 +1,15 @@
 package schema
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema/avatar"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema/root"
+	"github.com/discomco/go-cart/robby/execute-game/schema/avatar"
+	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/sdk/core"
 )
 
-type Root struct {
+type GameDoc struct {
 	ID      *core.Identity `json:"id,omitempty"`
 	Details *Details       `json:"details"`
-	Status  root.Status    `json:"status"`
+	Status  doc.Status     `json:"status"`
 }
 
 type Details struct {

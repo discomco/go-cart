@@ -1,9 +1,9 @@
 package spoke
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/-shared/behavior/builder"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/behavior/ftor"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema"
+	"github.com/discomco/go-cart/robby/execute-game/behavior/builder"
+	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
+	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/actors"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
 	"github.com/discomco/go-cart/sdk/container"
@@ -34,7 +34,7 @@ func init() {
 func buildTestEnv() ioc.IDig {
 	dig := container.DefaultCMD(ConfigPath)
 	dig.Inject(dig,
-		schema.RootFtor,
+		schema.GameDocFtor,
 	).Inject(dig,
 		ftor.BehaviorFtor,
 		builder.BehaviorBuilder,

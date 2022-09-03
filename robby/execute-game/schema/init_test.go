@@ -1,8 +1,6 @@
-package builder
+package schema
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/-shared/behavior/ftor"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
@@ -10,7 +8,7 @@ import (
 )
 
 const (
-	ConfigPath = "../../config/config.yaml"
+	ConfigPath = "../config/config.yaml"
 )
 
 var (
@@ -25,10 +23,7 @@ func init() {
 func buildTestEnv() ioc.IDig {
 	dig := container.DefaultCMD(ConfigPath)
 	dig.Inject(dig,
-		schema.RootFtor,
-	).Inject(dig,
-		ftor.BehaviorFtor,
-		BehaviorBuilder,
+		GameDocFtor,
 	)
 	return resolveTestEnv(dig)
 }

@@ -4,26 +4,26 @@ import (
 	sdk_model "github.com/discomco/go-cart/sdk/model"
 )
 
-type DocFtor sdk_model.DocFtor[Root]
+type DocFtor sdk_model.DocFtor[GameDoc]
 
-func (r *Root) GetStatus() int {
+func (r *GameDoc) GetStatus() int {
 	return int(r.Status)
 }
 
-func RootFtor() DocFtor {
-	return func() *Root {
-		return newRoot()
+func GameDocFtor() DocFtor {
+	return func() *GameDoc {
+		return newGameDoc()
 	}
 }
 
-func NewRoot() *Root {
-	return newRoot()
+func NewGameDoc() *GameDoc {
+	return newGameDoc()
 }
 
-func newRoot() *Root {
-	return &Root{
+func newGameDoc() *GameDoc {
+	return &GameDoc{
 		ID:      nil,
-		Details: NewDetails("New Game"),
+		Details: NewDetails("New GameDoc"),
 	}
 }
 

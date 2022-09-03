@@ -26,5 +26,5 @@ help: ## Show this help
 
 .PHONY: build-dev
 build-dev: ## Build the project
-	go build -o ~/work/apps/ce/cmd/ce-cmd ./cmd  &&\
-    cp -r ./config ~/work/apps/ce/cmd/
+	go build -o ~/work/apps/robby/execute-game/runme ./cmd  &&\
+    cp -r ./config ~/work/apps/robby/execute-game/

@@ -2,7 +2,7 @@ package spoke
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema/root"
+	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/actors"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/dtos"
@@ -91,7 +91,7 @@ var rMutex = &sync.Mutex{}
 func randomHope() (contract.IHope, error) {
 	rMutex.Lock()
 	defer rMutex.Unlock()
-	aggID, _ := root.NewRootID()
+	aggID, _ := doc.NewGameID()
 	pl := randomPayload()
 	return contract.NewHope(aggID.Id(), *pl)
 }
@@ -107,7 +107,7 @@ var (
 )
 
 func randomPayload() *contract.Payload {
-	ID, _ := root.NewRootID()
+	ID, _ := doc.NewGameID()
 	seed := rand.Intn(5)
 	name := gameNames[seed]
 	x := rand.Intn(42) + 3
