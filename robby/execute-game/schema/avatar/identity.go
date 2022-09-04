@@ -1,13 +1,13 @@
 package avatar
 
-import "github.com/discomco/go-cart/sdk/core"
+import "github.com/discomco/go-cart/sdk/schema"
 
 const ID_PREFIX = "avatar"
 
-func NewAvatarID() (*core.Identity, error) {
-	return core.NewIdentity(ID_PREFIX)
+func NewAvatarID() (*schema.Identity, error) {
+	return schema.NewIdentity(ID_PREFIX)
 }
 
-func NewAvatarIDFrom(id string) (*core.Identity, error) {
-	return core.NewIdentityFrom(ID_PREFIX, id)
+func NewAvatarIDFrom(id string) (*schema.Identity, error) {
+	return schema.NewIdentityFrom(ID_PREFIX, id)
 }

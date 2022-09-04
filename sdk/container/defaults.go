@@ -6,7 +6,7 @@ import (
 	"github.com/discomco/go-cart/sdk/drivers/eventstore_db"
 	"github.com/discomco/go-cart/sdk/drivers/nats"
 	"github.com/discomco/go-cart/sdk/drivers/tirol"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
 )
 
 //DefaultCMD creates a basic Container that injects the infrastructure for
@@ -29,7 +29,7 @@ import (
 func DefaultCMD(cfgPath string) ioc.IDig {
 	dig := builder.InjectCoLoMed(cfgPath)
 	return dig.Inject(dig,
-		features.CmdHandler,
+		reactors.CmdHandler,
 	).Inject(dig,
 		eventstore_db.SingletonESClient,
 		eventstore_db.EStore,

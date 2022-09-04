@@ -2,7 +2,7 @@ package schema
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/schema/list"
-	"github.com/discomco/go-cart/sdk/model"
+	"github.com/discomco/go-cart/sdk/schema"
 )
 
 func NewGameList() *GameList {
@@ -19,7 +19,7 @@ func NewGameItem(Id string, name string) *GameItem {
 	}
 }
 
-func ListFtor() model.DocFtor[GameList] {
+func ListFtor() schema.DocFtor[GameList] {
 	return func() *GameList {
 		return NewGameList()
 	}

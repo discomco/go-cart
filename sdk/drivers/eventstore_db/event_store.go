@@ -5,10 +5,10 @@ import (
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
 	"github.com/discomco/go-cart/sdk/core/logger"
 	"github.com/discomco/go-cart/sdk/drivers/convert"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
 	"io"
 
-	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/drivers/jaeger"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/log"
@@ -20,18 +20,18 @@ type eventStore struct {
 	db  *esdb.Client
 }
 
-func newEventStore(log logger.IAppLogger, db *esdb.Client) features.IEventStore {
+func newEventStore(log logger.IAppLogger, db *esdb.Client) reactors.IEventStore {
 	return &eventStore{log: log, db: db}
 }
 
-func EStore(log logger.IAppLogger, newClient EventStoreDBFtor) features.ESFtor {
-	return func() features.IEventStore {
+func EStore(log logger.IAppLogger, newClient EventStoreDBFtor) reactors.ESFtor {
+	return func() reactors.IEventStore {
 		db := newClient()
 		return newEventStore(log, db)
 	}
 }
 
-func (e *eventStore) SaveEvents(ctx context.Context, streamID string, events []domain.IEvt) error {
+func (e *eventStore) SaveEvents(ctx context.Context, streamID string, events []behavior.IEvt) error {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "eventStore.SaveEvents")
 	defer span.Finish()
 	span.LogFields(log.String("aggregateID", streamID))
@@ -51,7 +51,7 @@ func (e *eventStore) SaveEvents(ctx context.Context, streamID string, events []d
 	return nil
 }
 
-func (e *eventStore) LoadEvents(ctx context.Context, streamID string) ([]domain.IEvt, error) {
+func (e *eventStore) LoadEvents(ctx context.Context, streamID string) ([]behavior.IEvt, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "eventStore.Load")
 	defer span.Finish()
 	span.LogFields(log.String("aggregateID", streamID))
@@ -66,7 +66,7 @@ func (e *eventStore) LoadEvents(ctx context.Context, streamID string) ([]domain.
 	}
 	defer stream.Close()
 
-	events := make([]domain.IEvt, 0, 100)
+	events := make([]behavior.IEvt, 0, 100)
 	for {
 		event, err := stream.Recv()
 		if errors.Is(err, io.EOF) {

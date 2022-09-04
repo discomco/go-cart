@@ -3,29 +3,30 @@ package nats
 import (
 	"context"
 	"fmt"
+	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/ioc"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/dtos"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/nats-io/nats.go"
 	"golang.org/x/sync/errgroup"
 )
 
-type IListener[TFact dtos.IFact, TCmd domain.ICmd] interface {
-	features.IGenFactListener[*nats.Msg, TFact]
+type IListener[TFact contract.IFact, TCmd behavior.ICmd] interface {
+	reactors.IGenFactListener[*nats.Msg, TFact]
 }
 
-type Listener[TCmd domain.ICmd] struct {
-	*features.AppComponent
+type Listener[TCmd behavior.ICmd] struct {
+	*reactors.Component
 	Topic         string
 	natsBus       INATSBus
-	newCmdHandler features.CmdHandlerFtor
-	data2Cmd      domain.GenData2CmdFunc[TCmd]
+	newCmdHandler reactors.CmdHandlerFtor
+	data2Cmd      behavior.GenData2CmdFunc[TCmd]
 }
 
-func NewListener[TCmd domain.ICmd](
+func NewListener[TCmd behavior.ICmd](
 	topic string,
-	d2c domain.GenData2CmdFunc[TCmd]) (*Listener[TCmd], error) {
+	d2c behavior.GenData2CmdFunc[TCmd]) (*Listener[TCmd], error) {
 	return newListener[TCmd](topic, d2c)
 }
 
@@ -33,19 +34,19 @@ const (
 	ListenerFmt = "%+v.NATSListener"
 )
 
-func newListener[TCmd domain.ICmd](
+func newListener[TCmd behavior.ICmd](
 	topic string,
-	data2Cmd domain.GenData2CmdFunc[TCmd],
+	data2Cmd behavior.GenData2CmdFunc[TCmd],
 ) (*Listener[TCmd], error) {
 	l := &Listener[TCmd]{
 		Topic:    topic,
 		data2Cmd: data2Cmd,
 	}
 	name := fmt.Sprintf(ListenerFmt, topic)
-	b := features.NewAppComponent(features.Name(name))
+	b := reactors.NewComponent(schema.Name(name))
 	dig := ioc.SingleIoC()
 	var err error
-	err = dig.Invoke(func(newBus BusFtor, newCH features.CmdHandlerFtor) {
+	err = dig.Invoke(func(newBus BusFtor, newCH reactors.CmdHandlerFtor) {
 		l.natsBus, err = newBus()
 		l.newCmdHandler = newCH
 	})
@@ -53,7 +54,7 @@ func newListener[TCmd domain.ICmd](
 		l.GetLogger().Fatal(err)
 		return nil, err
 	}
-	l.AppComponent = b
+	l.Component = b
 	return l, nil
 }
 
@@ -91,8 +92,8 @@ func (l *Listener[TCmd]) worker(ctx context.Context) func() error {
 			//			_ = l.natsBus.Wait()
 			for {
 				msg := <-factChan
-				var fbk dtos.IFbk
-				fbk = dtos.NewFbk("", -1, "")
+				var fbk contract.IFbk
+				fbk = contract.NewFbk("", -1, "")
 				cmd, err := l.data2Cmd(msg)
 				if err != nil {
 					l.handleError(err, fbk)
@@ -107,7 +108,7 @@ func (l *Listener[TCmd]) worker(ctx context.Context) func() error {
 	}
 }
 
-func (l *Listener[TCmd]) handleError(err error, fbk dtos.IFbk) {
+func (l *Listener[TCmd]) handleError(err error, fbk contract.IFbk) {
 	if err != nil {
 		l.GetLogger().Debug(err)
 		fbk.SetError(err.Error())

@@ -2,31 +2,25 @@ package features
 
 import (
 	"context"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/hashicorp/go-multierror"
 )
 
 type (
-	GenCmdFeatureBuilder[T domain.ICmd] func() IGenCmdFeature[T]
-	GenCmdFeatureFtor[T domain.ICmd]    func() IGenCmdFeature[T]
+	GenCmdSpokeBuilder[T behavior.ICmd] func() IGenCmdSpoke[T]
+	GenCmdSpokeFtor[T behavior.ICmd]    func() IGenCmdSpoke[T]
 )
 
-type (
-	GenResponderFtor[THope dtos.IHope] func() IGenResponder[THope]
-	IGenResponder[THope dtos.IHope]    interface {
-		IHopeResponder
-	}
-)
-
-type GenCmdFeature struct {
-	*Feature
-	responders []IHopeResponder
-	listeners  []IFactListener
-	handlers   []IMediatorSubscriber
+type GenCmdSpoke struct {
+	*Spoke
+	responders []reactors.IResponder
+	listeners  []reactors.IListener
+	handlers   []reactors.IMediatorReactor
 }
 
-func (f *GenCmdFeature) up(ctx context.Context) error {
+func (f *GenCmdSpoke) up(ctx context.Context) error {
 	errors := multierror.Error{}
 	for _, handler := range f.handlers {
 		err := handler.Activate(ctx)
@@ -53,7 +47,7 @@ func (f *GenCmdFeature) up(ctx context.Context) error {
 	return nil
 }
 
-func (f *GenCmdFeature) down(ctx context.Context) {
+func (f *GenCmdSpoke) down(ctx context.Context) {
 	errors := multierror.Error{}
 	for _, handler := range f.handlers {
 		err := handler.Deactivate(ctx)
@@ -79,29 +73,29 @@ func (f *GenCmdFeature) down(ctx context.Context) {
 	}
 }
 
-func (f *GenCmdFeature) registerCmdPlugins(plugins []IFeaturePlugin) {
+func (f *GenCmdSpoke) registerReactors(plugins []reactors.IReactor) {
 	if len(plugins) == 0 {
 		return
 	}
 	for _, plugin := range plugins {
 		switch plugin.(type) {
-		case IHopeResponder:
-			f.responders = append(f.responders, plugin.(IHopeResponder))
-		case IFactListener:
-			f.listeners = append(f.listeners, plugin.(IFactListener))
-		case IMediatorSubscriber:
-			f.handlers = append(f.handlers, plugin.(IMediatorSubscriber))
+		case reactors.IResponder:
+			f.responders = append(f.responders, plugin.(reactors.IResponder))
+		case reactors.IListener:
+			f.listeners = append(f.listeners, plugin.(reactors.IListener))
+		case reactors.IMediatorReactor:
+			f.handlers = append(f.handlers, plugin.(reactors.IMediatorReactor))
 		}
 	}
 }
 
-func NewGenCmdFeature(name Name) *GenCmdFeature {
-	f := &GenCmdFeature{
-		handlers:   make([]IMediatorSubscriber, 0),
-		responders: make([]IHopeResponder, 0),
-		listeners:  make([]IFactListener, 0),
+func NewGenCmdSpoke(name schema.Name) *GenCmdSpoke {
+	f := &GenCmdSpoke{
+		handlers:   make([]reactors.IMediatorReactor, 0),
+		responders: make([]reactors.IResponder, 0),
+		listeners:  make([]reactors.IListener, 0),
 	}
-	base := NewFeature(name, f.up, f.down, f.registerCmdPlugins)
-	f.Feature = base
+	base := NewSpoke(name, f.up, f.down, f.registerReactors)
+	f.Spoke = base
 	return f
 }

@@ -5,27 +5,27 @@ import (
 	"fmt"
 	"github.com/discomco/go-cart/robby/execute-game/behavior/specs/state_must"
 	initialize_game "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/pkg/errors"
 )
 
 type ITryCmd interface {
-	domain.ITryCmd
+	behavior.ITryCmd
 }
 
-func TryCmd() domain.IAggPlugin {
+func TryCmd() behavior.IBehaviorPlugin {
 	return newTry()
 }
 
 type try struct {
-	*domain.TryCmd
+	*behavior.TryCmd
 }
 
-func (t *try) raiseEvent(ctx context.Context, cmd domain.ICmd) (domain.IEvt, dtos.IFbk) {
+func (t *try) raiseEvent(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt, contract.IFbk) {
 	// Initializations
 	aggID := cmd.GetAggregateID()
-	fbk := dtos.NewFbk(aggID.Id(), -1, "")
+	fbk := contract.NewFbk(aggID.Id(), -1, "")
 	agg := t.GetAggregate()
 	state := agg.GetState()
 	// SPECIFICATIONS
@@ -48,7 +48,7 @@ func (t *try) raiseEvent(ctx context.Context, cmd domain.ICmd) (domain.IEvt, dto
 
 func newTry() *try {
 	t := &try{}
-	b := domain.NewTryCmd(CMD_TOPIC, t.raiseEvent)
+	b := behavior.NewTryCmd(CMD_TOPIC, t.raiseEvent)
 	t.TryCmd = b
 	return t
 }

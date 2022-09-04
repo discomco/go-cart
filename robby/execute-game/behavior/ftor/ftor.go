@@ -2,19 +2,18 @@ package ftor
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/sdk/model"
-
-	sdk_domain "github.com/discomco/go-cart/sdk/domain"
+	sdk_domain "github.com/discomco/go-cart/sdk/behavior"
+	sdk_schema "github.com/discomco/go-cart/sdk/schema"
 )
 
 const BehaviorName = "robby.execute-game"
 
 type IBehavior interface {
-	sdk_domain.IAggregate
+	sdk_domain.IBehavior
 }
 
-func BehaviorFtor(newRoot model.DocFtor[schema.GameDoc]) sdk_domain.GenAggFtor[schema.GameDoc] {
-	return func() sdk_domain.IAggregate {
-		return sdk_domain.NewAggregate(BehaviorName, newRoot())
+func BehaviorFtor(newRoot sdk_schema.DocFtor[schema.GameDoc]) sdk_domain.GenBehaviorFtor[schema.GameDoc] {
+	return func() sdk_domain.IBehavior {
+		return sdk_domain.NewBehavior(BehaviorName, newRoot())
 	}
 }

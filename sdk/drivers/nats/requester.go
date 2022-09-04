@@ -3,20 +3,21 @@ package nats
 import (
 	"context"
 	"fmt"
+	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/utils/convert"
-	"github.com/discomco/go-cart/sdk/dtos"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"golang.org/x/sync/errgroup"
 	"time"
 )
 
-type INATSRequester[THope dtos.IHope] interface {
-	features.IGenHopeRequester[THope]
+type INATSRequester[THope contract.IHope] interface {
+	reactors.IGenRequester[THope]
 }
 
-type Requester[THope dtos.IHope] struct {
-	*features.AppComponent
+type Requester[THope contract.IHope] struct {
+	*reactors.Component
 	bus   INATSBus
 	Topic string
 }
@@ -25,15 +26,15 @@ const (
 	RequesterFmt = "[%+v].NATSRequester"
 )
 
-func (r *Requester[THope]) GetHopeType() dtos.HopeType {
-	return dtos.HopeType(r.Topic)
+func (r *Requester[THope]) GetHopeType() contract.HopeType {
+	return contract.HopeType(r.Topic)
 }
 
-func (r *Requester[THope]) IAmHopeRequester() {}
+func (r *Requester[THope]) IAmRequester() {}
 
-func newRequester[THope dtos.IHope](topic string) (*Requester[THope], error) {
+func newRequester[THope contract.IHope](topic string) (*Requester[THope], error) {
 	name := fmt.Sprintf(RequesterFmt, topic)
-	ac := features.NewAppComponent(features.Name(name))
+	ac := reactors.NewComponent(schema.Name(name))
 	dig := ioc.SingleIoC()
 	var b INATSBus
 	var err error
@@ -44,9 +45,9 @@ func newRequester[THope dtos.IHope](topic string) (*Requester[THope], error) {
 		return nil, err
 	}
 	r := &Requester[THope]{
-		bus:          b,
-		AppComponent: ac,
-		Topic:        topic,
+		bus:       b,
+		Component: ac,
+		Topic:     topic,
 	}
 	return r, nil
 }
@@ -69,8 +70,8 @@ func (r *Requester[THope]) requestRawAsync(ctx context.Context, topic string, da
 	return <-responses, gr.Wait()
 }
 
-func (r *Requester[THope]) GenRequestAsync(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk {
-	fbk := dtos.NewFbk(hope.GetId(), -1, "")
+func (r *Requester[THope]) GenRequestAsync(ctx context.Context, hope THope, timeout time.Duration) contract.IFbk {
+	fbk := contract.NewFbk(hope.GetId(), -1, "")
 	data, err := convert.Any2Data(hope)
 	if err != nil {
 		fbk.SetError(err.Error())
@@ -89,8 +90,8 @@ func (r *Requester[THope]) GenRequestAsync(ctx context.Context, hope THope, time
 	return fbk
 }
 
-func (r *Requester[THope]) RequestAsync(ctx context.Context, hope dtos.IHope, timeout time.Duration) dtos.IFbk {
-	fbk := dtos.NewFbk(hope.GetId(), -1, "")
+func (r *Requester[THope]) RequestAsync(ctx context.Context, hope contract.IHope, timeout time.Duration) contract.IFbk {
+	fbk := contract.NewFbk(hope.GetId(), -1, "")
 	data, err := convert.Any2Data(hope)
 	if err != nil {
 		fbk.SetError(err.Error())
@@ -109,8 +110,8 @@ func (r *Requester[THope]) RequestAsync(ctx context.Context, hope dtos.IHope, ti
 	return fbk
 }
 
-func (r *Requester[THope]) GenRequest(ctx context.Context, hope THope, timeout time.Duration) dtos.IFbk {
-	fbk := dtos.NewFbk(hope.GetId(), -1, "")
+func (r *Requester[THope]) GenRequest(ctx context.Context, hope THope, timeout time.Duration) contract.IFbk {
+	fbk := contract.NewFbk(hope.GetId(), -1, "")
 	data, err := convert.Any2Data(hope)
 	if err != nil {
 		fbk.SetError(err.Error())
@@ -129,8 +130,8 @@ func (r *Requester[THope]) GenRequest(ctx context.Context, hope THope, timeout t
 	return fbk
 }
 
-func (r *Requester[THope]) Request(ctx context.Context, hope dtos.IHope, timeout time.Duration) dtos.IFbk {
-	fbk := dtos.NewFbk(hope.GetId(), -1, "")
+func (r *Requester[THope]) Request(ctx context.Context, hope contract.IHope, timeout time.Duration) contract.IFbk {
+	fbk := contract.NewFbk(hope.GetId(), -1, "")
 	data, err := convert.Any2Data(hope)
 	if err != nil {
 		fbk.SetError(err.Error())
@@ -149,6 +150,6 @@ func (r *Requester[THope]) Request(ctx context.Context, hope dtos.IHope, timeout
 	return fbk
 }
 
-func NewRequester[THope dtos.IHope](topic string) (*Requester[THope], error) {
+func NewRequester[THope contract.IHope](topic string) (*Requester[THope], error) {
 	return newRequester[THope](topic)
 }

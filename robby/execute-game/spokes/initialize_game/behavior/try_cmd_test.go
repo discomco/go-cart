@@ -13,9 +13,9 @@ import (
 
 func TestThatWeCanInitializeAnAggregate(t *testing.T) {
 	// GIVEN
-	assert.NotNil(t, newTestAgg)
+	assert.NotNil(t, newTestBehavior)
 	// WHEN
-	agg := newTestAgg()
+	agg := newTestBehavior()
 	assert.NotNil(t, agg)
 
 	ID, err := doc.NewGameIDFromString(test.CLEAN_TEST_UUID)

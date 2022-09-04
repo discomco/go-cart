@@ -3,7 +3,7 @@ package eventstore_db
 import (
 	"context"
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
-	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/drivers/convert"
 	uuid2 "github.com/gofrs/uuid"
 	"math/rand"
@@ -38,7 +38,7 @@ func pusherWorker(ctx context.Context) func() error {
 					Metadata:    nil,
 				})
 				i := rand.Intn(2)
-				err := testES.SaveEvents(ctx, testStreamIDs[i], []domain.IEvt{evt})
+				err := testES.SaveEvents(ctx, testStreamIDs[i], []behavior.IEvt{evt})
 				if err != nil {
 					testLogger.Fatal(err)
 				}

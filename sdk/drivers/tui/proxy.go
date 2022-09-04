@@ -3,29 +3,29 @@ package tui
 import (
 	"context"
 	"fmt"
-	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/drivers/tui/app_topics"
-	"github.com/discomco/go-cart/sdk/dtos"
-	"github.com/discomco/go-cart/sdk/features"
-	"github.com/discomco/go-cart/sdk/model"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/pkg/errors"
 	"time"
 )
 
 type IProxy interface {
-	features.IMsgHandler
+	reactors.IMsgReactor
 	IAmProxy()
-	Inject(requesters ...features.IHopeRequester)
+	Inject(requesters ...reactors.IRequester)
 	RefreshList(ctx context.Context, key string) error
 	RefreshDoc(ctx context.Context, key string) error
-	Request(ctx context.Context, hopeType dtos.HopeType, hope dtos.IHope, timeout time.Duration) dtos.IFbk
+	Request(ctx context.Context, hopeType contract.HopeType, hope contract.IHope, timeout time.Duration) contract.IFbk
 }
 
-type Proxy[TDoc model.IReadModel, TList model.IReadModel] struct {
-	*features.MsgHandler
-	requesters map[dtos.HopeType]features.IHopeRequester
-	docStore   domain.IReadModelStore[TDoc]
-	listStore  domain.IReadModelStore[TList]
+type Proxy[TDoc schema.IReadModel, TList schema.IReadModel] struct {
+	*reactors.MsgReactor
+	requesters map[contract.HopeType]reactors.IRequester
+	docStore   behavior.IReadModelStore[TDoc]
+	listStore  behavior.IReadModelStore[TList]
 	model      IGenModel[TDoc, TList]
 }
 
@@ -48,8 +48,8 @@ func (p *Proxy[TDoc, TList]) RefreshDoc(ctx context.Context, key string) error {
 	return err
 }
 
-func (p *Proxy[TDoc, TList]) Request(ctx context.Context, hopeType dtos.HopeType, hope dtos.IHope, timeout time.Duration) dtos.IFbk {
-	fbk := dtos.NewFbk(hope.GetId(), -1, "")
+func (p *Proxy[TDoc, TList]) Request(ctx context.Context, hopeType contract.HopeType, hope contract.IHope, timeout time.Duration) contract.IFbk {
+	fbk := contract.NewFbk(hope.GetId(), -1, "")
 	r, ok := p.requesters[hopeType]
 	if !ok {
 		fbk.SetError(fmt.Sprintf("(%+v.GenRequest) could not find a requester for message %+v", p.GetName(), hope))
@@ -59,7 +59,7 @@ func (p *Proxy[TDoc, TList]) Request(ctx context.Context, hopeType dtos.HopeType
 	return fbk
 }
 
-func (p *Proxy[TDoc, TList]) Inject(requesters ...features.IHopeRequester) {
+func (p *Proxy[TDoc, TList]) Inject(requesters ...reactors.IRequester) {
 	for _, requester := range requesters {
 		_, ok := p.requesters[requester.GetHopeType()]
 		if !ok {
@@ -70,30 +70,30 @@ func (p *Proxy[TDoc, TList]) Inject(requesters ...features.IHopeRequester) {
 
 func (p *Proxy[TDoc, TList]) IAmProxy() {}
 
-func newProxy[TDoc model.IReadModel, TList model.IReadModel](
-	name features.Name,
-	onAppInitialized features.OnMsgFunc,
-	newDocStore domain.StoreFtor[TDoc],
-	newListStore domain.StoreFtor[TList],
+func newProxy[TDoc schema.IReadModel, TList schema.IReadModel](
+	name schema.Name,
+	onAppInitialized reactors.OnMsgFunc,
+	newDocStore behavior.StoreFtor[TDoc],
+	newListStore behavior.StoreFtor[TList],
 	newModel GenModelFtor[TDoc, TList],
 ) *Proxy[TDoc, TList] {
 	p := &Proxy[TDoc, TList]{
 		docStore:   newDocStore(),
 		listStore:  newListStore(),
-		requesters: make(map[dtos.HopeType]features.IHopeRequester),
+		requesters: make(map[contract.HopeType]reactors.IRequester),
 		model:      newModel(),
 	}
-	b := features.NewMsgHandler(app_topics.AppInitialized, onAppInitialized)
+	b := reactors.NewMsgReactor(app_topics.AppInitialized, onAppInitialized)
 	b.Name = name
-	p.MsgHandler = b
+	p.MsgReactor = b
 	return p
 }
 
-func NewProxy[TDoc model.IReadModel, TList model.IReadModel](
-	name features.Name,
-	onAppInitialized features.OnMsgFunc,
-	newDocStore domain.StoreFtor[TDoc],
-	newListStore domain.StoreFtor[TList],
+func NewProxy[TDoc schema.IReadModel, TList schema.IReadModel](
+	name schema.Name,
+	onAppInitialized reactors.OnMsgFunc,
+	newDocStore behavior.StoreFtor[TDoc],
+	newListStore behavior.StoreFtor[TList],
 	newModel GenModelFtor[TDoc, TList],
 ) *Proxy[TDoc, TList] {
 	return newProxy(name,

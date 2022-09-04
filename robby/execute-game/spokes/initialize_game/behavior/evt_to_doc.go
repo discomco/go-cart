@@ -4,13 +4,13 @@ import (
 	"github.com/discomco/go-cart/robby/execute-game/schema"
 	doc2 "github.com/discomco/go-cart/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
-	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/core/utils/status"
-	"github.com/discomco/go-cart/sdk/domain"
+	sdk_schema "github.com/discomco/go-cart/sdk/schema"
 	"github.com/pkg/errors"
 )
 
-func EvtToDoc() domain.Evt2ModelFunc[IEvt, schema.GameDoc] {
+func EvtToDoc() behavior.Evt2ModelFunc[IEvt, schema.GameDoc] {
 	return func(evt IEvt, schema *schema.GameDoc) error {
 		return evt2Doc(evt, schema)
 	}
@@ -21,9 +21,9 @@ func evt2Doc(evt IEvt, doc *schema.GameDoc) error {
 	if err != nil {
 		return errors.Wrapf(err, "(initialize_game.evt2Doc) failed to get aggregate ID from evt")
 	}
-	doc.ID = aggID.(*core.Identity)
+	doc.ID = aggID.(*sdk_schema.Identity)
 	var pl contract.Payload
-	err = evt.GetJsonData(&pl)
+	err = evt.GetPayload(&pl)
 	if err != nil {
 		return errors.Wrapf(err, "(initialize_game.evt2Doc) failed to extract payload from Event")
 	}

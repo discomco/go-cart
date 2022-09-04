@@ -3,11 +3,12 @@ package eventstore_db
 import (
 	"context"
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
+	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/core/constants"
-	"github.com/discomco/go-cart/sdk/domain"
 	"github.com/discomco/go-cart/sdk/drivers/convert"
 	"github.com/discomco/go-cart/sdk/drivers/jaeger"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
@@ -23,20 +24,20 @@ type ProjectorName string
 
 //EvtProjFtor is a functor for Projectors that marshal events onto the Mediator
 //where they can be handled by all kinds of GenProjection Handlers.
-func EvtProjFtor(newClient EventStoreDBFtor) features.EventProjectorFtor {
-	return func() features.IEventProjector {
+func EvtProjFtor(newClient EventStoreDBFtor) reactors.ProjectorFtor {
+	return func() reactors.IProjector {
 		clt := newClient()
 		return newProjector(clt)
 	}
 }
 
 var (
-	singletonProjector features.IEventProjector
+	singletonProjector reactors.IProjector
 	cPMutex            = &sync.Mutex{}
 )
 
 //EventProjector is a Projector that marshals events onto the Mediator
-func EventProjector(newClient EventStoreDBFtor) features.IEventProjector {
+func EventProjector(newClient EventStoreDBFtor) reactors.IProjector {
 	if singletonProjector == nil {
 		cPMutex.Lock()
 		defer cPMutex.Unlock()
@@ -47,8 +48,8 @@ func EventProjector(newClient EventStoreDBFtor) features.IEventProjector {
 }
 
 type eventProjector struct {
-	*features.AppComponent
-	handlers    map[domain.EventType]features.IProjection
+	*reactors.Component
+	handlers    map[behavior.EventType]reactors.IProjection
 	esdb        *esdb.Client
 	handleMutex *sync.Mutex
 }
@@ -98,14 +99,14 @@ func newProjector(
 	esdb *esdb.Client,
 ) *eventProjector {
 	name := ProjectorFmt
-	base := features.NewAppComponent(features.Name(name))
+	base := reactors.NewComponent(schema.Name(name))
 	base.Name = "eventstoreDB.Projector"
 	p := &eventProjector{
 		esdb:        esdb,
-		handlers:    make(map[domain.EventType]features.IProjection),
+		handlers:    make(map[behavior.EventType]reactors.IProjection),
 		handleMutex: &sync.Mutex{},
 	}
-	p.AppComponent = base
+	p.Component = base
 	return p
 }
 
@@ -119,8 +120,8 @@ func (o *eventProjector) runWorker(ctx context.Context, worker ProjectionWorkerF
 	}
 }
 
-func (o *eventProjector) Inject(handlers ...features.IProjection) {
-	for _, h := range handlers {
+func (o *eventProjector) Inject(projections ...reactors.IProjection) {
+	for _, h := range projections {
 		_, ok := o.handlers[h.GetEventType()]
 		if !ok {
 			o.GetLogger().Debugf("(GenProjection.Inject) [%+v]", h.GetName())
@@ -187,7 +188,7 @@ func (o *eventProjector) processStream(ctx context.Context, stream *esdb.Persist
 				o.GetLogger().(Logger).ProjectionEvent(constants.MediatorProjection, c.GetGroup(), event.EventAppeared.Event, workerID)
 				evt := event.EventAppeared.Event.Event
 
-				err := o.When(ctx, convert.Recorded2Evt(evt))
+				err := o.React(ctx, convert.Recorded2Evt(evt))
 
 				if err != nil {
 					o.GetLogger().Errorf("(GenProjection.when) \nevent: {%v}, \nerr): {%v}", evt, err)
@@ -207,13 +208,13 @@ func (o *eventProjector) processStream(ctx context.Context, stream *esdb.Persist
 	}
 }
 
-func (o *eventProjector) When(ctx context.Context, evt domain.IEvt) error {
-	ctx, span := jaeger.StartProjectionTracerSpan(ctx, "GenProjection.When", evt)
+func (o *eventProjector) React(ctx context.Context, evt behavior.IEvt) error {
+	ctx, span := jaeger.StartProjectionTracerSpan(ctx, "GenProjection.React", evt)
 	defer span.Finish()
 	span.LogFields(
 		log.String("Id [%+v]", evt.GetAggregateId()),
 		log.String("EventType", evt.GetEventTypeString()))
-	o.GetLogger().Debugf("(GenProjection.When) event_type: [%v], event  {%+v}", evt.GetEventType(), evt)
+	o.GetLogger().Debugf("(GenProjection.React) event_type: [%v], event  {%+v}", evt.GetEventType(), evt)
 	topic := evt.GetEventTypeString()
 	o.GetMediator().Broadcast(topic, ctx, evt)
 	return nil

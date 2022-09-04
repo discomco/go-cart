@@ -6,6 +6,8 @@ import (
 	"github.com/discomco/go-cart/sdk/core/errors"
 	"github.com/discomco/go-cart/sdk/drivers/jaeger"
 	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/opentracing/opentracing-go"
@@ -52,9 +54,9 @@ var (
 //   3) *-QRY apps that implement pure QUERY (read) functionality (the "Q" in CPQRS)
 //
 type App struct {
-	*features.AppComponent
+	*reactors.Component
 	echo     *echo.Echo
-	features map[features.Name]features.IFeature
+	features map[schema.Name]features.ISpoke
 	doneCh   chan struct{}
 	runApp   RunAppFunc
 	downApp  DownAppFunc
@@ -79,17 +81,17 @@ func NewApp(
 ) *App {
 	name := config.GetServiceConfig().GetServiceName()
 
-	base := features.NewAppComponent(features.Name(name))
+	base := reactors.NewComponent(schema.Name(name))
 	a := &App{
-		features: make(map[features.Name]features.IFeature, 0),
+		features: make(map[schema.Name]features.ISpoke, 0),
 		runApp:   run,
 		downApp:  down,
 	}
-	a.AppComponent = base
+	a.Component = base
 	return a
 }
 
-func (a *App) regFeature(feature features.IFeature) {
+func (a *App) regFeature(feature features.ISpoke) {
 	if feature == nil {
 		return
 	}
@@ -153,7 +155,7 @@ func (a *App) Shutdown(ctx context.Context) {
 	}
 }
 
-func (a *App) Inject(features ...features.IFeature) features.IApp {
+func (a *App) Inject(features ...features.ISpoke) features.IApp {
 	if len(features) == 0 {
 		return a
 	}

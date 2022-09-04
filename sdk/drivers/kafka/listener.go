@@ -3,48 +3,49 @@ package kafka
 import (
 	"context"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/ioc"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/dtos"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 )
 
-type IListener[TFact dtos.IFact, TCmd domain.ICmd] interface {
-	features.IGenFactListener[*kafka.Event, TFact]
+type IListener[TFact contract.IFact, TCmd behavior.ICmd] interface {
+	reactors.IGenFactListener[*kafka.Event, TFact]
 }
 
-type Listener[TCmd domain.ICmd] struct {
-	*features.AppComponent
+type Listener[TCmd behavior.ICmd] struct {
+	*reactors.Component
 	Topic         string
 	consumer      *kafka.Consumer
-	newCmdHandler features.CmdHandlerFtor
-	data2Cmd      domain.GenData2CmdFunc[TCmd]
+	newCmdHandler reactors.CmdHandlerFtor
+	data2Cmd      behavior.GenData2CmdFunc[TCmd]
 }
 
 func (l *Listener[TCmd]) IAmListener() {}
 
-func newListener[TCmd domain.ICmd](
-	name features.Name,
+func newListener[TCmd behavior.ICmd](
+	name schema.Name,
 	topic string,
-	data2Cmd domain.GenData2CmdFunc[TCmd],
+	data2Cmd behavior.GenData2CmdFunc[TCmd],
 ) (*Listener[TCmd], error) {
 	l := &Listener[TCmd]{
 		Topic:    topic,
 		data2Cmd: data2Cmd,
 	}
-	b := features.NewAppComponent(name)
+	b := reactors.NewComponent(name)
 	dig := ioc.SingleIoC()
 	var err error
-	err = dig.Invoke(func(newConsumer ConsumerFtor, newCH features.CmdHandlerFtor) {
+	err = dig.Invoke(func(newConsumer ConsumerFtor, newCH reactors.CmdHandlerFtor) {
 		l.newCmdHandler = newCH
 		l.consumer, err = newConsumer()
 	})
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create consumer: %v", err)
 	}
-	l.AppComponent = b
+	l.Component = b
 	return l, nil
 }
 
@@ -76,8 +77,8 @@ func (l *Listener[TCmd]) worker(ctx context.Context) func() error {
 			l.consumer.Subscribe(l.Topic, nil)
 			for {
 				msg, err := l.consumer.ReadMessage(-1)
-				var fbk dtos.IFbk
-				fbk = dtos.NewFbk("", -1, "")
+				var fbk contract.IFbk
+				fbk = contract.NewFbk("", -1, "")
 				cmd, err := l.data2Cmd(msg.Value)
 				if err != nil {
 					l.handleError(err, fbk)
@@ -92,7 +93,7 @@ func (l *Listener[TCmd]) worker(ctx context.Context) func() error {
 	}
 }
 
-func (l *Listener[TCmd]) handleError(err error, fbk dtos.IFbk) {
+func (l *Listener[TCmd]) handleError(err error, fbk contract.IFbk) {
 	if err != nil {
 		l.GetLogger().Debug(err)
 		fbk.SetError(err.Error())

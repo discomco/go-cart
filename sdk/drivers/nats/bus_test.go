@@ -11,7 +11,7 @@ import (
 func TestNewBus(t *testing.T) {
 	// Given
 	ioc := buildTestEnv()
-	// When
+	// React
 	assert.NotNil(t, ioc)
 }
 
@@ -25,7 +25,7 @@ func TestThatNATSBusImplementsNatsIBus(t *testing.T) {
 	})
 	assert.Nil(t, err)
 	assert.NotNil(t, b)
-	// When
+	// React
 	ok := IAmNATSBus(b)
 	// Then
 	assert.True(t, ok)

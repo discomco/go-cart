@@ -6,7 +6,10 @@
   - [Table of Contents](#table-of-contents)
   - [Definition](#definition)
   - [Motivation](#motivation)
+  - [General Description](#general-description)
   - [Discovery Artifacts](#discovery-artifacts)
+  - [Getting Started.](#getting-started)
+    - [What we got from discovery.](#what-we-got-from-discovery)
 
 ## Definition
 Robby is a complete *go-cart application* and is part of the training material for the Purposeful Method,
@@ -34,11 +37,18 @@ The Purposeful Method starts with a *Discovery Phase* which results in:
   - The Structural Model (from DDD)
 A *Context*'s boundaries are defined by its behavior, in other words,
   - a Context supports a business process end-to-end and 
-  - its data model should support just enough structures, not more,not less than is required to support this process autonomously.
+  - its schema should support just enough structures, not more,not less than is required to support this process autonomously.
 
 ### What we got from discovery.
-So far, we have a rough understanding of what the system should look like here: [Big Picture Diagram](https://miro.com/app/board/uXjVPa2FZfk=/)
-And we have one Context that is considered ready for implementation: [Execute Game](https://miro.com/app/board/uXjVPa2FWuY=/)
+So far, we have a rough understanding of what the system should look like here: 
+
+- [Big Picture Diagram](https://miro.com/app/board/uXjVPa2FZfk=/)
+
+And we have one Context that is considered ready for implementation: 
+
+- [Execute Game](https://miro.com/app/board/uXjVPa2FWuY=/)
+
+
 
 
 

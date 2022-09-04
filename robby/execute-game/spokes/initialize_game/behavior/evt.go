@@ -2,15 +2,15 @@ package behavior
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
-	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/behavior"
 )
 
 type IEvt interface {
-	domain.IEvt
+	behavior.IEvt
 }
 
-func NewEvt(aggregate domain.IAggregate, payload contract.Payload) IEvt {
-	e := domain.NewEvt(aggregate, EVT_TOPIC)
-	e.SetJsonData(payload)
+func NewEvt(aggregate behavior.IBehavior, payload contract.Payload) IEvt {
+	e := behavior.NewEvt(aggregate, EVT_TOPIC)
+	e.SetPayload(payload)
 	return e
 }

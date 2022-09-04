@@ -1,11 +1,11 @@
 package contract
 
-import "github.com/discomco/go-cart/sdk/dtos"
+import "github.com/discomco/go-cart/sdk/contract"
 
 type IHope interface {
-	dtos.IHope
+	contract.IHope
 }
 
 func NewHope(aggId string, payload Payload) (IHope, error) {
-	return dtos.NewHope(aggId, payload)
+	return contract.NewHope(aggId, payload)
 }

@@ -2,9 +2,9 @@ package spoke
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/actors"
+	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/reactors"
 	testing2 "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/testing"
-	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/sync/errgroup"
 	"testing"
@@ -26,7 +26,7 @@ func TestThatWeCanResolveAModule(t *testing.T) {
 func TestThatWeCanResolveARequester(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
-	err := testEnv.Invoke(func(_ actors.IRequester) {
+	err := testEnv.Invoke(func(_ reactors.IRequester) {
 
 	})
 	assert.NoError(t, err)
@@ -40,10 +40,10 @@ func TestThatWeCanRunASpoke(t *testing.T) {
 	ctx, expired := context.WithTimeout(context.Background(), 20*time.Second)
 	defer expired()
 	// AND
-	fbks := make(chan dtos.IFbk)
+	fbks := make(chan contract.IFbk)
 	// WHEN
 
-	go func(c context.Context, fc chan dtos.IFbk) error {
+	go func(c context.Context, fc chan contract.IFbk) error {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
@@ -64,7 +64,7 @@ func TestThatWeCanRunASpoke(t *testing.T) {
 
 }
 
-func requestWorker(ctx context.Context, fbks chan dtos.IFbk) func() error {
+func requestWorker(ctx context.Context, fbks chan contract.IFbk) func() error {
 	return func() error {
 		select {
 		case <-ctx.Done():

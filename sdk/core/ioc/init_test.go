@@ -1,7 +1,7 @@
 package ioc
 
 import (
-	"github.com/discomco/go-cart/sdk/model"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/discomco/go-cart/sdk/test/bogus"
 )
 
@@ -14,15 +14,15 @@ func init() {
 }
 
 type ICar interface {
-	model.IWriteModel
+	schema.IWriteModel
 }
 
 type IHuman interface {
-	model.IWriteModel
+	schema.IWriteModel
 }
 
 type HumansAndCars struct {
-	list []model.IPayload
+	list []schema.IPayload
 }
 
 type Human struct {
@@ -31,11 +31,11 @@ type Human struct {
 	Weight float64 `json:"weight"`
 }
 
-func newCar() model.IPayload {
+func newCar() schema.IPayload {
 	return bogus.NewCar("Toyota", "Desire", 15, 500)
 }
 
-func newHuman() model.IPayload {
+func newHuman() schema.IPayload {
 	return &Human{
 		Name:   "John",
 		Age:    42,
@@ -43,11 +43,11 @@ func newHuman() model.IPayload {
 	}
 }
 
-func NewHumansAndCars(list ...model.IPayload) *HumansAndCars {
+func NewHumansAndCars(list ...schema.IPayload) *HumansAndCars {
 	return newHC(list)
 }
 
-func newHC(list []model.IPayload) *HumansAndCars {
+func newHC(list []schema.IPayload) *HumansAndCars {
 	return &HumansAndCars{
 		list: list,
 	}

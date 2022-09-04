@@ -1,7 +1,7 @@
 package schema
 
 import (
-	sdk_model "github.com/discomco/go-cart/sdk/model"
+	sdk_model "github.com/discomco/go-cart/sdk/schema"
 )
 
 //type DocFtor sdk_model.DocFtor[GameDoc]

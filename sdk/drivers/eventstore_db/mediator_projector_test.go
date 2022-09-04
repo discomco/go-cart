@@ -1,9 +1,9 @@
 package eventstore_db
 
 import (
-	"github.com/discomco/go-cart/sdk/core"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 	"golang.org/x/sync/errgroup"
@@ -15,8 +15,8 @@ func TestThatWeCanCreateAProjector(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
 	// WHEN
-	var prj features.IEventProjector
-	err := testEnv.Invoke(func(prjCtor features.EventProjectorFtor) {
+	var prj reactors.IProjector
+	err := testEnv.Invoke(func(prjCtor reactors.ProjectorFtor) {
 		prj = prjCtor()
 	})
 	// THEN
@@ -68,17 +68,17 @@ func TestThatWhenWorks(t *testing.T) {
 	assert.NotNil(t, testProjector)
 	ctx, done := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer done()
-	agg := domain.NewAggregate("test", "1")
-	ID, _ := core.NewIdentity("test")
+	agg := behavior.NewBehavior("test", nil)
+	ID, _ := schema.NewIdentity("test")
 	agg.SetID(ID)
-	testEvent := domain.NewEvt(agg, "test")
+	testEvent := behavior.NewEvt(agg, "test")
 
-	testMed.Register(testEvent.GetEventTypeString(), func(ctx context.Context, evt domain.IEvt) {
+	testMed.Register(testEvent.GetEventTypeString(), func(ctx context.Context, evt behavior.IEvt) {
 		assert.Equal(t, testEvent, evt)
 	})
 
 	// WHEN
-	err := testProjector.When(ctx, testEvent)
+	err := testProjector.React(ctx, testEvent)
 	assert.NoError(t, err)
 
 }

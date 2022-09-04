@@ -3,12 +3,12 @@ package eventstore_db
 import (
 	"context"
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
+	"github.com/discomco/go-cart/sdk/behavior"
 	sdk_errors "github.com/discomco/go-cart/sdk/core/errors"
 	"github.com/discomco/go-cart/sdk/core/logger"
-	"github.com/discomco/go-cart/sdk/domain"
 	"github.com/discomco/go-cart/sdk/drivers/convert"
 	"github.com/discomco/go-cart/sdk/drivers/jaeger"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -31,19 +31,19 @@ var (
 	cMutex    = &sync.Mutex{}
 )
 
-// AStore is an Injection that injects a functor for IAggregateStore
-func AStore(log logger.IAppLogger, newDb EventStoreDBFtor) features.ASFtor {
-	return func() features.IAggregateStore {
+// AStore is an Injection that injects a functor for IBehaviorStore
+func AStore(log logger.IAppLogger, newDb EventStoreDBFtor) reactors.BehSFtor {
+	return func() reactors.IBehaviorStore {
 		db := newDb()
 		return aStore(log, db)
 	}
 }
 
-func aStore(log logger.IAppLogger, db *esdb.Client) features.IAggregateStore {
+func aStore(log logger.IAppLogger, db *esdb.Client) reactors.IBehaviorStore {
 	return &aggregateStore{log: log, db: db}
 }
 
-func (a *aggregateStore) Load(ctx context.Context, aggregate domain.IAggregate) error {
+func (a *aggregateStore) Load(ctx context.Context, aggregate behavior.IBehavior) error {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "aggregateStore.Load")
 	defer span.Finish()
 	span.LogFields(log.String("aggregateID", aggregate.GetID().Id()))
@@ -84,7 +84,7 @@ func (a *aggregateStore) Load(ctx context.Context, aggregate domain.IAggregate) 
 	return nil
 }
 
-func (a *aggregateStore) Save(ctx context.Context, aggregate domain.IAggregate) error {
+func (a *aggregateStore) Save(ctx context.Context, aggregate behavior.IBehavior) error {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "aggregateStore.Save")
 	defer span.Finish()
 	span.LogFields(log.String("domain", aggregate.String()))

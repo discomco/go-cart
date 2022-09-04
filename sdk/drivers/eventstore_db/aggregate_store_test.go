@@ -2,7 +2,7 @@ package eventstore_db
 
 import (
 	"github.com/discomco/go-cart/sdk/core/logger"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -12,10 +12,10 @@ func TestThatWeCanResolveAnAggregateStore(t *testing.T) {
 	assert.NotNil(t, testEnv)
 	// WHEN
 	var lgg logger.IAppLogger
-	var as features.IAggregateStore
-	err := testEnv.Invoke(func(log logger.IAppLogger, asCtor features.ASFtor) {
+	var as reactors.IBehaviorStore
+	err := testEnv.Invoke(func(log logger.IAppLogger, asFtor reactors.BehSFtor) {
 		lgg = log
-		as = asCtor()
+		as = asFtor()
 	})
 	assert.Nil(t, err)
 	assert.NotNil(t, lgg)

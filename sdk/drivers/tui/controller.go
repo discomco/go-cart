@@ -1,33 +1,34 @@
 package tui
 
 import (
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 )
 
 type IController interface {
-	features.IMediatorSubscriber
+	reactors.IMediatorReactor
 	Register(topic string, action interface{}, transactional bool)
 	IAmController()
 	GetProxy() IProxy
 }
 
 type Controller struct {
-	*features.MsgHandler
+	*reactors.MsgReactor
 	proxy IProxy
 }
 
 func (c *Controller) IAmController() {}
 
-func NewController(name features.Name,
+func NewController(name schema.Name,
 	proxy IProxy,
-	msgType features.MsgType,
-	onMsg features.OnMsgFunc) *Controller {
+	msgType schema.MsgType,
+	onMsg reactors.OnMsgFunc) *Controller {
 	c := &Controller{
 		proxy: proxy,
 	}
-	b := features.NewMsgHandler(msgType, onMsg)
+	b := reactors.NewMsgReactor(msgType, onMsg)
 	b.Name = name
-	c.MsgHandler = b
+	c.MsgReactor = b
 	return c
 }
 

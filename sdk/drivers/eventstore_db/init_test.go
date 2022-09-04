@@ -5,7 +5,7 @@ import (
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
 	"github.com/discomco/go-cart/sdk/core/mediator"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
 )
 
 const (
@@ -14,14 +14,14 @@ const (
 
 var (
 	testEnv            ioc.IDig
-	testProjector      features.IEventProjector
+	testProjector      reactors.IProjector
 	testLogger         logger.IAppLogger
-	testAS             features.IAggregateStore
-	testES             features.IEventStore
+	testAS             reactors.IBehaviorStore
+	testES             reactors.IEventStore
 	testConfig         config.IAppConfig
 	testMed            mediator.IMediator
 	testStreamIDs      []string
-	testLoggingHandler features.IMediatorLogger
+	testLoggingHandler reactors.ILoggingReactor
 )
 
 func init() {
@@ -30,11 +30,11 @@ func init() {
 	err := testEnv.Invoke(func(
 		log logger.IAppLogger,
 		cfg config.IAppConfig,
-		asFtor features.ASFtor,
-		esFtor features.ESFtor,
-		prjFtor features.EventProjectorFtor,
+		asFtor reactors.BehSFtor,
+		esFtor reactors.ESFtor,
+		prjFtor reactors.ProjectorFtor,
 		med mediator.IMediator,
-		medLogger features.IMediatorLogger) {
+		medLogger reactors.ILoggingReactor) {
 		testConfig = cfg
 		testLogger = log
 		testProjector = prjFtor()
@@ -54,6 +54,6 @@ func buildTestEnv() ioc.IDig {
 		AddESProjector(dig),
 		mediator.SingletonMediator,
 	).Inject(dig,
-		features.GeneralMediatorLogger,
+		reactors.GeneralMediatorLogger,
 	)
 }

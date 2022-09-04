@@ -3,10 +3,10 @@ package behavior
 import (
 	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
 	"github.com/discomco/go-cart/robby/execute-game/schema"
+	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/core/builder"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
-	domain2 "github.com/discomco/go-cart/sdk/domain"
 	"log"
 )
 
@@ -15,17 +15,17 @@ const (
 )
 
 var (
-	testEnv    ioc.IDig
-	testLogger logger.IAppLogger
-	newTestAgg domain2.AggBuilder
+	testEnv         ioc.IDig
+	testLogger      logger.IAppLogger
+	newTestBehavior sdk_behavior.BehaviorBuilder
 )
 
 func init() {
 	testEnv = buildTestEnv()
 }
 
-func localBuilder(ftor domain2.GenAggFtor[schema.GameDoc]) domain2.AggBuilder {
-	return func() domain2.IAggregate {
+func localBuilder(ftor sdk_behavior.GenBehaviorFtor[schema.GameDoc]) sdk_behavior.BehaviorBuilder {
+	return func() sdk_behavior.IBehavior {
 		agg := ftor()
 		agg.Inject(agg,
 			TryCmd,
@@ -49,10 +49,10 @@ func buildTestEnv() ioc.IDig {
 func resolveTestEnv(dig ioc.IDig) ioc.IDig {
 	err := dig.Invoke(func(
 		appLogger logger.IAppLogger,
-		newAgg domain2.AggBuilder,
+		newBeh sdk_behavior.BehaviorBuilder,
 	) {
 		testLogger = appLogger
-		newTestAgg = newAgg
+		newTestBehavior = newBeh
 	})
 	if err != nil {
 		log.Fatal(err)

@@ -2,8 +2,8 @@ package ftor
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/model"
+	"github.com/discomco/go-cart/sdk/behavior"
+	sdk_schema "github.com/discomco/go-cart/sdk/schema"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -14,8 +14,8 @@ func TestThatWeCanResolveAnAggregate(t *testing.T) {
 	assert.NotNil(t, testLogger)
 	// WHEN
 	var agg IBehavior
-	err := testEnv.Invoke(func(rootFor model.DocFtor[schema.GameDoc],
-		aggFtor domain.GenAggFtor[schema.GameDoc]) {
+	err := testEnv.Invoke(func(rootFor sdk_schema.DocFtor[schema.GameDoc],
+		aggFtor behavior.GenBehaviorFtor[schema.GameDoc]) {
 		agg = aggFtor()
 	})
 	// THEN

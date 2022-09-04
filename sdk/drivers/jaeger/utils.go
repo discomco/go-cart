@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/labstack/echo/v4"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
@@ -24,8 +24,8 @@ func StartHttpServerTracerSpan(c echo.Context, operationName string) (context.Co
 	return ctx, serverSpan
 }
 
-//GetTextMapCarrierFromEvent loads the Metadata from a domain.IEvt and returns it as as
-func GetTextMapCarrierFromEvent(event domain.IEvt) opentracing.TextMapCarrier {
+//GetTextMapCarrierFromEvent loads the Metadata from a behavior.IEvt and returns it as as
+func GetTextMapCarrierFromEvent(event behavior.IEvt) opentracing.TextMapCarrier {
 	metadataMap := make(opentracing.TextMapCarrier)
 	err := json.Unmarshal(event.GetMetadata(), &metadataMap)
 	if err != nil {
@@ -34,7 +34,7 @@ func GetTextMapCarrierFromEvent(event domain.IEvt) opentracing.TextMapCarrier {
 	return metadataMap
 }
 
-func StartProjectionTracerSpan(ctx context.Context, operationName string, event domain.IEvt) (context.Context, opentracing.Span) {
+func StartProjectionTracerSpan(ctx context.Context, operationName string, event behavior.IEvt) (context.Context, opentracing.Span) {
 	textMapCarrierFromMetaData := GetTextMapCarrierFromEvent(event)
 	span, err := opentracing.GlobalTracer().Extract(opentracing.TextMap, textMapCarrierFromMetaData)
 	if err != nil {

@@ -2,22 +2,22 @@ package behavior
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
-	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/core/utils/convert"
-	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/pkg/errors"
 )
 
 type ICmd interface {
-	domain.ICmd
+	behavior.ICmd
 }
 
-func NewCmd(aggID core.IIdentity, payload contract.Payload) (ICmd, error) {
+func NewCmd(aggID schema.IIdentity, payload contract.Payload) (ICmd, error) {
 	data, err := convert.Any2Data(payload)
 	if err != nil {
 		return nil, errors.Wrapf(err, "(NewCmd) failed to convert payload %v", payload)
 	}
-	c, err := domain.NewCmd(aggID, CMD_TOPIC, data)
+	c, err := behavior.NewCmd(aggID, CMD_TOPIC, data)
 	if err != nil {
 		return nil, errors.Wrapf(err, "(NewCmd) failed to create ICmd for topic [%v]", CMD_TOPIC)
 	}

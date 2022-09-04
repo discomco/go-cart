@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus"
@@ -18,17 +20,17 @@ const (
 )
 
 type IMetrics interface {
-	features.IFeature
+	features.ISpoke
 	IAmMetrics()
 	RegisterCounters(counters ...Counter)
 }
 
 type metrics struct {
-	*features.AppComponent
+	*reactors.Component
 	chDone   chan struct{}
 	errGroup *errgroup.Group
 	config   config.IProbesConfig
-	counters map[features.Name]Counter
+	counters map[schema.Name]Counter
 }
 
 func (m *metrics) Shutdown(ctx context.Context) {
@@ -62,7 +64,7 @@ func (m *metrics) Run(ctx context.Context) func() error {
 	}
 }
 
-func (m *metrics) Inject(plugins ...features.IFeaturePlugin) features.IFeature {
+func (m *metrics) Inject(plugins ...reactors.IReactor) features.ISpoke {
 	for _, plugin := range plugins {
 		switch plugin.(type) {
 		case IMetricsCounter:
@@ -89,25 +91,25 @@ const (
 
 func NewMetrics(config config.IAppConfig) IMetrics {
 	name := fmt.Sprintf(NameFmt, config.GetServiceConfig().GetServiceName())
-	return newMetrics(features.Name(name), config.GetProbesConfig())
+	return newMetrics(schema.Name(name), config.GetProbesConfig())
 }
 
-func newMetrics(name features.Name, probesConfig config.IProbesConfig) IMetrics {
-	b := features.NewAppComponent(name)
+func newMetrics(name schema.Name, probesConfig config.IProbesConfig) IMetrics {
+	b := reactors.NewComponent(name)
 	m := &metrics{
 		config:   probesConfig,
-		counters: make(map[features.Name]Counter),
+		counters: make(map[schema.Name]Counter),
 	}
-	m.AppComponent = b
+	m.Component = b
 	return m
 }
 
 type IMetricsCounter interface {
-	features.IFeaturePlugin
+	reactors.IReactor
 	IAmMetricsCounter()
 }
 
-func NewCounter(name features.Name,
+func NewCounter(name schema.Name,
 	nameSpace string,
 	subSystem string,
 	help string,
@@ -122,17 +124,17 @@ func NewCounter(name features.Name,
 	return newCounter(name, promauto.NewCounter(opts))
 }
 
-func newCounter(name features.Name, pCounter prometheus.Counter) *Counter {
-	comp := features.NewAppComponent(name)
+func newCounter(name schema.Name, pCounter prometheus.Counter) *Counter {
+	comp := reactors.NewComponent(name)
 	c := &Counter{
 		PCounter: pCounter,
 	}
-	c.AppComponent = comp
+	c.Component = comp
 	return c
 }
 
 type Counter struct {
-	*features.AppComponent
+	*reactors.Component
 	PCounter prometheus.Counter
 }
 

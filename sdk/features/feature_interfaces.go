@@ -1,35 +1,43 @@
 package features
 
 import (
-	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/reactors"
 	"golang.org/x/net/context"
 )
 
-type IFeature interface {
-	IComponent
-	IShutdown
+type ISpoke interface {
+	reactors.IComponent
+	reactors.IShutdown
 	Run(ctx context.Context) func() error
-	Inject(plugins ...IFeaturePlugin) IFeature
+	Inject(plugins ...reactors.IReactor) ISpoke
 }
 
-type IShutdown interface {
-	Shutdown(ctx context.Context)
+type IPrjSpoke interface {
+	ISpoke
 }
 
-type IPrjFeature interface {
-	IFeature
+type ICmdSpoke interface {
+	IMediatorSpoke
 }
 
-type ICmdFeature interface {
-	IMediatorFeature
+type IMediatorSpoke interface {
+	ISpoke
 }
 
-type IMediatorFeature interface {
-	IFeature
+// IGenCmdSpoke is a generic CMD ScreamingApp Spoke,
+// discriminated by T of type ICmd
+type IGenCmdSpoke[T behavior.ICmd] interface {
+	ICmdSpoke
 }
 
-// IGenCmdFeature is a generic CMD ScreamingApp Feature,
-// discriminated by TState of type ICmd
-type IGenCmdFeature[T domain.ICmd] interface {
-	ICmdFeature
+//IApp is the Generic Injector for GO-CART applications
+type IApp interface {
+	reactors.IComponent
+	reactors.IShutdown
+	Run() error
+	Inject(spokes ...ISpoke) IApp
 }
+
+type AppFtor func() IApp
+type AppBuilder func() IApp

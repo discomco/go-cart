@@ -3,32 +3,34 @@ package nats
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/utils/convert"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/dtos"
 	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/nats-io/nats.go"
 	"golang.org/x/net/context"
 	"golang.org/x/sync/errgroup"
 	"sync"
 )
 
-type INATSResponder[THope dtos.IHope, TCmd domain.ICmd] interface {
-	features.IHopeResponder
+type IResponder[THope contract.IHope, TCmd behavior.ICmd] interface {
+	reactors.IResponder
 }
 
-type Responder[THope dtos.IHope, TCmd domain.ICmd] struct {
-	*features.AppComponent
+type Responder[THope contract.IHope, TCmd behavior.ICmd] struct {
+	*reactors.Component
 	Topic         string
 	natsBus       INATSBus
-	newCmdHandler features.CmdHandlerFtor
-	hope2Cmd      domain.Hope2CmdFunc[THope, TCmd]
+	newCmdHandler reactors.CmdHandlerFtor
+	hope2Cmd      behavior.Hope2CmdFunc[THope, TCmd]
 	mMutex        *sync.Mutex
 }
 
-func (r *Responder[THope, TCmd]) GetHopeType() dtos.HopeType {
-	return dtos.HopeType(r.Topic)
+func (r *Responder[THope, TCmd]) GetHopeType() contract.HopeType {
+	return contract.HopeType(r.Topic)
 }
 
 func (r *Responder[THope, TCmd]) IAmHopeResponder() {}
@@ -41,12 +43,12 @@ func (r *Responder[THope, TCmd]) Deactivate(ctx context.Context) error {
 }
 
 //ResponderFtor is a generic functor that is discriminated by the feature's specific IHope and ICmd injectors.
-func ResponderFtor[THope dtos.IHope, TCmd domain.ICmd](
+func ResponderFtor[THope contract.IHope, TCmd behavior.ICmd](
 	topic string,
-	feature features.IFeature,
-	hope2Cmd domain.Hope2CmdFunc[THope, TCmd],
-) features.GenResponderFtor[THope] {
-	return func() features.IGenResponder[THope] {
+	feature features.ISpoke,
+	hope2Cmd behavior.Hope2CmdFunc[THope, TCmd],
+) reactors.GenResponderFtor[THope] {
+	return func() reactors.IGenResponder[THope] {
 		r, err := newResponder[THope, TCmd](
 			topic,
 			hope2Cmd)
@@ -58,9 +60,9 @@ func ResponderFtor[THope dtos.IHope, TCmd domain.ICmd](
 	}
 }
 
-func NewResponder[THope dtos.IHope, TCmd domain.ICmd](
+func NewResponder[THope contract.IHope, TCmd behavior.ICmd](
 	topic string,
-	h2c domain.Hope2CmdFunc[THope, TCmd]) (INATSResponder[THope, TCmd], error) {
+	h2c behavior.Hope2CmdFunc[THope, TCmd]) (IResponder[THope, TCmd], error) {
 	return newResponder[THope, TCmd](topic, h2c)
 }
 
@@ -68,19 +70,19 @@ const (
 	ResponderFmt = "[%+v].NATSResponder"
 )
 
-func newResponder[THope dtos.IHope, TCmd domain.ICmd](
+func newResponder[THope contract.IHope, TCmd behavior.ICmd](
 	topic string,
-	hope2Cmd domain.Hope2CmdFunc[THope, TCmd],
+	hope2Cmd behavior.Hope2CmdFunc[THope, TCmd],
 ) (*Responder[THope, TCmd], error) {
 	name := fmt.Sprintf(ResponderFmt, topic)
 	r := &Responder[THope, TCmd]{
 		Topic:  topic,
 		mMutex: &sync.Mutex{},
 	}
-	c := features.NewAppComponent(features.Name(name))
+	c := reactors.NewComponent(schema.Name(name))
 	dig := ioc.SingleIoC()
 	var err error
-	dig.Invoke(func(newBus BusFtor, newCH features.CmdHandlerFtor) {
+	dig.Invoke(func(newBus BusFtor, newCH reactors.CmdHandlerFtor) {
 		r.natsBus, err = newBus()
 		r.newCmdHandler = newCH
 	})
@@ -89,7 +91,7 @@ func newResponder[THope dtos.IHope, TCmd domain.ICmd](
 		return nil, err
 	}
 	r.hope2Cmd = hope2Cmd
-	r.AppComponent = c
+	r.Component = c
 	return r, nil
 }
 
@@ -100,7 +102,7 @@ func (r *Responder[THope, TCmd]) Activate(ctx context.Context) error {
 	return g.Wait()
 }
 
-func (r *Responder[THope, TCmd]) mapHope2Cmd(hope *dtos.Dto) (TCmd, error) {
+func (r *Responder[THope, TCmd]) mapHope2Cmd(hope *contract.Dto) (TCmd, error) {
 	r.mMutex.Lock()
 	defer r.mMutex.Unlock()
 	return r.hope2Cmd(hope)
@@ -126,13 +128,13 @@ func (r *Responder[THope, TCmd]) worker(ctx context.Context) func() error {
 			//			_ = r.natsBus.Wait()
 			for {
 				msg := <-hopeChan
-				var fbk dtos.IFbk
-				fbk = dtos.NewFbk("", -1, "")
+				var fbk contract.IFbk
+				fbk = contract.NewFbk("", -1, "")
 
 				// TODO: Remove Debugging Code
 				logger.Debugf("[%+v] received %+v", r.GetName(), string(msg.Data))
 
-				var dto dtos.Dto
+				var dto contract.Dto
 				err := convert.Data2Any(msg.Data, &dto)
 
 				// TODO: Remove Debugging Code
@@ -164,7 +166,7 @@ func (r *Responder[THope, TCmd]) worker(ctx context.Context) func() error {
 	}
 }
 
-func (r *Responder[THope, TCmd]) handleError(err error, fbk dtos.IFbk, msg *nats.Msg) {
+func (r *Responder[THope, TCmd]) handleError(err error, fbk contract.IFbk, msg *nats.Msg) {
 	fbk.SetError(err.Error())
 	rsp, err := json.Marshal(fbk)
 	if err != nil {

@@ -1,7 +1,7 @@
 package bogus
 
 import (
-	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/schema"
 )
 
 const (
@@ -13,7 +13,7 @@ const (
 )
 
 type Root struct {
-	ID     *core.Identity
+	ID     *schema.Identity
 	Status Status
 	Car    *Car
 }
@@ -22,11 +22,11 @@ func (m *Root) GetStatus() int {
 	return int(m.Status)
 }
 
-func NewRootIdentity() (*core.Identity, error) {
-	return core.NewIdentity(BOGUS_PREFIX)
+func NewRootIdentity() (*schema.Identity, error) {
+	return schema.NewIdentity(BOGUS_PREFIX)
 }
 
-func NewRoot(ID *core.Identity) *Root {
+func NewRoot(ID *schema.Identity) *Root {
 	return &Root{
 		ID:     ID,
 		Status: Unknown,

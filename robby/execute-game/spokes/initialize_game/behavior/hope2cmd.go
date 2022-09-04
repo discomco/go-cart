@@ -2,20 +2,20 @@ package behavior
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
-	"github.com/discomco/go-cart/sdk/core"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/dtos"
+	"github.com/discomco/go-cart/sdk/behavior"
+	sdk_contract "github.com/discomco/go-cart/sdk/contract"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/pkg/errors"
 )
 
-func Hope2Cmd() domain.Hope2CmdFunc[contract.IHope, ICmd] {
-	return func(hope *dtos.Dto) (ICmd, error) {
+func Hope2Cmd() behavior.Hope2CmdFunc[contract.IHope, ICmd] {
+	return func(hope *sdk_contract.Dto) (ICmd, error) {
 		var pl contract.Payload
-		err := hope.GetJsonData(&pl)
+		err := hope.GetPayload(&pl)
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to extract payload from hope: %v", err)
 		}
-		gameID, err := core.IdentityFromPrefixedId(pl.GameId)
+		gameID, err := schema.IdentityFromPrefixedId(pl.GameId)
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to extract gameId from hope: %v", err)
 		}

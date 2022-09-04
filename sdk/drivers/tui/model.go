@@ -2,8 +2,8 @@ package tui
 
 import (
 	"fmt"
-	"github.com/discomco/go-cart/sdk/features"
-	"github.com/discomco/go-cart/sdk/model"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 )
 
 const (
@@ -13,14 +13,14 @@ const (
 )
 
 type ModelFtor func() IModel
-type GenModelFtor[TDoc model.IReadModel, TList model.IReadModel] func() IGenModel[TDoc, TList]
+type GenModelFtor[TDoc schema.IReadModel, TList schema.IReadModel] func() IGenModel[TDoc, TList]
 
 type IModel interface {
-	features.IComponent
+	reactors.IComponent
 	IAmModel()
 }
 
-type IGenModel[TDoc model.IReadModel, TList model.IReadModel] interface {
+type IGenModel[TDoc schema.IReadModel, TList schema.IReadModel] interface {
 	IModel
 	GetDocChangedTopic() string
 	GetListChangedTopic() string
@@ -30,8 +30,8 @@ type IGenModel[TDoc model.IReadModel, TList model.IReadModel] interface {
 	SetList(list *TList)
 }
 
-type innerModel[TDoc model.IReadModel, TList model.IReadModel] struct {
-	*features.AppComponent
+type innerModel[TDoc schema.IReadModel, TList schema.IReadModel] struct {
+	*reactors.Component
 	doc  *TDoc
 	list *TList
 }
@@ -69,24 +69,24 @@ func (m *innerModel[TDoc, TList]) SetList(list *TList) {
 	m.GetMediator().Broadcast(m.GetListChangedTopic(), nil, m.list)
 }
 
-func newModel[TDoc model.IReadModel, TList model.IReadModel](
-	name features.Name,
-	docFtor features.DocFtor[TDoc],
-	listFtor features.DocFtor[TList],
+func newModel[TDoc schema.IReadModel, TList schema.IReadModel](
+	name schema.Name,
+	docFtor schema.DocFtor[TDoc],
+	listFtor schema.DocFtor[TList],
 ) *innerModel[TDoc, TList] {
 	m := &innerModel[TDoc, TList]{
 		doc:  docFtor(),
 		list: listFtor(),
 	}
-	b := features.NewAppComponent(name)
-	m.AppComponent = b
+	b := reactors.NewComponent(name)
+	m.Component = b
 	return m
 }
 
-func NewModel[TDoc model.IReadModel, TList model.IReadModel](
-	name features.Name,
-	docFtor features.DocFtor[TDoc],
-	listFtor features.DocFtor[TList],
+func NewModel[TDoc schema.IReadModel, TList schema.IReadModel](
+	name schema.Name,
+	docFtor schema.DocFtor[TDoc],
+	listFtor schema.DocFtor[TList],
 ) IGenModel[TDoc, TList] {
 	return newModel[TDoc, TList](name, docFtor, listFtor)
 }

@@ -1,15 +1,15 @@
 package doc
 
-import "github.com/discomco/go-cart/sdk/core"
+import "github.com/discomco/go-cart/sdk/schema"
 
 const (
 	ID_PREFIX = "execgame"
 )
 
-func NewGameID() (*core.Identity, error) {
-	return core.NewIdentity(ID_PREFIX)
+func NewGameID() (*schema.Identity, error) {
+	return schema.NewIdentity(ID_PREFIX)
 }
 
-func NewGameIDFromString(id string) (*core.Identity, error) {
-	return core.NewIdentityFrom(ID_PREFIX, id)
+func NewGameIDFromString(id string) (*schema.Identity, error) {
+	return schema.NewIdentityFrom(ID_PREFIX, id)
 }

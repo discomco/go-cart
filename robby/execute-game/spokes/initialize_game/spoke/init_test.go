@@ -4,13 +4,13 @@ import (
 	"github.com/discomco/go-cart/robby/execute-game/behavior/builder"
 	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
 	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/actors"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
+	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/reactors"
+	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/features"
+	sdk_reactors "github.com/discomco/go-cart/sdk/reactors"
 	"log"
 )
 
@@ -21,10 +21,10 @@ const (
 var (
 	testEnv           ioc.IDig
 	testLogger        logger.IAppLogger
-	newTestBehavior   domain.AggBuilder
-	newTestCmdHandler features.CmdHandlerFtor
+	newTestBehavior   sdk_behavior.BehaviorBuilder
+	newTestCmdHandler sdk_reactors.CmdHandlerFtor
 	testModule        ISpoke
-	testRequester     actors.IRequester
+	testRequester     reactors.IRequester
 )
 
 func init() {
@@ -39,10 +39,10 @@ func buildTestEnv() ioc.IDig {
 		ftor.BehaviorFtor,
 		builder.BehaviorBuilder,
 	).Inject(dig,
-		actors.Responder,
+		reactors.Responder,
 		behavior.Hope2Cmd,
 		Spoke,
-		actors.Requester,
+		reactors.Requester,
 	)
 	return resolveTestEnv(dig)
 }
@@ -50,10 +50,10 @@ func buildTestEnv() ioc.IDig {
 func resolveTestEnv(dig ioc.IDig) ioc.IDig {
 	err := dig.Invoke(func(
 		appLogger logger.IAppLogger,
-		newBehavior domain.AggBuilder,
-		newCmdHandler features.CmdHandlerFtor,
+		newBehavior sdk_behavior.BehaviorBuilder,
+		newCmdHandler sdk_reactors.CmdHandlerFtor,
 		mod ISpoke,
-		req actors.IRequester,
+		req reactors.IRequester,
 	) {
 		testLogger = appLogger
 		newTestBehavior = newBehavior

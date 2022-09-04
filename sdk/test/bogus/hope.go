@@ -1,11 +1,11 @@
 package bogus
 
-import "github.com/discomco/go-cart/sdk/dtos"
+import "github.com/discomco/go-cart/sdk/contract"
 
 type IHope interface {
-	dtos.IHope
+	contract.IHope
 }
 
 func NewHope(aggregateId string, payload *Car) (IHope, error) {
-	return dtos.NewHope(aggregateId, payload)
+	return contract.NewHope(aggregateId, payload)
 }

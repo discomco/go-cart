@@ -2,12 +2,12 @@ package kafka
 
 import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
 	"time"
 )
 
 type IKafkaBus interface {
-	features.IBus
+	reactors.IBus
 }
 
 type bus struct {

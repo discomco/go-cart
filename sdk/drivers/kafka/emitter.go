@@ -3,26 +3,27 @@ package kafka
 import (
 	"context"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/utils/convert"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/pkg/errors"
 )
 
 type IEmitter interface {
-	features.IFactEmitter
+	reactors.IEmitter
 }
 
 type emitter struct {
-	*features.EventHandler
-	evt2Fact domain.Evt2FactFunc
+	*reactors.EventReactor
+	evt2Fact behavior.Evt2FactFunc
 	producer *kafka.Producer
 }
 
 func (e *emitter) IAmEmitter() {}
 
-func (e *emitter) emit(ctx context.Context, evt domain.IEvt) error {
+func (e *emitter) emit(ctx context.Context, evt behavior.IEvt) error {
 	fact, err := e.evt2Fact(evt)
 	if err != nil {
 		return errors.Wrapf(err, "(%+v) could not convert event to fact", e.GetName())
@@ -43,13 +44,13 @@ func (e *emitter) emit(ctx context.Context, evt domain.IEvt) error {
 	return nil
 }
 
-func newEmitter(name features.Name,
-	eventType domain.EventType,
-	evt2Fact domain.Evt2FactFunc) (*emitter, error) {
+func newEmitter(name schema.Name,
+	eventType behavior.EventType,
+	evt2Fact behavior.Evt2FactFunc) (*emitter, error) {
 	e := &emitter{
 		evt2Fact: evt2Fact,
 	}
-	base := features.NewEventHandler(eventType, e.emit)
+	base := reactors.NewEventReactor(eventType, e.emit)
 	var err error
 	var p *kafka.Producer
 	dig := ioc.SingleIoC()
@@ -60,13 +61,13 @@ func newEmitter(name features.Name,
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create producer")
 	}
-	e.EventHandler = base
+	e.EventReactor = base
 	e.Name = name
 	return e, nil
 }
 
-func NewEmitter(name features.Name,
-	eventType domain.EventType,
-	evt2Fact domain.Evt2FactFunc) (IEmitter, error) {
+func NewEmitter(name schema.Name,
+	eventType behavior.EventType,
+	evt2Fact behavior.Evt2FactFunc) (IEmitter, error) {
 	return newEmitter(name, eventType, evt2Fact)
 }

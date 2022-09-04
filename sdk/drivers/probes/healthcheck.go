@@ -1,22 +1,26 @@
 package probes
 
-import "github.com/discomco/go-cart/sdk/features"
+import (
+	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/schema"
+)
 
 type IHealthcheck interface {
-	features.IFeature
+	features.ISpoke
 }
 
 type Healthcheck struct {
-	*features.AppComponent
+	*reactors.Component
 }
 
 const (
 	HealthCheckNameFmt = "[%+v].Healthcheck"
 )
 
-func newHealthCheck(name features.Name) *Healthcheck {
+func newHealthCheck(name schema.Name) *Healthcheck {
 	hc := &Healthcheck{}
-	cp := features.NewAppComponent(name)
-	hc.AppComponent = cp
+	cp := reactors.NewComponent(name)
+	hc.Component = cp
 	return hc
 }

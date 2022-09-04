@@ -2,9 +2,9 @@ package redis
 
 import (
 	"encoding/json"
+	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/config"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/model"
+	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/go-redis/redis/v9"
 	"golang.org/x/net/context"
 	"log"
@@ -14,7 +14,7 @@ import (
 var cMutex = &sync.Mutex{}
 var singleton interface{}
 
-type cache[T model.IReadModel] struct {
+type cache[T schema.IReadModel] struct {
 	client *redis.Client
 }
 
@@ -59,7 +59,7 @@ func (c *cache[T]) Delete(ctx context.Context, key string) (*T, error) {
 	return ref, nil
 }
 
-func newRedis[T model.IReadModel](cfg config.IAppConfig) (domain.IReadModelStore[T], error) {
+func newRedis[T schema.IReadModel](cfg config.IAppConfig) (behavior.IReadModelStore[T], error) {
 	c := &cache[T]{}
 	opts, err := redis.ParseURL(cfg.GetRedisConfig().GetUrl())
 	if err != nil {
@@ -70,7 +70,7 @@ func newRedis[T model.IReadModel](cfg config.IAppConfig) (domain.IReadModelStore
 	return c, nil
 }
 
-func oneRedis[T model.IReadModel](cfg config.IAppConfig) (domain.IReadModelStore[T], error) {
+func oneRedis[T schema.IReadModel](cfg config.IAppConfig) (behavior.IReadModelStore[T], error) {
 	cMutex.Lock()
 	defer cMutex.Unlock()
 	if singleton == nil {
@@ -83,8 +83,8 @@ func oneRedis[T model.IReadModel](cfg config.IAppConfig) (domain.IReadModelStore
 	return singleton.(*cache[T]), nil
 }
 
-func NewRedisStore[T model.IReadModel](config config.IAppConfig) domain.StoreFtor[T] {
-	return func() domain.IReadModelStore[T] {
+func NewRedisStore[T schema.IReadModel](config config.IAppConfig) behavior.StoreFtor[T] {
+	return func() behavior.IReadModelStore[T] {
 		c, err := newRedis[T](config)
 		if err != nil {
 			log.Fatal(err)
@@ -94,8 +94,8 @@ func NewRedisStore[T model.IReadModel](config config.IAppConfig) domain.StoreFto
 	}
 }
 
-func SingleRedisStore[T model.IReadModel](config config.IAppConfig) domain.StoreFtor[T] {
-	return func() domain.IReadModelStore[T] {
+func SingleRedisStore[T schema.IReadModel](config config.IAppConfig) behavior.StoreFtor[T] {
+	return func() behavior.IReadModelStore[T] {
 		c, err := oneRedis[T](config)
 		if err != nil {
 			log.Fatal(err)

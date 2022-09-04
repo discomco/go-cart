@@ -3,13 +3,13 @@ package redis
 import (
 	"context"
 	"github.com/discomco/go-cart/robby/execute-game/schema"
+	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/config"
-	"github.com/discomco/go-cart/sdk/domain"
 	"github.com/discomco/go-cart/sdk/drivers/redis"
 )
 
 type IDocStore interface {
-	domain.IReadModelStore[schema.GameDoc]
+	behavior.IReadModelStore[schema.GameDoc]
 }
 
 func newDocStore(cfg config.IAppConfig) IDocStore {
@@ -17,8 +17,8 @@ func newDocStore(cfg config.IAppConfig) IDocStore {
 	return newStore()
 }
 
-func DocStore(config config.IAppConfig) domain.StoreFtor[schema.GameDoc] {
-	return func() domain.IReadModelStore[schema.GameDoc] {
+func DocStore(config config.IAppConfig) behavior.StoreFtor[schema.GameDoc] {
+	return func() behavior.IReadModelStore[schema.GameDoc] {
 		return newDocStore(config)
 	}
 }

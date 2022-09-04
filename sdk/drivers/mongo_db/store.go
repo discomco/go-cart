@@ -2,20 +2,20 @@ package mongo_db
 
 import (
 	"fmt"
-	"github.com/discomco/go-cart/sdk/domain"
-	"github.com/discomco/go-cart/sdk/model"
+	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/schema"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/net/context"
 )
 
-type MongoDbStoreFtor[TModel model.IReadModel] func() IStore[TModel]
+type MongoDbStoreFtor[TModel schema.IReadModel] func() IStore[TModel]
 
-type IStore[T model.IReadModel] interface {
-	domain.IReadModelStore[T]
+type IStore[T schema.IReadModel] interface {
+	behavior.IReadModelStore[T]
 }
 
-type store[T model.IReadModel] struct {
+type store[T schema.IReadModel] struct {
 	mongo   *mongo.Client
 	dbName  string
 	colName string
@@ -75,7 +75,7 @@ func (s *store[T]) Delete(ctx context.Context, key string) (*T, error) {
 	panic("implement me")
 }
 
-func newStore[T model.IReadModel](mongo *mongo.Client, dbName string, colName string) *store[T] {
+func newStore[T schema.IReadModel](mongo *mongo.Client, dbName string, colName string) *store[T] {
 	return &store[T]{
 		mongo:   mongo,
 		dbName:  dbName,
@@ -83,7 +83,7 @@ func newStore[T model.IReadModel](mongo *mongo.Client, dbName string, colName st
 	}
 }
 
-func NewMongoStore[TModel model.IReadModel](newMongoDb MongoDbClientFtor, dbName string, colName string) MongoDbStoreFtor[TModel] {
+func NewMongoStore[TModel schema.IReadModel](newMongoDb MongoDbClientFtor, dbName string, colName string) MongoDbStoreFtor[TModel] {
 	return func() IStore[TModel] {
 		clt := newMongoDb()
 		return newStore[TModel](clt, dbName, colName)

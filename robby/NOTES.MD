@@ -2,6 +2,7 @@
 
 ## 22.09.04
 - Now that we have a running Cartwheel, Let's test the requester.
+- We have completed a full implementation of the initialize_game spoke
 - 
 
 

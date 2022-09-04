@@ -2,14 +2,14 @@ package convert
 
 import (
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
-	"github.com/discomco/go-cart/sdk/domain"
+	"github.com/discomco/go-cart/sdk/behavior"
 )
 
-func Recorded2Evt(recorded *esdb.RecordedEvent) domain.IEvt {
-	return &domain.Event{
+func Recorded2Evt(recorded *esdb.RecordedEvent) behavior.IEvt {
+	return &behavior.Event{
 		EventID:   recorded.EventID.String(),
-		EventType: domain.EventType(recorded.EventType),
-		//		AggregateType: domain.AggregateType(recorded.ContentType),
+		EventType: behavior.EventType(recorded.EventType),
+		//		BehaviorType: domain.BehaviorType(recorded.ContentType),
 		Data:        recorded.Data,
 		Timestamp:   recorded.CreatedDate,
 		AggregateID: recorded.StreamID,
@@ -31,16 +31,16 @@ func Recorded2Evt(recorded *esdb.RecordedEvent) domain.IEvt {
 }
 */
 
-func EventData2Evt(eventData esdb.EventData) domain.IEvt {
-	return &domain.Event{
+func EventData2Evt(eventData esdb.EventData) behavior.IEvt {
+	return &behavior.Event{
 		EventID:   eventData.EventID.String(),
-		EventType: domain.EventType(eventData.EventType),
+		EventType: behavior.EventType(eventData.EventType),
 		Data:      eventData.Data,
 		Metadata:  eventData.Metadata,
 	}
 }
 
-func Evt2EventData(evt domain.IEvt) esdb.EventData {
+func Evt2EventData(evt behavior.IEvt) esdb.EventData {
 	return esdb.EventData{
 		EventType:   string(evt.GetEventType()),
 		ContentType: esdb.JsonContentType,

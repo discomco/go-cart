@@ -2,11 +2,11 @@ package schema
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	"github.com/discomco/go-cart/sdk/core"
+	"github.com/discomco/go-cart/sdk/schema"
 )
 
 type GameList struct {
-	ID    *core.Identity       `json:"id,omitempty"`
+	ID    *schema.Identity     `json:"id,omitempty"`
 	Items map[string]*GameItem `json:"items"`
 }
 

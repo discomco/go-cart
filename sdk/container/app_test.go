@@ -24,7 +24,7 @@ func Test_NewIoCApp(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, cfg)
 
-	// When
+	// React
 	app := NewApp(cfg, nil, nil)
 	// Then
 	assert.NotNil(t, app)
