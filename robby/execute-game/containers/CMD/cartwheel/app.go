@@ -3,12 +3,12 @@ package cartwheel
 import (
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/container"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/spokes"
 	"sync"
 )
 
 var (
-	singleton features.IApp
+	singleton spokes.IApp
 	cMutex    = &sync.Mutex{}
 )
 
@@ -16,7 +16,7 @@ type app struct {
 	*container.App
 }
 
-func SingleApp(cfg config.IAppConfig) features.IApp {
+func SingleApp(cfg config.IAppConfig) spokes.IApp {
 	if singleton == nil {
 		cMutex.Lock()
 		defer cMutex.Unlock()

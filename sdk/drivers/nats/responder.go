@@ -8,8 +8,8 @@ import (
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/utils/convert"
-	"github.com/discomco/go-cart/sdk/features"
 	"github.com/discomco/go-cart/sdk/schema"
+	"github.com/discomco/go-cart/sdk/spokes"
 	"github.com/nats-io/nats.go"
 	"golang.org/x/net/context"
 	"golang.org/x/sync/errgroup"
@@ -45,7 +45,7 @@ func (r *Responder[THope, TCmd]) Deactivate(ctx context.Context) error {
 //ResponderFtor is a generic functor that is discriminated by the feature's specific IHope and ICmd injectors.
 func ResponderFtor[THope contract.IHope, TCmd behavior.ICmd](
 	topic string,
-	feature features.ISpoke,
+	feature spokes.ISpoke,
 	hope2Cmd behavior.Hope2CmdFunc[THope, TCmd],
 ) comps.GenResponderFtor[THope] {
 	return func() comps.IGenResponder[THope] {
@@ -132,13 +132,13 @@ func (r *Responder[THope, TCmd]) worker(ctx context.Context) func() error {
 				fbk = contract.NewFbk("", -1, "")
 
 				// TODO: Remove Debugging Code
-				logger.Debugf("[%+v] received %+v", r.GetName(), string(msg.Data))
+				//				logger.Debugf("[%+v] received %+v", r.GetName(), string(msg.Data))
 
 				var dto contract.Dto
 				err := convert.Data2Any(msg.Data, &dto)
 
 				// TODO: Remove Debugging Code
-				logger.Debugf("[%+v] converted %+v to %+v", r.GetName(), string(msg.Data), dto)
+				//				logger.Debugf("[%+v] converted %+v to %+v", r.GetName(), string(msg.Data), dto)
 
 				if err != nil {
 					r.handleError(err, fbk, msg)

@@ -1,4 +1,4 @@
-package features
+package spokes
 
 import (
 	"github.com/discomco/go-cart/sdk/behavior"
@@ -13,6 +13,10 @@ type ISpoke interface {
 	Inject(plugins ...comps.IReactor) ISpoke
 }
 
+type IMediatorSpoke interface {
+	ISpoke
+}
+
 type IPrjSpoke interface {
 	ISpoke
 }
@@ -21,7 +25,7 @@ type ICmdSpoke interface {
 	IMediatorSpoke
 }
 
-type IMediatorSpoke interface {
+type IQrySpoke interface {
 	ISpoke
 }
 

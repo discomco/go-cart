@@ -7,21 +7,21 @@ import (
 	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/reactors"
-	sdk_reactors "github.com/discomco/go-cart/sdk/comps"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/drivers/eventstore_db"
-	"github.com/discomco/go-cart/sdk/features"
+	"github.com/discomco/go-cart/sdk/spokes"
 	"log"
 )
 
 type ISpoke interface {
-	features.ICmdSpoke
+	spokes.ICmdSpoke
 }
 
 func newCmdSpoke() ISpoke {
-	return features.NewCmdFeature(behavior.CMD_TOPIC)
+	return spokes.NewCmdFeature(behavior.CMD_TOPIC)
 }
 
 func Spoke(cfgPath config.Path) ISpoke {
@@ -41,6 +41,8 @@ func Spoke(cfgPath config.Path) ISpoke {
 	).Inject(dig,
 		behavior.EvtToDoc,
 		reactors.ToRedisDoc,
+		behavior.EvtToList,
+		reactors.ToRedisList,
 	).Inject(dig,
 		reactors.Responder,
 		behavior.Hope2Cmd,
@@ -52,13 +54,15 @@ func resolve(dig ioc.IDig) ISpoke {
 	spoke := newCmdSpoke()
 	err := dig.Invoke(func(
 		responder reactors.IResponder,
-		projector sdk_reactors.IProjector,
+		projector comps.IProjector,
 		toRedisDoc reactors.IToRedisDoc,
+		toRedisList reactors.IToRedisList,
 	) {
 		spoke.Inject(
 			projector,
 			responder,
 			toRedisDoc,
+			toRedisList,
 		)
 	})
 	if err != nil {

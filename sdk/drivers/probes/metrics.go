@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/config"
-	"github.com/discomco/go-cart/sdk/features"
 	"github.com/discomco/go-cart/sdk/schema"
+	"github.com/discomco/go-cart/sdk/spokes"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus"
@@ -20,7 +20,7 @@ const (
 )
 
 type IMetrics interface {
-	features.ISpoke
+	spokes.ISpoke
 	IAmMetrics()
 	RegisterCounters(counters ...Counter)
 }
@@ -64,7 +64,7 @@ func (m *metrics) Run(ctx context.Context) func() error {
 	}
 }
 
-func (m *metrics) Inject(plugins ...comps.IReactor) features.ISpoke {
+func (m *metrics) Inject(plugins ...comps.IReactor) spokes.ISpoke {
 	for _, plugin := range plugins {
 		switch plugin.(type) {
 		case IMetricsCounter:

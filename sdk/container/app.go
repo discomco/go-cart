@@ -6,8 +6,8 @@ import (
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/core/errors"
 	"github.com/discomco/go-cart/sdk/drivers/jaeger"
-	"github.com/discomco/go-cart/sdk/features"
 	"github.com/discomco/go-cart/sdk/schema"
+	"github.com/discomco/go-cart/sdk/spokes"
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/opentracing/opentracing-go"
@@ -30,7 +30,7 @@ const (
 
 var (
 	cMutex    = &sync.Mutex{}
-	singleApp features.IApp
+	singleApp spokes.IApp
 )
 
 // App is the receiver that serves as the -base for all GO-SCREAM Apps
@@ -56,7 +56,7 @@ var (
 type App struct {
 	*comps.Component
 	echo     *echo.Echo
-	features map[schema.Name]features.ISpoke
+	features map[schema.Name]spokes.ISpoke
 	doneCh   chan struct{}
 	runApp   RunAppFunc
 	downApp  DownAppFunc
@@ -83,7 +83,7 @@ func NewApp(
 
 	base := comps.NewComponent(schema.Name(name))
 	a := &App{
-		features: make(map[schema.Name]features.ISpoke, 0),
+		features: make(map[schema.Name]spokes.ISpoke, 0),
 		runApp:   run,
 		downApp:  down,
 	}
@@ -91,7 +91,7 @@ func NewApp(
 	return a
 }
 
-func (a *App) regFeature(feature features.ISpoke) {
+func (a *App) regFeature(feature spokes.ISpoke) {
 	if feature == nil {
 		return
 	}
@@ -155,7 +155,7 @@ func (a *App) Shutdown(ctx context.Context) {
 	}
 }
 
-func (a *App) Inject(features ...features.ISpoke) features.IApp {
+func (a *App) Inject(features ...spokes.ISpoke) spokes.IApp {
 	if len(features) == 0 {
 		return a
 	}

@@ -1,9 +1,9 @@
 package tui
 
-import "github.com/discomco/go-cart/sdk/features"
+import "github.com/discomco/go-cart/sdk/spokes"
 
 type IMicroApp interface {
-	features.ISpoke
+	spokes.ISpoke
 }
 
 type MicroApp struct {

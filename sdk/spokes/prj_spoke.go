@@ -1,4 +1,4 @@
-package features
+package spokes
 
 import (
 	"github.com/discomco/go-cart/sdk/comps"

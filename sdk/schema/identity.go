@@ -64,8 +64,7 @@ func NilIdentity() (*Identity, error) {
 func NewIdentityFrom(prefix string, id string) (*Identity, error) {
 	uid, err := uuid.Parse(id)
 	if err != nil {
-		err := fmt.Errorf("'%+v' cannot be used as a Value for an Identity", id)
-		err = errors.Wrap(err, "(NewIdentityFrom.UUID")
+		err = errors.Wrapf(err, "(NewIdentityFrom.UUID")
 		return nil, err
 	}
 	prefix, err = checkPrefix(prefix)

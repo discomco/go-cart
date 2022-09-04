@@ -3,11 +3,14 @@ package schema
 import (
 	"github.com/discomco/go-cart/robby/execute-game/schema/list"
 	"github.com/discomco/go-cart/sdk/schema"
+	"log"
 )
 
 func NewGameList() *GameList {
+	Id := GameListKey()
+	ID, _ := schema.IdentityFromPrefixedId(Id)
 	return &GameList{
-		ID:    list.DefaultID(),
+		ID:    ID,
 		Items: make(map[string]*GameItem),
 	}
 }
@@ -46,6 +49,10 @@ func (l *GameList) DeleteItem(key string) {
 }
 
 func GameListKey() string {
-	ID := list.DefaultID()
+	ID, err := list.DefaultID()
+	if err != nil {
+		log.Fatal(err)
+		panic(err)
+	}
 	return ID.Id()
 }

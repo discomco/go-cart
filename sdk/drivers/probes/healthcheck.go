@@ -2,12 +2,12 @@ package probes
 
 import (
 	"github.com/discomco/go-cart/sdk/comps"
-	"github.com/discomco/go-cart/sdk/features"
 	"github.com/discomco/go-cart/sdk/schema"
+	"github.com/discomco/go-cart/sdk/spokes"
 )
 
 type IHealthcheck interface {
-	features.ISpoke
+	spokes.ISpoke
 }
 
 type Healthcheck struct {
