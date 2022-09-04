@@ -130,13 +130,13 @@ func (r *Responder[THope, TCmd]) worker(ctx context.Context) func() error {
 				fbk = dtos.NewFbk("", -1, "")
 
 				// TODO: Remove Debugging Code
-				logger.Debugf("[%+v] received %v", r.GetName(), msg)
+				logger.Debugf("[%+v] received %+v", r.GetName(), string(msg.Data))
 
 				var dto dtos.Dto
 				err := convert.Data2Any(msg.Data, &dto)
 
 				// TODO: Remove Debugging Code
-				logger.Debugf("[%+v] converted %v to %v", r.GetName(), msg.Data, dto)
+				logger.Debugf("[%+v] converted %+v to %+v", r.GetName(), string(msg.Data), dto)
 
 				if err != nil {
 					r.handleError(err, fbk, msg)

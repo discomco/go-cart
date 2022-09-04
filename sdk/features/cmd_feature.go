@@ -38,6 +38,12 @@ func (f *CmdFeature) up(ctx context.Context) error {
 			errors.Errors = append(errors.Errors, err)
 		}
 	}
+	if f.projector != nil {
+		err := f.projector.Activate(ctx)
+		if err != nil {
+			errors.Errors = append(errors.Errors, err)
+		}
+	}
 	if len(errors.Errors) > 0 {
 		err := multierror.Flatten(&errors)
 		return err
@@ -61,6 +67,12 @@ func (f *CmdFeature) down(ctx context.Context) {
 	}
 	for _, responder := range f.responders {
 		err := responder.Deactivate(ctx)
+		if err != nil {
+			errors.Errors = append(errors.Errors, err)
+		}
+	}
+	if f.projector != nil {
+		err := f.projector.Deactivate(ctx)
 		if err != nil {
 			errors.Errors = append(errors.Errors, err)
 		}
