@@ -2,30 +2,30 @@ package features
 
 import (
 	"context"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/drivers/tirol"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 )
 
 type QrySpoke struct {
 	*Spoke
-	providers map[schema.Name]reactors.IQueryProvider
+	providers map[schema.Name]comps.IQueryProvider
 	tirol     tirol.ITirol
 }
 
-func (qs *QrySpoke) registerReactors(plugins []reactors.IReactor) {
+func (qs *QrySpoke) registerReactors(plugins []comps.IReactor) {
 	for _, plugin := range plugins {
 		switch plugin.(type) {
-		case reactors.IQueryProvider:
-			qs.registerQueryProvider(plugin.(reactors.IQueryProvider))
+		case comps.IQueryProvider:
+			qs.registerQueryProvider(plugin.(comps.IQueryProvider))
 		default:
 			continue
 		}
 	}
 }
 
-func (qs *QrySpoke) registerQueryProvider(provider reactors.IQueryProvider) {
+func (qs *QrySpoke) registerQueryProvider(provider comps.IQueryProvider) {
 	if qs.providers[provider.GetName()] == nil {
 		qs.providers[provider.GetName()] = provider
 	}

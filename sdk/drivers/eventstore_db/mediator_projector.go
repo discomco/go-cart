@@ -4,10 +4,10 @@ import (
 	"context"
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
 	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/core/constants"
 	"github.com/discomco/go-cart/sdk/drivers/convert"
 	"github.com/discomco/go-cart/sdk/drivers/jaeger"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -24,20 +24,20 @@ type ProjectorName string
 
 //EvtProjFtor is a functor for Projectors that marshal events onto the Mediator
 //where they can be handled by all kinds of GenProjection Handlers.
-func EvtProjFtor(newClient EventStoreDBFtor) reactors.ProjectorFtor {
-	return func() reactors.IProjector {
+func EvtProjFtor(newClient EventStoreDBFtor) comps.ProjectorFtor {
+	return func() comps.IProjector {
 		clt := newClient()
 		return newProjector(clt)
 	}
 }
 
 var (
-	singletonProjector reactors.IProjector
+	singletonProjector comps.IProjector
 	cPMutex            = &sync.Mutex{}
 )
 
 //EventProjector is a Projector that marshals events onto the Mediator
-func EventProjector(newClient EventStoreDBFtor) reactors.IProjector {
+func EventProjector(newClient EventStoreDBFtor) comps.IProjector {
 	if singletonProjector == nil {
 		cPMutex.Lock()
 		defer cPMutex.Unlock()
@@ -48,8 +48,8 @@ func EventProjector(newClient EventStoreDBFtor) reactors.IProjector {
 }
 
 type eventProjector struct {
-	*reactors.Component
-	handlers    map[behavior.EventType]reactors.IProjection
+	*comps.Component
+	handlers    map[behavior.EventType]comps.IProjection
 	esdb        *esdb.Client
 	handleMutex *sync.Mutex
 }
@@ -99,11 +99,11 @@ func newProjector(
 	esdb *esdb.Client,
 ) *eventProjector {
 	name := ProjectorFmt
-	base := reactors.NewComponent(schema.Name(name))
+	base := comps.NewComponent(schema.Name(name))
 	base.Name = "eventstoreDB.Projector"
 	p := &eventProjector{
 		esdb:        esdb,
-		handlers:    make(map[behavior.EventType]reactors.IProjection),
+		handlers:    make(map[behavior.EventType]comps.IProjection),
 		handleMutex: &sync.Mutex{},
 	}
 	p.Component = base
@@ -120,7 +120,7 @@ func (o *eventProjector) runWorker(ctx context.Context, worker ProjectionWorkerF
 	}
 }
 
-func (o *eventProjector) Inject(projections ...reactors.IProjection) {
+func (o *eventProjector) Inject(projections ...comps.IProjection) {
 	for _, h := range projections {
 		_, ok := o.handlers[h.GetEventType()]
 		if !ok {

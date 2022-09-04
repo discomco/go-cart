@@ -4,23 +4,23 @@ import (
 	"context"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/ioc"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 )
 
 type IListener[TFact contract.IFact, TCmd behavior.ICmd] interface {
-	reactors.IGenFactListener[*kafka.Event, TFact]
+	comps.IGenFactListener[*kafka.Event, TFact]
 }
 
 type Listener[TCmd behavior.ICmd] struct {
-	*reactors.Component
+	*comps.Component
 	Topic         string
 	consumer      *kafka.Consumer
-	newCmdHandler reactors.CmdHandlerFtor
+	newCmdHandler comps.CmdHandlerFtor
 	data2Cmd      behavior.GenData2CmdFunc[TCmd]
 }
 
@@ -35,10 +35,10 @@ func newListener[TCmd behavior.ICmd](
 		Topic:    topic,
 		data2Cmd: data2Cmd,
 	}
-	b := reactors.NewComponent(name)
+	b := comps.NewComponent(name)
 	dig := ioc.SingleIoC()
 	var err error
-	err = dig.Invoke(func(newConsumer ConsumerFtor, newCH reactors.CmdHandlerFtor) {
+	err = dig.Invoke(func(newConsumer ConsumerFtor, newCH comps.CmdHandlerFtor) {
 		l.newCmdHandler = newCH
 		l.consumer, err = newConsumer()
 	})

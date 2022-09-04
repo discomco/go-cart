@@ -2,18 +2,18 @@ package nats
 
 import (
 	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/mediator"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/nats-io/nats.go"
 )
 
 type IEmitter interface {
-	reactors.IEmitter
+	comps.IEmitter
 }
 
 type Emitter struct {
-	*reactors.EventReactor
+	*comps.EventReactor
 	natsBus  INATSBus
 	mediator mediator.IMediator
 	Topic    behavior.EventType
@@ -21,13 +21,13 @@ type Emitter struct {
 
 func NewEmitter(
 	topic behavior.EventType,
-	emitFact reactors.OnEvtFunc,
+	emitFact comps.OnEvtFunc,
 ) (*Emitter, error) {
-	eh := reactors.NewEventReactor(topic, emitFact)
+	eh := comps.NewEventReactor(topic, emitFact)
 	var b INATSBus
 	var err error
 	dig := ioc.SingleIoC()
-	err = dig.Invoke(func(newBus reactors.GenBusFtor[*nats.Conn, *nats.Msg]) {
+	err = dig.Invoke(func(newBus comps.GenBusFtor[*nats.Conn, *nats.Msg]) {
 		b, err = newBus()
 	})
 	if err != nil {

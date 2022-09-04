@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/utils/convert"
 	"github.com/discomco/go-cart/sdk/features"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/nats-io/nats.go"
 	"golang.org/x/net/context"
@@ -17,14 +17,14 @@ import (
 )
 
 type IResponder[THope contract.IHope, TCmd behavior.ICmd] interface {
-	reactors.IResponder
+	comps.IResponder
 }
 
 type Responder[THope contract.IHope, TCmd behavior.ICmd] struct {
-	*reactors.Component
+	*comps.Component
 	Topic         string
 	natsBus       INATSBus
-	newCmdHandler reactors.CmdHandlerFtor
+	newCmdHandler comps.CmdHandlerFtor
 	hope2Cmd      behavior.Hope2CmdFunc[THope, TCmd]
 	mMutex        *sync.Mutex
 }
@@ -47,8 +47,8 @@ func ResponderFtor[THope contract.IHope, TCmd behavior.ICmd](
 	topic string,
 	feature features.ISpoke,
 	hope2Cmd behavior.Hope2CmdFunc[THope, TCmd],
-) reactors.GenResponderFtor[THope] {
-	return func() reactors.IGenResponder[THope] {
+) comps.GenResponderFtor[THope] {
+	return func() comps.IGenResponder[THope] {
 		r, err := newResponder[THope, TCmd](
 			topic,
 			hope2Cmd)
@@ -79,10 +79,10 @@ func newResponder[THope contract.IHope, TCmd behavior.ICmd](
 		Topic:  topic,
 		mMutex: &sync.Mutex{},
 	}
-	c := reactors.NewComponent(schema.Name(name))
+	c := comps.NewComponent(schema.Name(name))
 	dig := ioc.SingleIoC()
 	var err error
-	dig.Invoke(func(newBus BusFtor, newCH reactors.CmdHandlerFtor) {
+	dig.Invoke(func(newBus BusFtor, newCH comps.CmdHandlerFtor) {
 		r.natsBus, err = newBus()
 		r.newCmdHandler = newCH
 	})

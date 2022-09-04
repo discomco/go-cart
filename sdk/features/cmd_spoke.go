@@ -2,7 +2,7 @@ package features
 
 import (
 	"context"
-	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/hashicorp/go-multierror"
 )
@@ -14,10 +14,10 @@ type (
 
 type CmdSpoke struct {
 	*Spoke
-	projector  reactors.IProjector
-	responders []reactors.IResponder
-	listeners  []reactors.IListener
-	handlers   []reactors.IMediatorReactor
+	projector  comps.IProjector
+	responders []comps.IResponder
+	listeners  []comps.IListener
+	handlers   []comps.IMediatorReactor
 }
 
 func (f *CmdSpoke) up(ctx context.Context) error {
@@ -85,33 +85,33 @@ func (f *CmdSpoke) down(ctx context.Context) {
 	}
 }
 
-func (f *CmdSpoke) registerReactors(plugins []reactors.IReactor) {
+func (f *CmdSpoke) registerReactors(plugins []comps.IReactor) {
 	if len(plugins) == 0 {
 		return
 	}
 	for _, plugin := range plugins {
 		switch plugin.(type) {
-		case reactors.IMediatorReactor, reactors.IEvtReactor:
-			f.handlers = append(f.handlers, plugin.(reactors.IMediatorReactor))
-		case reactors.IResponder:
-			f.responders = append(f.responders, plugin.(reactors.IResponder))
-		case reactors.IListener:
-			f.listeners = append(f.listeners, plugin.(reactors.IListener))
-		case reactors.IProjector:
-			f.registerProjector(plugin.(reactors.IProjector))
+		case comps.IMediatorReactor, comps.IEvtReactor:
+			f.handlers = append(f.handlers, plugin.(comps.IMediatorReactor))
+		case comps.IResponder:
+			f.responders = append(f.responders, plugin.(comps.IResponder))
+		case comps.IListener:
+			f.listeners = append(f.listeners, plugin.(comps.IListener))
+		case comps.IProjector:
+			f.registerProjector(plugin.(comps.IProjector))
 		}
 	}
 }
 
-func (f *CmdSpoke) registerProjector(projector reactors.IProjector) {
+func (f *CmdSpoke) registerProjector(projector comps.IProjector) {
 	f.projector = projector
 }
 
 func NewCmdFeature(name schema.Name) *CmdSpoke {
 	f := &CmdSpoke{
-		handlers:   make([]reactors.IMediatorReactor, 0),
-		responders: make([]reactors.IResponder, 0),
-		listeners:  make([]reactors.IListener, 0),
+		handlers:   make([]comps.IMediatorReactor, 0),
+		responders: make([]comps.IResponder, 0),
+		listeners:  make([]comps.IListener, 0),
 		projector:  nil,
 	}
 	base := NewSpoke(name, f.up, f.down, f.registerReactors)

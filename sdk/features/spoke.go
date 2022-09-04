@@ -2,21 +2,21 @@ package features
 
 import (
 	"context"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/core/ioc"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 )
 
 type (
 	runSpokeFunc         func(ctx context.Context) error
 	downSpokeFunc        func(ctx context.Context)
-	registerReactorsFunc func(plugins []reactors.IReactor)
+	registerReactorsFunc func(plugins []comps.IReactor)
 	SpokeFtor            func() ISpoke
 	SpokeBuilder         func() ISpoke
 )
 
 type Spoke struct {
-	*reactors.Component
+	*comps.Component
 	run         runSpokeFunc
 	down        downSpokeFunc
 	regReactors registerReactorsFunc
@@ -41,7 +41,7 @@ func (f *Spoke) Run(ctx context.Context) func() error {
 	}
 }
 
-func (f *Spoke) Inject(reactors ...reactors.IReactor) ISpoke {
+func (f *Spoke) Inject(reactors ...comps.IReactor) ISpoke {
 	if len(reactors) == 0 {
 		return f
 	}
@@ -60,7 +60,7 @@ func NewSpoke(
 	if name == "" {
 		name = "Spoke"
 	}
-	base := reactors.NewComponent(name)
+	base := comps.NewComponent(name)
 	base.Name = name
 	f := &Spoke{
 		run:         run,

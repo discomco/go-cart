@@ -3,7 +3,7 @@ package features
 import (
 	"context"
 	"github.com/discomco/go-cart/sdk/behavior"
-	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/hashicorp/go-multierror"
 )
@@ -15,9 +15,9 @@ type (
 
 type GenCmdSpoke struct {
 	*Spoke
-	responders []reactors.IResponder
-	listeners  []reactors.IListener
-	handlers   []reactors.IMediatorReactor
+	responders []comps.IResponder
+	listeners  []comps.IListener
+	handlers   []comps.IMediatorReactor
 }
 
 func (f *GenCmdSpoke) up(ctx context.Context) error {
@@ -73,27 +73,27 @@ func (f *GenCmdSpoke) down(ctx context.Context) {
 	}
 }
 
-func (f *GenCmdSpoke) registerReactors(plugins []reactors.IReactor) {
+func (f *GenCmdSpoke) registerReactors(plugins []comps.IReactor) {
 	if len(plugins) == 0 {
 		return
 	}
 	for _, plugin := range plugins {
 		switch plugin.(type) {
-		case reactors.IResponder:
-			f.responders = append(f.responders, plugin.(reactors.IResponder))
-		case reactors.IListener:
-			f.listeners = append(f.listeners, plugin.(reactors.IListener))
-		case reactors.IMediatorReactor:
-			f.handlers = append(f.handlers, plugin.(reactors.IMediatorReactor))
+		case comps.IResponder:
+			f.responders = append(f.responders, plugin.(comps.IResponder))
+		case comps.IListener:
+			f.listeners = append(f.listeners, plugin.(comps.IListener))
+		case comps.IMediatorReactor:
+			f.handlers = append(f.handlers, plugin.(comps.IMediatorReactor))
 		}
 	}
 }
 
 func NewGenCmdSpoke(name schema.Name) *GenCmdSpoke {
 	f := &GenCmdSpoke{
-		handlers:   make([]reactors.IMediatorReactor, 0),
-		responders: make([]reactors.IResponder, 0),
-		listeners:  make([]reactors.IListener, 0),
+		handlers:   make([]comps.IMediatorReactor, 0),
+		responders: make([]comps.IResponder, 0),
+		listeners:  make([]comps.IListener, 0),
 	}
 	base := NewSpoke(name, f.up, f.down, f.registerReactors)
 	f.Spoke = base

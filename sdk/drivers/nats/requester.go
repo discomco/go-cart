@@ -3,21 +3,21 @@ package nats
 import (
 	"context"
 	"fmt"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/utils/convert"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"golang.org/x/sync/errgroup"
 	"time"
 )
 
 type INATSRequester[THope contract.IHope] interface {
-	reactors.IGenRequester[THope]
+	comps.IGenRequester[THope]
 }
 
 type Requester[THope contract.IHope] struct {
-	*reactors.Component
+	*comps.Component
 	bus   INATSBus
 	Topic string
 }
@@ -34,7 +34,7 @@ func (r *Requester[THope]) IAmRequester() {}
 
 func newRequester[THope contract.IHope](topic string) (*Requester[THope], error) {
 	name := fmt.Sprintf(RequesterFmt, topic)
-	ac := reactors.NewComponent(schema.Name(name))
+	ac := comps.NewComponent(schema.Name(name))
 	dig := ioc.SingleIoC()
 	var b INATSBus
 	var err error

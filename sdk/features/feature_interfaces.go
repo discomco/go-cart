@@ -2,15 +2,15 @@ package features
 
 import (
 	"github.com/discomco/go-cart/sdk/behavior"
-	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/comps"
 	"golang.org/x/net/context"
 )
 
 type ISpoke interface {
-	reactors.IComponent
-	reactors.IShutdown
+	comps.IComponent
+	comps.IShutdown
 	Run(ctx context.Context) func() error
-	Inject(plugins ...reactors.IReactor) ISpoke
+	Inject(plugins ...comps.IReactor) ISpoke
 }
 
 type IPrjSpoke interface {
@@ -33,8 +33,8 @@ type IGenCmdSpoke[T behavior.ICmd] interface {
 
 //IApp is the Generic Injector for GO-CART applications
 type IApp interface {
-	reactors.IComponent
-	reactors.IShutdown
+	comps.IComponent
+	comps.IShutdown
 	Run() error
 	Inject(spokes ...ISpoke) IApp
 }

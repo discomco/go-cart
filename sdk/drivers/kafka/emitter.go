@@ -4,19 +4,19 @@ import (
 	"context"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/utils/convert"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/pkg/errors"
 )
 
 type IEmitter interface {
-	reactors.IEmitter
+	comps.IEmitter
 }
 
 type emitter struct {
-	*reactors.EventReactor
+	*comps.EventReactor
 	evt2Fact behavior.Evt2FactFunc
 	producer *kafka.Producer
 }
@@ -50,7 +50,7 @@ func newEmitter(name schema.Name,
 	e := &emitter{
 		evt2Fact: evt2Fact,
 	}
-	base := reactors.NewEventReactor(eventType, e.emit)
+	base := comps.NewEventReactor(eventType, e.emit)
 	var err error
 	var p *kafka.Producer
 	dig := ioc.SingleIoC()

@@ -4,23 +4,23 @@ import (
 	"context"
 	"fmt"
 	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/ioc"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/nats-io/nats.go"
 	"golang.org/x/sync/errgroup"
 )
 
 type IListener[TFact contract.IFact, TCmd behavior.ICmd] interface {
-	reactors.IGenFactListener[*nats.Msg, TFact]
+	comps.IGenFactListener[*nats.Msg, TFact]
 }
 
 type Listener[TCmd behavior.ICmd] struct {
-	*reactors.Component
+	*comps.Component
 	Topic         string
 	natsBus       INATSBus
-	newCmdHandler reactors.CmdHandlerFtor
+	newCmdHandler comps.CmdHandlerFtor
 	data2Cmd      behavior.GenData2CmdFunc[TCmd]
 }
 
@@ -43,10 +43,10 @@ func newListener[TCmd behavior.ICmd](
 		data2Cmd: data2Cmd,
 	}
 	name := fmt.Sprintf(ListenerFmt, topic)
-	b := reactors.NewComponent(schema.Name(name))
+	b := comps.NewComponent(schema.Name(name))
 	dig := ioc.SingleIoC()
 	var err error
-	err = dig.Invoke(func(newBus BusFtor, newCH reactors.CmdHandlerFtor) {
+	err = dig.Invoke(func(newBus BusFtor, newCH comps.CmdHandlerFtor) {
 		l.natsBus, err = newBus()
 		l.newCmdHandler = newCH
 	})

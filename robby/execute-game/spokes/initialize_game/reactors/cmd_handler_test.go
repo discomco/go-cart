@@ -5,7 +5,7 @@ import (
 	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
-	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -15,8 +15,8 @@ func TestThatWeCanResolveACommandHandler(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
 	// WHEN
-	var newCh reactors.CmdHandlerFtor
-	err := testEnv.Invoke(func(nc reactors.CmdHandlerFtor) {
+	var newCh comps.CmdHandlerFtor
+	err := testEnv.Invoke(func(nc comps.CmdHandlerFtor) {
 		newCh = nc
 	})
 	// THEN

@@ -1,4 +1,4 @@
-package reactors
+package comps
 
 import (
 	"github.com/discomco/go-cart/sdk/config"

@@ -3,9 +3,9 @@ package probes
 import (
 	"context"
 	"fmt"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/features"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -26,7 +26,7 @@ type IMetrics interface {
 }
 
 type metrics struct {
-	*reactors.Component
+	*comps.Component
 	chDone   chan struct{}
 	errGroup *errgroup.Group
 	config   config.IProbesConfig
@@ -64,7 +64,7 @@ func (m *metrics) Run(ctx context.Context) func() error {
 	}
 }
 
-func (m *metrics) Inject(plugins ...reactors.IReactor) features.ISpoke {
+func (m *metrics) Inject(plugins ...comps.IReactor) features.ISpoke {
 	for _, plugin := range plugins {
 		switch plugin.(type) {
 		case IMetricsCounter:
@@ -95,7 +95,7 @@ func NewMetrics(config config.IAppConfig) IMetrics {
 }
 
 func newMetrics(name schema.Name, probesConfig config.IProbesConfig) IMetrics {
-	b := reactors.NewComponent(name)
+	b := comps.NewComponent(name)
 	m := &metrics{
 		config:   probesConfig,
 		counters: make(map[schema.Name]Counter),
@@ -105,7 +105,7 @@ func newMetrics(name schema.Name, probesConfig config.IProbesConfig) IMetrics {
 }
 
 type IMetricsCounter interface {
-	reactors.IReactor
+	comps.IReactor
 	IAmMetricsCounter()
 }
 
@@ -125,7 +125,7 @@ func NewCounter(name schema.Name,
 }
 
 func newCounter(name schema.Name, pCounter prometheus.Counter) *Counter {
-	comp := reactors.NewComponent(name)
+	comp := comps.NewComponent(name)
 	c := &Counter{
 		PCounter: pCounter,
 	}
@@ -134,7 +134,7 @@ func newCounter(name schema.Name, pCounter prometheus.Counter) *Counter {
 }
 
 type Counter struct {
-	*reactors.Component
+	*comps.Component
 	PCounter prometheus.Counter
 }
 

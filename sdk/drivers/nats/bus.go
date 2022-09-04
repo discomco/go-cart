@@ -3,8 +3,8 @@ package nats
 import (
 	"context"
 	"fmt"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/config"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/nats-io/nats.go"
 	"golang.org/x/sync/errgroup"
@@ -14,7 +14,7 @@ import (
 
 // INATSBus is the Injector that hides driver specifics from the application.
 type INATSBus interface {
-	reactors.IGenBus[*nats.Conn, *nats.Msg]
+	comps.IGenBus[*nats.Conn, *nats.Msg]
 }
 
 type BusFtor func() (INATSBus, error)
@@ -43,7 +43,7 @@ func IAmNATSBus(b INATSBus) bool {
 }
 
 type bus struct {
-	*reactors.Component
+	*comps.Component
 	conn  *nats.Conn
 	mutex *sync.Mutex
 	wg    *errgroup.Group
@@ -186,7 +186,7 @@ const (
 func transient(cfg config.INATSConfig) (INATSBus, error) {
 	name := fmt.Sprintf(BusFmt, cfg.GetUrl())
 	b := &bus{
-		Component: reactors.NewComponent(schema.Name(name)),
+		Component: comps.NewComponent(schema.Name(name)),
 		wg:        &errgroup.Group{},
 	}
 	conn, err := nats.Connect(

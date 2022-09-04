@@ -7,12 +7,12 @@ import (
 	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/reactors"
+	sdk_reactors "github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/drivers/eventstore_db"
 	"github.com/discomco/go-cart/sdk/features"
-	sdk_reactors "github.com/discomco/go-cart/sdk/reactors"
 	"log"
 )
 

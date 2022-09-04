@@ -1,4 +1,4 @@
-package reactors
+package comps
 
 import (
 	"encoding/json"

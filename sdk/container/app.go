@@ -2,11 +2,11 @@ package container
 
 import (
 	"context"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/core/errors"
 	"github.com/discomco/go-cart/sdk/drivers/jaeger"
 	"github.com/discomco/go-cart/sdk/features"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
@@ -54,7 +54,7 @@ var (
 //   3) *-QRY apps that implement pure QUERY (read) functionality (the "Q" in CPQRS)
 //
 type App struct {
-	*reactors.Component
+	*comps.Component
 	echo     *echo.Echo
 	features map[schema.Name]features.ISpoke
 	doneCh   chan struct{}
@@ -81,7 +81,7 @@ func NewApp(
 ) *App {
 	name := config.GetServiceConfig().GetServiceName()
 
-	base := reactors.NewComponent(schema.Name(name))
+	base := comps.NewComponent(schema.Name(name))
 	a := &App{
 		features: make(map[schema.Name]features.ISpoke, 0),
 		runApp:   run,

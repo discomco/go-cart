@@ -3,9 +3,9 @@ package eventstore_db
 import (
 	"context"
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/core/logger"
 	"github.com/discomco/go-cart/sdk/drivers/convert"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"io"
 
 	"github.com/discomco/go-cart/sdk/behavior"
@@ -20,12 +20,12 @@ type eventStore struct {
 	db  *esdb.Client
 }
 
-func newEventStore(log logger.IAppLogger, db *esdb.Client) reactors.IEventStore {
+func newEventStore(log logger.IAppLogger, db *esdb.Client) comps.IEventStore {
 	return &eventStore{log: log, db: db}
 }
 
-func EStore(log logger.IAppLogger, newClient EventStoreDBFtor) reactors.ESFtor {
-	return func() reactors.IEventStore {
+func EStore(log logger.IAppLogger, newClient EventStoreDBFtor) comps.ESFtor {
+	return func() comps.IEventStore {
 		db := newClient()
 		return newEventStore(log, db)
 	}

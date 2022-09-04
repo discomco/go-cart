@@ -6,10 +6,10 @@ import (
 	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
 	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"log"
 )
 
@@ -21,7 +21,7 @@ var (
 	testEnv           ioc.IDig
 	testLogger        logger.IAppLogger
 	newTestBehavior   sdk_behavior.BehaviorBuilder
-	newTestCmdHandler reactors.CmdHandlerFtor
+	newTestCmdHandler comps.CmdHandlerFtor
 	testRequester     IRequester
 )
 
@@ -48,7 +48,7 @@ func resolveTestEnv(dig ioc.IDig) ioc.IDig {
 	err := dig.Invoke(func(
 		appLogger logger.IAppLogger,
 		newBehavior sdk_behavior.BehaviorBuilder,
-		newCmdHandler reactors.CmdHandlerFtor,
+		newCmdHandler comps.CmdHandlerFtor,
 		requester IRequester,
 	) {
 		testLogger = appLogger

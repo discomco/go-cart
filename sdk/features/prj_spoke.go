@@ -1,7 +1,7 @@
 package features
 
 import (
-	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/schema"
 	"golang.org/x/net/context"
 	"time"
@@ -14,8 +14,8 @@ type (
 
 type projSpoke struct {
 	*Spoke
-	projector   reactors.IProjector
-	projections map[schema.Name]reactors.IMediatorReactor
+	projector   comps.IProjector
+	projections map[schema.Name]comps.IMediatorReactor
 }
 
 func (f *projSpoke) run(ctx context.Context) error {
@@ -36,24 +36,24 @@ func (f *projSpoke) down(ctx context.Context) {
 	}
 }
 
-func (f *projSpoke) registerProjection(handler reactors.IMediatorReactor) {
+func (f *projSpoke) registerProjection(handler comps.IMediatorReactor) {
 	_, ok := f.projections[handler.GetName()]
 	if !ok {
 		f.projections[handler.GetName()] = handler
 	}
 }
 
-func (f *projSpoke) registerProjector(projector reactors.IProjector) {
+func (f *projSpoke) registerProjector(projector comps.IProjector) {
 	f.projector = projector
 }
 
-func (f *projSpoke) registerReactors(plugins []reactors.IReactor) {
+func (f *projSpoke) registerReactors(plugins []comps.IReactor) {
 	for _, plugin := range plugins {
 		switch plugin.(type) {
-		case reactors.IMediatorReactor:
-			f.registerProjection(plugin.(reactors.IMediatorReactor))
-		case reactors.IProjector:
-			f.registerProjector(plugin.(reactors.IProjector))
+		case comps.IMediatorReactor:
+			f.registerProjection(plugin.(comps.IMediatorReactor))
+		case comps.IProjector:
+			f.registerProjector(plugin.(comps.IProjector))
 		default:
 			continue
 		}
@@ -64,7 +64,7 @@ func NewPrjSpoke(
 	name schema.Name,
 ) *projSpoke {
 	f := &projSpoke{
-		projections: make(map[schema.Name]reactors.IMediatorReactor),
+		projections: make(map[schema.Name]comps.IMediatorReactor),
 	}
 	f.Spoke = NewSpoke(name, f.run, f.down, f.registerReactors)
 	return f

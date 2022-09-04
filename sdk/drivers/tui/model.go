@@ -2,7 +2,7 @@ package tui
 
 import (
 	"fmt"
-	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/schema"
 )
 
@@ -16,7 +16,7 @@ type ModelFtor func() IModel
 type GenModelFtor[TDoc schema.IReadModel, TList schema.IReadModel] func() IGenModel[TDoc, TList]
 
 type IModel interface {
-	reactors.IComponent
+	comps.IComponent
 	IAmModel()
 }
 
@@ -31,7 +31,7 @@ type IGenModel[TDoc schema.IReadModel, TList schema.IReadModel] interface {
 }
 
 type innerModel[TDoc schema.IReadModel, TList schema.IReadModel] struct {
-	*reactors.Component
+	*comps.Component
 	doc  *TDoc
 	list *TList
 }
@@ -78,7 +78,7 @@ func newModel[TDoc schema.IReadModel, TList schema.IReadModel](
 		doc:  docFtor(),
 		list: listFtor(),
 	}
-	b := reactors.NewComponent(name)
+	b := comps.NewComponent(name)
 	m.Component = b
 	return m
 }

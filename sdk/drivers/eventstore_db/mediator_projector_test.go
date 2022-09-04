@@ -2,7 +2,7 @@ package eventstore_db
 
 import (
 	"github.com/discomco/go-cart/sdk/behavior"
-	"github.com/discomco/go-cart/sdk/reactors"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
@@ -15,8 +15,8 @@ func TestThatWeCanCreateAProjector(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
 	// WHEN
-	var prj reactors.IProjector
-	err := testEnv.Invoke(func(prjCtor reactors.ProjectorFtor) {
+	var prj comps.IProjector
+	err := testEnv.Invoke(func(prjCtor comps.ProjectorFtor) {
 		prj = prjCtor()
 	})
 	// THEN

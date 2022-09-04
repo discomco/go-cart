@@ -4,26 +4,26 @@ import (
 	"context"
 	"fmt"
 	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/drivers/tui/app_topics"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/pkg/errors"
 	"time"
 )
 
 type IProxy interface {
-	reactors.IMsgReactor
+	comps.IMsgReactor
 	IAmProxy()
-	Inject(requesters ...reactors.IRequester)
+	Inject(requesters ...comps.IRequester)
 	RefreshList(ctx context.Context, key string) error
 	RefreshDoc(ctx context.Context, key string) error
 	Request(ctx context.Context, hopeType contract.HopeType, hope contract.IHope, timeout time.Duration) contract.IFbk
 }
 
 type Proxy[TDoc schema.IReadModel, TList schema.IReadModel] struct {
-	*reactors.MsgReactor
-	requesters map[contract.HopeType]reactors.IRequester
+	*comps.MsgReactor
+	requesters map[contract.HopeType]comps.IRequester
 	docStore   behavior.IReadModelStore[TDoc]
 	listStore  behavior.IReadModelStore[TList]
 	model      IGenModel[TDoc, TList]
@@ -59,7 +59,7 @@ func (p *Proxy[TDoc, TList]) Request(ctx context.Context, hopeType contract.Hope
 	return fbk
 }
 
-func (p *Proxy[TDoc, TList]) Inject(requesters ...reactors.IRequester) {
+func (p *Proxy[TDoc, TList]) Inject(requesters ...comps.IRequester) {
 	for _, requester := range requesters {
 		_, ok := p.requesters[requester.GetHopeType()]
 		if !ok {
@@ -72,7 +72,7 @@ func (p *Proxy[TDoc, TList]) IAmProxy() {}
 
 func newProxy[TDoc schema.IReadModel, TList schema.IReadModel](
 	name schema.Name,
-	onAppInitialized reactors.OnMsgFunc,
+	onAppInitialized comps.OnMsgFunc,
 	newDocStore behavior.StoreFtor[TDoc],
 	newListStore behavior.StoreFtor[TList],
 	newModel GenModelFtor[TDoc, TList],
@@ -80,10 +80,10 @@ func newProxy[TDoc schema.IReadModel, TList schema.IReadModel](
 	p := &Proxy[TDoc, TList]{
 		docStore:   newDocStore(),
 		listStore:  newListStore(),
-		requesters: make(map[contract.HopeType]reactors.IRequester),
+		requesters: make(map[contract.HopeType]comps.IRequester),
 		model:      newModel(),
 	}
-	b := reactors.NewMsgReactor(app_topics.AppInitialized, onAppInitialized)
+	b := comps.NewMsgReactor(app_topics.AppInitialized, onAppInitialized)
 	b.Name = name
 	p.MsgReactor = b
 	return p
@@ -91,7 +91,7 @@ func newProxy[TDoc schema.IReadModel, TList schema.IReadModel](
 
 func NewProxy[TDoc schema.IReadModel, TList schema.IReadModel](
 	name schema.Name,
-	onAppInitialized reactors.OnMsgFunc,
+	onAppInitialized comps.OnMsgFunc,
 	newDocStore behavior.StoreFtor[TDoc],
 	newListStore behavior.StoreFtor[TList],
 	newModel GenModelFtor[TDoc, TList],

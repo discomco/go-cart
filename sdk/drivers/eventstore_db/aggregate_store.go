@@ -4,11 +4,11 @@ import (
 	"context"
 	"github.com/EventStore/EventStore-Client-Go/v2/esdb"
 	"github.com/discomco/go-cart/sdk/behavior"
+	"github.com/discomco/go-cart/sdk/comps"
 	sdk_errors "github.com/discomco/go-cart/sdk/core/errors"
 	"github.com/discomco/go-cart/sdk/core/logger"
 	"github.com/discomco/go-cart/sdk/drivers/convert"
 	"github.com/discomco/go-cart/sdk/drivers/jaeger"
-	"github.com/discomco/go-cart/sdk/reactors"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/log"
 	"github.com/pkg/errors"
@@ -32,14 +32,14 @@ var (
 )
 
 // AStore is an Injection that injects a functor for IBehaviorStore
-func AStore(log logger.IAppLogger, newDb EventStoreDBFtor) reactors.BehSFtor {
-	return func() reactors.IBehaviorStore {
+func AStore(log logger.IAppLogger, newDb EventStoreDBFtor) comps.BehSFtor {
+	return func() comps.IBehaviorStore {
 		db := newDb()
 		return aStore(log, db)
 	}
 }
 
-func aStore(log logger.IAppLogger, db *esdb.Client) reactors.IBehaviorStore {
+func aStore(log logger.IAppLogger, db *esdb.Client) comps.IBehaviorStore {
 	return &aggregateStore{log: log, db: db}
 }
 
