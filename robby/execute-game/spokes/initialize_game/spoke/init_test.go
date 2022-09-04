@@ -34,7 +34,7 @@ func init() {
 func buildTestEnv() ioc.IDig {
 	dig := container.DefaultCMD(ConfigPath)
 	dig.Inject(dig,
-		schema.GameDocFtor,
+		schema.DocFtor,
 	).Inject(dig,
 		ftor.BehaviorFtor,
 		builder.BehaviorBuilder,

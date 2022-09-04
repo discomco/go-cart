@@ -2,14 +2,11 @@ package spoke
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/actors"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
+	testing2 "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/testing"
 	"github.com/discomco/go-cart/sdk/dtos"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/sync/errgroup"
-	"math/rand"
-	"sync"
 	"testing"
 	"time"
 )
@@ -74,7 +71,7 @@ func requestWorker(ctx context.Context, fbks chan dtos.IFbk) func() error {
 			return ctx.Err()
 		default:
 			for i := 0; i < 20; i++ {
-				hope, err := randomHope()
+				hope, err := testing2.RandomHope()
 				if err != nil {
 					return err
 				}
@@ -84,35 +81,4 @@ func requestWorker(ctx context.Context, fbks chan dtos.IFbk) func() error {
 			return nil
 		}
 	}
-}
-
-var rMutex = &sync.Mutex{}
-
-func randomHope() (contract.IHope, error) {
-	rMutex.Lock()
-	defer rMutex.Unlock()
-	aggID, _ := doc.NewGameID()
-	pl := randomPayload()
-	return contract.NewHope(aggID.Id(), *pl)
-}
-
-var (
-	gameNames = []string{
-		"John's Bonanza",
-		"All quiet on the Southern Front",
-		"Resurrection",
-		"The Day after Yesterday",
-		"Corpses for Sale",
-	}
-)
-
-func randomPayload() *contract.Payload {
-	ID, _ := doc.NewGameID()
-	seed := rand.Intn(5)
-	name := gameNames[seed]
-	x := rand.Intn(42) + 3
-	y := rand.Intn(42) + 3
-	z := rand.Intn(42) + 3
-	nbrOfPlayers := rand.Intn(12) + 2
-	return contract.NewPayload(ID.Id(), name, x, y, z, nbrOfPlayers)
 }

@@ -1,7 +1,7 @@
 package ftor
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/-shared/schema"
+	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
@@ -24,7 +24,7 @@ func init() {
 func buildTestEnv() ioc.IDig {
 	dig := container.DefaultCMD(ConfigPath)
 	dig.Inject(dig,
-		schema.RootFtor,
+		schema.DocFtor,
 	).Inject(dig,
 		BehaviorFtor,
 	)

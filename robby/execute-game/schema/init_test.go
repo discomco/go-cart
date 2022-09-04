@@ -23,7 +23,7 @@ func init() {
 func buildTestEnv() ioc.IDig {
 	dig := container.DefaultCMD(ConfigPath)
 	dig.Inject(dig,
-		GameDocFtor,
+		DocFtor,
 	)
 	return resolveTestEnv(dig)
 }

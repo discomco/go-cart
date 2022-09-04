@@ -39,7 +39,7 @@ func localBuilder(ftor domain2.GenAggFtor[schema.GameDoc]) domain2.AggBuilder {
 func buildTestEnv() ioc.IDig {
 	dig := builder.InjectCoLoMed(ConfigPath)
 	dig.Inject(dig,
-		schema.GameDocFtor,
+		schema.DocFtor,
 		ftor.BehaviorFtor,
 		localBuilder,
 	)

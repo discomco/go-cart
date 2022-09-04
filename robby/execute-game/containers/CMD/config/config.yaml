@@ -1,5 +1,5 @@
 service:
-  nameSpace: Robby
+  nameSpace: Robby.execute-game
   subSystem: CMD
 grpc:
   port: :5001
@@ -34,9 +34,9 @@ redis:
   url: "redis://localhost:6379/0"
 projection:
   poolSize: 6
-  eventPrefix: "sdk-"
-  group: "sdk-med"
-  name: "sdkProjector"
+  eventPrefix: "execgame-"
+  group: "robby-exec-game-med"
+  name: "MediatorProjector"
 nats:
   url: "nats://localhost:4222"
   user: "a"

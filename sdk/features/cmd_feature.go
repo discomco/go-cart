@@ -12,6 +12,7 @@ type (
 
 type CmdFeature struct {
 	*Feature
+	projector  IEventProjector
 	responders []IHopeResponder
 	listeners  []IFactListener
 	handlers   []IMediatorSubscriber
@@ -70,7 +71,7 @@ func (f *CmdFeature) down(ctx context.Context) {
 	}
 }
 
-func (f *CmdFeature) registerCmdPlugins(plugins []IFeaturePlugin) {
+func (f *CmdFeature) registerPlugins(plugins []IFeaturePlugin) {
 	if len(plugins) == 0 {
 		return
 	}
@@ -82,8 +83,14 @@ func (f *CmdFeature) registerCmdPlugins(plugins []IFeaturePlugin) {
 			f.responders = append(f.responders, plugin.(IHopeResponder))
 		case IFactListener:
 			f.listeners = append(f.listeners, plugin.(IFactListener))
+		case IEventProjector:
+			f.registerProjector(plugin.(IEventProjector))
 		}
 	}
+}
+
+func (f *CmdFeature) registerProjector(projector IEventProjector) {
+	f.projector = projector
 }
 
 func NewCmdFeature(name Name) *CmdFeature {
@@ -91,8 +98,9 @@ func NewCmdFeature(name Name) *CmdFeature {
 		handlers:   make([]IMediatorSubscriber, 0),
 		responders: make([]IHopeResponder, 0),
 		listeners:  make([]IFactListener, 0),
+		projector:  nil,
 	}
-	base := NewFeature(name, f.up, f.down, f.registerCmdPlugins)
+	base := NewFeature(name, f.up, f.down, f.registerPlugins)
 	f.Feature = base
 	return f
 }
