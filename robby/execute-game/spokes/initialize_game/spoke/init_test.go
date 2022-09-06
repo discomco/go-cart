@@ -5,7 +5,7 @@ import (
 	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
 	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/reactors"
+	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/comps"
 	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	sdk_reactors "github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/container"
@@ -24,7 +24,7 @@ var (
 	newTestBehavior   sdk_behavior.BehaviorBuilder
 	newTestCmdHandler sdk_reactors.CmdHandlerFtor
 	testModule        ISpoke
-	testRequester     reactors.IRequester
+	testRequester     comps.IRequester
 )
 
 func init() {
@@ -39,10 +39,10 @@ func buildTestEnv() ioc.IDig {
 		ftor.BehaviorFtor,
 		builder.BehaviorBuilder,
 	).Inject(dig,
-		reactors.Responder,
+		comps.Responder,
 		behavior.Hope2Cmd,
 		Spoke,
-		reactors.Requester,
+		comps.Requester,
 	)
 	return resolveTestEnv(dig)
 }
@@ -53,7 +53,7 @@ func resolveTestEnv(dig ioc.IDig) ioc.IDig {
 		newBehavior sdk_behavior.BehaviorBuilder,
 		newCmdHandler sdk_reactors.CmdHandlerFtor,
 		mod ISpoke,
-		req reactors.IRequester,
+		req comps.IRequester,
 	) {
 		testLogger = appLogger
 		newTestBehavior = newBehavior

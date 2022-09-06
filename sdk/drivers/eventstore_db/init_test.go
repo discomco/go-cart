@@ -30,8 +30,8 @@ func init() {
 	err := testEnv.Invoke(func(
 		log logger.IAppLogger,
 		cfg config.IAppConfig,
-		asFtor comps.BehSFtor,
-		esFtor comps.ESFtor,
+		asFtor comps.BehaviorStoreFtor,
+		esFtor comps.EventStoreFtor,
 		prjFtor comps.ProjectorFtor,
 		med mediator.IMediator,
 		medLogger comps.ILoggingReactor) {

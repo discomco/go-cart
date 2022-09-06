@@ -11,6 +11,7 @@ import (
 	"github.com/discomco/go-cart/sdk/specs/cmd_must"
 	"github.com/opentracing/opentracing-go"
 	opentracing_log "github.com/opentracing/opentracing-go/log"
+	"sync"
 )
 
 const (
@@ -19,7 +20,7 @@ const (
 
 type CmdHandlerFtor func() ICmdHandler
 
-func CmdHandler(newAs BehSFtor, newAgg behavior.BehaviorBuilder) CmdHandlerFtor {
+func CmdHandler(newAs BehaviorStoreFtor, newAgg behavior.BehaviorBuilder) CmdHandlerFtor {
 	return func() ICmdHandler {
 		as := newAs()
 		agg := newAgg()
@@ -41,7 +42,11 @@ func (h *cmdHandler) GetAggregate(ID schema.IIdentity) behavior.IBehavior {
 	return h.behavior.SetID(ID)
 }
 
+var hMutex = &sync.Mutex{}
+
 func (h *cmdHandler) Handle(ctx context.Context, cmd behavior.ICmd) contract.IFbk {
+	hMutex.Lock()
+	defer hMutex.Unlock()
 	fbk := contract.NewFbk(cmd.GetAggregateID().Id(), -1, "")
 	cmd_must.NotBeNil(cmd, fbk)
 	cmd_must.HaveAggregateID(cmd, fbk)

@@ -24,7 +24,7 @@ func newEventStore(log logger.IAppLogger, db *esdb.Client) comps.IEventStore {
 	return &eventStore{log: log, db: db}
 }
 
-func EStore(log logger.IAppLogger, newClient EventStoreDBFtor) comps.ESFtor {
+func EStore(log logger.IAppLogger, newClient EventStoreDBFtor) comps.EventStoreFtor {
 	return func() comps.IEventStore {
 		db := newClient()
 		return newEventStore(log, db)

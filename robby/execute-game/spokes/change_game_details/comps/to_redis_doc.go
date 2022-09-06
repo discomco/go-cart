@@ -1,15 +1,15 @@
-package reactors
+package comps
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
+	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/behavior"
 	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/comps"
 	sdk_schema "github.com/discomco/go-cart/sdk/schema"
 )
 
 const (
-	ProjectionName = "toRedisDoc.Initialized"
+	ProjectionName = "toRedisDoc.GameDetailsChanged"
 )
 
 type IToRedisDoc interface {

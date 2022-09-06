@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-type ESFtor func() IEventStore
-type BehSFtor func() IBehaviorStore
+type EventStoreFtor func() IEventStore
+type BehaviorStoreFtor func() IBehaviorStore
 type ProjectorFtor func() IProjector
 type ProjectorBuilder func(newProj ProjectorFtor) IProjector
 type GenResponderFtor[THope contract.IHope] func() IGenResponder[THope]

@@ -7,9 +7,15 @@ import (
 )
 
 type GameDoc struct {
-	ID      *schema.Identity `json:"id,omitempty"`
-	Details *Details         `json:"details"`
-	Status  doc.Status       `json:"status"`
+	ID       *schema.Identity `json:"id,omitempty"`
+	Details  *Details         `json:"details"`
+	Status   doc.Status       `json:"status"`
+	Settings *Settings        `json:"settings"`
+}
+
+type Settings struct {
+	MapSize      *Dimensions
+	NbrOfPlayers int
 }
 
 type Details struct {

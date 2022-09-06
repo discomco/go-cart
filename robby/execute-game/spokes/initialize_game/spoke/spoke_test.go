@@ -2,7 +2,7 @@ package spoke
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/reactors"
+	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/comps"
 	testing2 "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/testing"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/stretchr/testify/assert"
@@ -26,7 +26,7 @@ func TestThatWeCanResolveAModule(t *testing.T) {
 func TestThatWeCanResolveARequester(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
-	err := testEnv.Invoke(func(_ reactors.IRequester) {
+	err := testEnv.Invoke(func(_ comps.IRequester) {
 
 	})
 	assert.NoError(t, err)

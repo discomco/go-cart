@@ -1,12 +1,12 @@
-package reactors
+package comps
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/contract"
 	"github.com/discomco/go-cart/sdk/drivers/nats"
 )
 
 type IRequester interface {
-	nats.INATSRequester[contract.IHope]
+	nats.IRequester[contract.IHope]
 }
 
 func Requester() (IRequester, error) {

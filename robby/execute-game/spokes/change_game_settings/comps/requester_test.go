@@ -1,9 +1,9 @@
-package reactors
+package comps
 
 import (
 	"context"
 	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	testing2 "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/testing"
+	testing2 "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/testing"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -19,7 +19,7 @@ func TestThatWeCanResolveARequester(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestThatWeCanRequestAGameInitialization(t *testing.T) {
+func TestThatWeCanRequestAGameSettingsChange(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testRequester)
 	// AND

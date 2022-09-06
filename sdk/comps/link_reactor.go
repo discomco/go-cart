@@ -7,13 +7,18 @@ import (
 
 type LinkReactor struct {
 	*EventReactor
+	NewCH CmdHandlerFtor
 }
 
 func NewLinkReactor(
 	name schema.Name,
 	eventType behavior.EventType,
-	onEvt OnEvtFunc) *LinkReactor {
-	dl := &LinkReactor{}
+	onEvt OnEvtFunc,
+	newCH CmdHandlerFtor,
+) *LinkReactor {
+	dl := &LinkReactor{
+		NewCH: newCH,
+	}
 	eh := NewEventReactor(eventType, onEvt)
 	dl.EventReactor = eh
 	dl.Name = name

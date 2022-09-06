@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/schema"
+	"sync"
 )
 
 const (
@@ -177,8 +178,12 @@ func (a *behavior) Load(events []IEvt) error {
 	return nil
 }
 
+var aMutex = &sync.Mutex{}
+
 // Apply push event to domain uncommitted events using IApplyEvt method
 func (a *behavior) ApplyEvent(event IEvt, isCommitted bool) error {
+	aMutex.Lock()
+	defer aMutex.Unlock()
 	if event.GetAggregateId() == "" {
 		return ErrEventHasNoAggregateID
 	}
@@ -204,8 +209,12 @@ func (a *behavior) ApplyEvent(event IEvt, isCommitted bool) error {
 	return nil
 }
 
+var raiseMutex = sync.Mutex{}
+
 // RaiseEvent push event to domain applied events using IApplyEvt method, used for load directly from eventstore
 func (a *behavior) RaiseEvent(event IEvt) error {
+	raiseMutex.Lock()
+	defer raiseMutex.Unlock()
 	if event.GetAggregateId() != a.GetID().Id() {
 		return ErrInvalidAggregateID
 	}
@@ -244,7 +253,11 @@ func (a *behavior) GetState() schema.IWriteModel {
 	return a.state
 }
 
+var tryMutex = &sync.Mutex{}
+
 func (a *behavior) TryCommand(ctx context.Context, cmd ICmd) (IEvt, contract.IFbk) {
+	tryMutex.Lock()
+	defer tryMutex.Unlock()
 	fbk := contract.NewFbk(cmd.GetAggregateID().Id(), -1, "")
 	if cmd == nil {
 		fbk.SetError(CommandCannotBeNil)

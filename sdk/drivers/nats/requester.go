@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-type INATSRequester[THope contract.IHope] interface {
+type IRequester[THope contract.IHope] interface {
 	comps.IGenRequester[THope]
 }
 
@@ -23,7 +23,7 @@ type Requester[THope contract.IHope] struct {
 }
 
 const (
-	RequesterFmt = "[%+v].NATSRequester"
+	RequesterFmt = "[%+v].Requester"
 )
 
 func (r *Requester[THope]) GetHopeType() contract.HopeType {

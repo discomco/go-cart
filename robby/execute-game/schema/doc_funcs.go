@@ -40,3 +40,10 @@ func NewDimensions(x, y, z int) *Dimensions {
 		Z: z,
 	}
 }
+
+func NewSettings(mapSize *Dimensions, nbrOfPlayers int) *Settings {
+	return &Settings{
+		MapSize:      mapSize,
+		NbrOfPlayers: nbrOfPlayers,
+	}
+}

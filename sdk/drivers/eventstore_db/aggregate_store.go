@@ -32,7 +32,7 @@ var (
 )
 
 // AStore is an Injection that injects a functor for IBehaviorStore
-func AStore(log logger.IAppLogger, newDb EventStoreDBFtor) comps.BehSFtor {
+func AStore(log logger.IAppLogger, newDb EventStoreDBFtor) comps.BehaviorStoreFtor {
 	return func() comps.IBehaviorStore {
 		db := newDb()
 		return aStore(log, db)

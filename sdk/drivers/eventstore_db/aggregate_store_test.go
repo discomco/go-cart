@@ -13,7 +13,7 @@ func TestThatWeCanResolveAnAggregateStore(t *testing.T) {
 	// WHEN
 	var lgg logger.IAppLogger
 	var as comps.IBehaviorStore
-	err := testEnv.Invoke(func(log logger.IAppLogger, asFtor comps.BehSFtor) {
+	err := testEnv.Invoke(func(log logger.IAppLogger, asFtor comps.BehaviorStoreFtor) {
 		lgg = log
 		as = asFtor()
 	})

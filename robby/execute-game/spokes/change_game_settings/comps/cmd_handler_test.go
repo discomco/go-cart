@@ -1,10 +1,13 @@
-package reactors
+package comps
 
 import (
 	"context"
+	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/behavior"
+	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/contract"
+	initialize_game "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
+	contract2 "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -24,7 +27,7 @@ func TestThatWeCanResolveACommandHandler(t *testing.T) {
 	assert.NotNil(t, newCh)
 }
 
-func TestThatWeCanExecuteAnInitializeCmd(t *testing.T) {
+func TestThatWeCanExecuteAChangeEventSettingsCmd(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, newTestCmdHandler)
 	// AND
@@ -33,12 +36,22 @@ func TestThatWeCanExecuteAnInitializeCmd(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)
 	// AND
-	pl := contract.NewPayload(ID.Id(), "John's Robby Game", 42, 42, 42, 12)
-	assert.NotNil(t, pl)
-	// AND
-	initCmd, err := behavior.NewCmd(ID, *pl)
+	initPl := contract2.NewPayload(ID.Id(), "John's Game", 23, 22, 42, 5)
+	initCmd, err := initialize_game.NewCmd(ID, *initPl)
 	assert.NoError(t, err)
 	assert.NotNil(t, initCmd)
+
+	// AND
+	mapSize := schema.NewDimensions(54, 42, 87)
+	nbrOfPlayers := 42
+	settings := schema.NewSettings(mapSize, nbrOfPlayers)
+	// AND
+	changeGameSettingsPl := contract.NewPayload(settings)
+	assert.NotNil(t, changeGameSettingsPl)
+	// AND
+	changeGameSettingsCmd, err := behavior.NewCmd(ID, *changeGameSettingsPl)
+	assert.NoError(t, err)
+	assert.NotNil(t, changeGameSettingsCmd)
 	// AND
 	ch := newTestCmdHandler()
 	assert.NotNil(t, ch)
