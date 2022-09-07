@@ -148,11 +148,11 @@ type IProjector interface {
 
 type IResponder interface {
 	IReactor
-	IAmHopeResponder()
+	IAmResponder()
 	GetHopeType() contract.HopeType
 }
 
-//IHopeReqHandler is an Injector to a Hope Request Handler.
+//IGenRequester is an Injector to a Hope Request Handler.
 type IGenRequester[THope contract.IHope] interface {
 	IRequester
 	GenRequest(ctx context.Context, hope THope, timeout time.Duration) contract.IFbk

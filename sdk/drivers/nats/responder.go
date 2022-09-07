@@ -33,7 +33,7 @@ func (r *Responder[THope, TCmd]) GetHopeType() contract.HopeType {
 	return contract.HopeType(r.Topic)
 }
 
-func (r *Responder[THope, TCmd]) IAmHopeResponder() {}
+func (r *Responder[THope, TCmd]) IAmResponder() {}
 
 //Deactivate is called when the component is deactivated
 func (r *Responder[THope, TCmd]) Deactivate(ctx context.Context) error {

@@ -48,7 +48,7 @@ const (
 	Time         = "time"
 	GroupName    = "GroupName"
 	StreamID     = "StreamID"
-	EventID      = "EventID"
+	EventID      = "EventId"
 	EventType    = "EventType"
 	EventNumber  = "EventNumber"
 	CreatedDate  = "CreatedDate"

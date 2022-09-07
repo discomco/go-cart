@@ -7,7 +7,7 @@ import (
 
 func Recorded2Evt(recorded *esdb.RecordedEvent) behavior.IEvt {
 	return &behavior.Event{
-		EventID:   recorded.EventID.String(),
+		EventId:   recorded.EventID.String(),
 		EventType: behavior.EventType(recorded.EventType),
 		//		BehaviorType: domain.BehaviorType(recorded.ContentType),
 		Data:        recorded.Data,
@@ -20,7 +20,7 @@ func Recorded2Evt(recorded *esdb.RecordedEvent) behavior.IEvt {
 
 /*func Resolved2Evt(recorded *esdb.ResolvedEvent) domain.IEvt {
 	return &domain.Event{
-		EventID:     recorded.Event.EventID.String(),
+		EventId:     recorded.Event.EventId.String(),
 		EventType:   domain.EventType(recorded.EventType),
 		Data:        recorded.Data,
 		Timestamp:   recorded.CreatedDate,
@@ -33,7 +33,7 @@ func Recorded2Evt(recorded *esdb.RecordedEvent) behavior.IEvt {
 
 func EventData2Evt(eventData esdb.EventData) behavior.IEvt {
 	return &behavior.Event{
-		EventID:   eventData.EventID.String(),
+		EventId:   eventData.EventID.String(),
 		EventType: behavior.EventType(eventData.EventType),
 		Data:      eventData.Data,
 		Metadata:  eventData.Metadata,

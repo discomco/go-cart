@@ -3,7 +3,6 @@ package behavior
 import (
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/schema"
-	"github.com/satori/go.uuid"
 	"time"
 )
 
@@ -19,7 +18,6 @@ type IEvt interface {
 	BehaviorTypeGetter
 	BehaviorTypeSetter
 	GetAggregateID() (schema.IIdentity, error)
-	GetEventID() uuid.UUID
 	GetStreamID() string
 	EventNumber() uint64
 	CreatedDate() time.Time

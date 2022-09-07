@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/discomco/go-cart/sdk/schema"
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"time"
 )
 
@@ -17,7 +17,7 @@ const (
 type CommandType string
 
 type Event struct {
-	EventID       string
+	EventId       string
 	EventType     EventType
 	Data          []byte
 	Timestamp     time.Time
@@ -31,7 +31,7 @@ func NewEvt(aggregate IBehavior, eventType EventType) IEvt {
 	return newEvent(aggregate, eventType)
 }
 
-// newEvent new -base Event constructor with configured EventID, IBehavior properties and Timestamp.
+// newEvent new -base Event constructor with configured EventId, IBehavior properties and Timestamp.
 func newEvent(aggregate IBehavior, eventType EventType) *Event {
 	if aggregate == nil {
 		panic(ErrBehaviorCannotBeNil)
@@ -40,9 +40,9 @@ func newEvent(aggregate IBehavior, eventType EventType) *Event {
 	if aggregate.GetID() != nil {
 		id = aggregate.GetID().Id()
 	}
-	eID, _ := uuid.NewV4()
+	eID, _ := uuid.NewUUID()
 	return &Event{
-		EventID:       eID.String(),
+		EventId:       eID.String(),
 		AggregateType: aggregate.GetBehaviorType(),
 		AggregateID:   id,
 		Version:       aggregate.GetVersion(),
@@ -59,12 +59,8 @@ func (e *Event) GetEventType() EventType {
 	return e.EventType
 }
 
-func (e *Event) GetEventID() uuid.UUID {
-	return uuid.FromStringOrNil(e.EventID)
-}
-
 func (e *Event) GetStreamID() string {
-	return e.EventID
+	return e.EventId
 }
 
 func (e *Event) EventNumber() uint64 {
@@ -76,7 +72,7 @@ func (e *Event) CreatedDate() time.Time {
 }
 
 func (e *Event) GetEventId() string {
-	return e.EventID
+	return e.EventId
 }
 
 // GetTimeStamp get timestamp of the Event.

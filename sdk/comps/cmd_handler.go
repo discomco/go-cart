@@ -80,7 +80,7 @@ func (h *cmdHandler) Handle(ctx context.Context, cmd behavior.ICmd) contract.IFb
 		f.SetError(behavior.ErrExecuteDidNotReturnAnEvent(string(cmd.GetCommandType())))
 		return f
 	}
-	span.LogFields(opentracing_log.String("domain", h.behavior.String()))
+	span.LogFields(opentracing_log.String("behavior", h.behavior.String()))
 	err = h.as.Save(ctx, h.behavior)
 	if err != nil {
 		f.SetError(err.Error())
