@@ -16,7 +16,7 @@ type IEmitter interface {
 }
 
 type emitter struct {
-	*comps.EventReactor
+	*comps.EventReaction
 	evt2Fact behavior.Evt2FactFunc
 	producer *kafka.Producer
 }
@@ -50,7 +50,7 @@ func newEmitter(name schema.Name,
 	e := &emitter{
 		evt2Fact: evt2Fact,
 	}
-	base := comps.NewEventReactor(eventType, e.emit)
+	base := comps.NewEventReaction(eventType, e.emit)
 	var err error
 	var p *kafka.Producer
 	dig := ioc.SingleIoC()
@@ -61,7 +61,7 @@ func newEmitter(name schema.Name,
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to create producer")
 	}
-	e.EventReactor = base
+	e.EventReaction = base
 	e.Name = name
 	return e, nil
 }

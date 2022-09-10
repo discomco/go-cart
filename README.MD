@@ -8,12 +8,13 @@
   - [MOTIVATIONS](#motivations)
   - [DEVELOPING GO-CART Applications](#developing-go-cart-applications)
     - [Setting up the local development environment](#setting-up-the-local-development-environment)
+    - [Reference Implementation](#reference-implementation)
   - [SOME REFERENCES](#some-references)
   - [SERVERLESS DEPLOYMENT](#serverless-deployment)
 
 
 ## DESCRIPTION
-This SDK provides a basis for developing modular applications for EventSourcing/CQRS in Golang
+This SDK provides a basis for developing modular applications for EventSourcing/CQRS in Golang, using Purposeful Architecture.
 
 ## MOTIVATIONS
 - as a **Software Engineering Manager**
@@ -34,6 +35,8 @@ This SDK provides a basis for developing modular applications for EventSourcing/
 
 ## DEVELOPING GO-CART Applications
 
+
+
 ### Setting up the local development environment
 
 For local development, we recommend the [compose-dev-stack](https://github.com/rgfaber/compose-dev-stack). 
@@ -46,6 +49,14 @@ git clone https://github.com/rgfaber/compose-dev-stack
 ./run-minimal.sh -d
 ```
 
+### Reference Implementation
+
+We are working on training material, but for now, 
+please check out the *./robby* folder for a reference implementation. 
+
+
+
+
 ## SOME REFERENCES
 - [Event Sourcing/CQRS - Greg Young](https://youtu.be/8JKjvY4etTY)
 - [Event Storming - Alberto Brandolini](https://youtu.be/mLXQIYEwK24)
@@ -53,4 +64,4 @@ git clone https://github.com/rgfaber/compose-dev-stack
 
 
 ## SERVERLESS DEPLOYMENT
-One may notice that this architecture, due to its decoupled and modular nature, has many similarities with the concept of **Functions as a Service** (FaaS). One of the major issues that FaaS platforms struggle with is how to implement event sourced systems. This architecture does not pretend to have the solution for this problem, but **Agregate Composition** may offer a path forward. Should decomposing the Screaming Monolith into functional nanoservices become an option or a necessity one day, packaging each feature as a function and deploying it to a "serverless" infrastructure like OpenFaaS, should require minimal effort.
+One may notice that this architecture, due to its decoupled and modular nature, has many similarities with the concept of **Functions as a Service** (FaaS). One of the major issues that FaaS platforms struggle with is how to implement event sourced systems. This architecture does not pretend to have the solution for this problem, but **Behavior Composition** may offer a path forward. Should decomposing the Screaming Monolith into functional nanoservices become an option or a necessity one day, packaging each feature as a function and deploying it to a "serverless" infrastructure like OpenFaaS, should require minimal effort.

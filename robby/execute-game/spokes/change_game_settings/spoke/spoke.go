@@ -17,7 +17,7 @@ import (
 )
 
 type ISpoke interface {
-	spokes.ICmdSpoke
+	spokes.ICommandSpoke
 }
 
 func newCmdSpoke() ISpoke {

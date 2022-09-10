@@ -1,8 +1,7 @@
-package testing
+package contract
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
 	"math/rand"
 	"sync"
 )
@@ -17,7 +16,7 @@ var (
 	}
 )
 
-func RandomPayload() *contract.Payload {
+func RandomPayload() *Payload {
 	ID, _ := doc.NewGameID()
 	seed := rand.Intn(5)
 	name := gameNames[seed]
@@ -25,15 +24,15 @@ func RandomPayload() *contract.Payload {
 	y := rand.Intn(42) + 3
 	z := rand.Intn(42) + 3
 	nbrOfPlayers := rand.Intn(12) + 2
-	return contract.NewPayload(ID.Id(), name, x, y, z, nbrOfPlayers)
+	return NewPayload(ID.Id(), name, x, y, z, nbrOfPlayers)
 }
 
 var rMutex = &sync.Mutex{}
 
-func RandomHope() (contract.IHope, error) {
+func RandomHope() (IHope, error) {
 	rMutex.Lock()
 	defer rMutex.Unlock()
 	aggID, _ := doc.NewGameID()
 	pl := RandomPayload()
-	return contract.NewHope(aggID.Id(), *pl)
+	return NewHope(aggID.Id(), *pl)
 }

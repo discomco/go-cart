@@ -10,29 +10,29 @@ type ISpoke interface {
 	comps.IComponent
 	comps.IShutdown
 	Run(ctx context.Context) func() error
-	Inject(plugins ...comps.IReactor) ISpoke
+	Inject(reactions ...comps.IReaction) ISpoke
 }
 
 type IMediatorSpoke interface {
 	ISpoke
 }
 
-type IPrjSpoke interface {
+type IProjectionSpoke interface {
 	ISpoke
 }
 
-type ICmdSpoke interface {
+type ICommandSpoke interface {
 	IMediatorSpoke
 }
 
-type IQrySpoke interface {
+type IQuerySpoke interface {
 	ISpoke
 }
 
 // IGenCmdSpoke is a generic CMD ScreamingApp Spoke,
 // discriminated by T of type ICmd
 type IGenCmdSpoke[T behavior.ICmd] interface {
-	ICmdSpoke
+	ICommandSpoke
 }
 
 //IApp is the Generic Injector for GO-CART applications

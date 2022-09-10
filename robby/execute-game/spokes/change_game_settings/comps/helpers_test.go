@@ -1,4 +1,4 @@
-package testing
+package comps
 
 import (
 	"github.com/discomco/go-cart/robby/execute-game/schema"

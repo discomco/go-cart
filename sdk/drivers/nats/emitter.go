@@ -13,7 +13,7 @@ type IEmitter interface {
 }
 
 type Emitter struct {
-	*comps.EventReactor
+	*comps.EventReaction
 	natsBus  INATSBus
 	mediator mediator.IMediator
 	Topic    behavior.EventType
@@ -23,7 +23,7 @@ func NewEmitter(
 	topic behavior.EventType,
 	emitFact comps.OnEvtFunc,
 ) (*Emitter, error) {
-	eh := comps.NewEventReactor(topic, emitFact)
+	eh := comps.NewEventReaction(topic, emitFact)
 	var b INATSBus
 	var err error
 	dig := ioc.SingleIoC()
@@ -34,9 +34,9 @@ func NewEmitter(
 		return nil, err
 	}
 	e := &Emitter{
-		EventReactor: eh,
-		natsBus:      b,
-		Topic:        topic,
+		EventReaction: eh,
+		natsBus:       b,
+		Topic:         topic,
 	}
 	return e, nil
 }

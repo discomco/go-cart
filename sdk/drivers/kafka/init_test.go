@@ -19,5 +19,8 @@ func init() {
 
 func buildTestEnv() ioc.IDig {
 	dig := builder.InjectCoLoMed(ConfigPath)
+	dig.Inject(dig,
+		Producer,
+	)
 	return dig
 }

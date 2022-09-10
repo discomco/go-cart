@@ -13,12 +13,12 @@ type ProjFtor[TEvt behavior.IEvt, TState schema.IReadModel] func() IProjection
 type GenProjFtor[TEvt behavior.IEvt, TState schema.IReadModel] func() IGenProjection[TEvt, TState]
 
 type IProjection interface {
-	IMediatorReactor
+	IMediatorReaction
 	IAmProjection()
 }
 
 type GenProjection[TEvt behavior.IEvt, TState schema.IReadModel] struct {
-	*EventReactor
+	*EventReaction
 	store     behavior.IReadModelStore[TState]
 	evt2Doc   behavior.Evt2ModelFunc[TEvt, TState]
 	newDoc    schema.DocFtor[TState]
@@ -41,7 +41,7 @@ func newGenProjection[TEvt behavior.IEvt, TState schema.IReadModel](
 		store:     store,
 		getDocKey: getDocKey,
 	}
-	h.EventReactor = NewEventReactor(eventType, h.loadEvent)
+	h.EventReaction = NewEventReaction(eventType, h.loadEvent)
 	h.Name = name
 	return h
 }

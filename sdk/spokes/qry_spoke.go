@@ -14,7 +14,7 @@ type QrySpoke struct {
 	tirol     tirol.ITirol
 }
 
-func (qs *QrySpoke) registerReactors(plugins []comps.IReactor) {
+func (qs *QrySpoke) registerReactors(plugins []comps.IReaction) {
 	for _, plugin := range plugins {
 		switch plugin.(type) {
 		case comps.IQueryProvider:
@@ -61,6 +61,6 @@ func newQrySpoke(name schema.Name, path string) (*QrySpoke, error) {
 	return f, nil
 }
 
-func NewQrySpoke(name schema.Name, path string) (IQrySpoke, error) {
+func NewQrySpoke(name schema.Name, path string) (IQuerySpoke, error) {
 	return newQrySpoke(name, path)
 }

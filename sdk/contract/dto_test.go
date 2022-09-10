@@ -89,7 +89,7 @@ func TestThatWeCanGetTheDtoAggregateIIdentity(t *testing.T) {
 	assert.Nil(t, err)
 	//WHEN
 	ID, err := d.GetID()
-	assert.NotNil(t, err)
+	assert.NoError(t, err)
 	//THEN
 	assert.NotNil(t, ID)
 	ty := reflect.TypeOf(ID).Elem()

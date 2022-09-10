@@ -11,7 +11,8 @@ var (
 )
 
 func init() {
-	testID, err := schema.NewIdentityFrom(test.TEST_PREFIX, test.TEST_UUID)
+	var err error
+	testID, err = schema.NewIdentityFrom(test.TEST_PREFIX, test.TEST_UUID)
 	if err != nil {
 		panic(err)
 	}

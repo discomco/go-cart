@@ -16,11 +16,11 @@ import (
 const LinkName = "change_game_settings.InitializedLink"
 
 type IInitializedLink interface {
-	comps.ILinkReactor
+	comps.IBehaviorLink
 }
 
 type link struct {
-	*comps.LinkReactor
+	*comps.BehaviorLink
 }
 
 var wMutex = &sync.Mutex{} //
@@ -49,7 +49,7 @@ func (l *link) onEvtFunc(ctx context.Context, evt sdk_behavior.IEvt) error {
 
 func newLink(newCH comps.CmdHandlerFtor) *link {
 	l := &link{}
-	l.LinkReactor = comps.NewLinkReactor(
+	l.BehaviorLink = comps.NewBehaviorLink(
 		LinkName, behavior2.EVT_TOPIC, l.onEvtFunc, newCH)
 	return l
 }

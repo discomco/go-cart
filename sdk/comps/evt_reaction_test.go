@@ -10,7 +10,7 @@ func Test_NewEvtHandler(t *testing.T) {
 	ioc := buildTestEnv()
 	assert.NotNil(t, ioc)
 	// WHEN
-	eh := NewEventReactor("-base", nil)
+	eh := NewEventReaction("-base", nil)
 	// THEN
 	assert.NotNil(t, eh)
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/discomco/go-cart/sdk/behavior"
 )
 
+// BehaviorBuilder is a function that composes the behavior for the Execute Game Context.
 func BehaviorBuilder(newAgg behavior.GenBehaviorFtor[schema.GameDoc]) behavior.BehaviorBuilder {
 	return func() behavior.IBehavior {
 		agg := newAgg()

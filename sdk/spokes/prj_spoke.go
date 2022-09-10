@@ -8,17 +8,17 @@ import (
 )
 
 type (
-	ProjSpokeFtor    func() IPrjSpoke
-	ProjSpokeBuilder func() IPrjSpoke
+	ProjectionSpokeFtor    func() IProjectionSpoke
+	ProjectionSpokeBuilder func() IProjectionSpoke
 )
 
-type projSpoke struct {
+type ProjectionSpoke struct {
 	*Spoke
 	projector   comps.IProjector
-	projections map[schema.Name]comps.IMediatorReactor
+	projections map[schema.Name]comps.IMediatorReaction
 }
 
-func (f *projSpoke) run(ctx context.Context) error {
+func (f *ProjectionSpoke) run(ctx context.Context) error {
 	for _, handler := range f.projections {
 		err := handler.Activate(ctx)
 		if err != nil {
@@ -29,29 +29,29 @@ func (f *projSpoke) run(ctx context.Context) error {
 	return f.projector.Activate(ctx)
 }
 
-func (f *projSpoke) down(ctx context.Context) {
+func (f *ProjectionSpoke) down(ctx context.Context) {
 	_ = f.projector.Deactivate(ctx)
 	for _, handler := range f.projections {
 		_ = handler.Deactivate(ctx)
 	}
 }
 
-func (f *projSpoke) registerProjection(handler comps.IMediatorReactor) {
+func (f *ProjectionSpoke) registerProjection(handler comps.IMediatorReaction) {
 	_, ok := f.projections[handler.GetName()]
 	if !ok {
 		f.projections[handler.GetName()] = handler
 	}
 }
 
-func (f *projSpoke) registerProjector(projector comps.IProjector) {
+func (f *ProjectionSpoke) registerProjector(projector comps.IProjector) {
 	f.projector = projector
 }
 
-func (f *projSpoke) registerReactors(plugins []comps.IReactor) {
-	for _, plugin := range plugins {
+func (f *ProjectionSpoke) registerReactions(reactions []comps.IReaction) {
+	for _, plugin := range reactions {
 		switch plugin.(type) {
-		case comps.IMediatorReactor:
-			f.registerProjection(plugin.(comps.IMediatorReactor))
+		case comps.IMediatorReaction:
+			f.registerProjection(plugin.(comps.IMediatorReaction))
 		case comps.IProjector:
 			f.registerProjector(plugin.(comps.IProjector))
 		default:
@@ -62,10 +62,10 @@ func (f *projSpoke) registerReactors(plugins []comps.IReactor) {
 
 func NewPrjSpoke(
 	name schema.Name,
-) *projSpoke {
-	f := &projSpoke{
-		projections: make(map[schema.Name]comps.IMediatorReactor),
+) *ProjectionSpoke {
+	f := &ProjectionSpoke{
+		projections: make(map[schema.Name]comps.IMediatorReaction),
 	}
-	f.Spoke = NewSpoke(name, f.run, f.down, f.registerReactors)
+	f.Spoke = NewSpoke(name, f.run, f.down, f.registerReactions)
 	return f
 }

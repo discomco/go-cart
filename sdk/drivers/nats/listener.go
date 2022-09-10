@@ -13,7 +13,7 @@ import (
 )
 
 type IListener[TFact contract.IFact, TCmd behavior.ICmd] interface {
-	comps.IGenFactListener[*nats.Msg, TFact]
+	comps.IGenListener[*nats.Msg, TFact]
 }
 
 type Listener[TCmd behavior.ICmd] struct {

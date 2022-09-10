@@ -6,17 +6,17 @@ import (
 )
 
 const (
-	BehaviorCannotBeNil = "Behavior cannot be nil"
+	CannotBeNil = "behavior cannot be nil"
 )
 
 var (
-	ErrBehaviorCannotBeNil = fmt.Errorf(BehaviorCannotBeNil)
+	ErrBehaviorCannotBeNil = fmt.Errorf(CannotBeNil)
 )
 
 type applyEvtToStateFunc func(evt IEvt, state schema.IWriteModel) error
 
 type ApplyEvt struct {
-	aggregate       IBehavior
+	behavior        IBehavior
 	eventType       EventType
 	applyEvtToState applyEvtToStateFunc
 }
@@ -26,7 +26,7 @@ func (a *ApplyEvt) ApplyEvent(event IEvt, state schema.IWriteModel) error {
 }
 
 func (a *ApplyEvt) GetAggregate() IBehavior {
-	return a.aggregate
+	return a.behavior
 }
 
 func (a *ApplyEvt) GetEventType() EventType {
@@ -34,7 +34,7 @@ func (a *ApplyEvt) GetEventType() EventType {
 }
 
 func (a *ApplyEvt) SetAggregate(agg IBehavior) {
-	a.aggregate = agg
+	a.behavior = agg
 }
 
 // NewApplyEvt lets you create an Event Applier and requires that you pass an applyEvtToStateFunc function.

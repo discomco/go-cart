@@ -13,7 +13,7 @@ import (
 )
 
 type IListener[TFact contract.IFact, TCmd behavior.ICmd] interface {
-	comps.IGenFactListener[*kafka.Event, TFact]
+	comps.IGenListener[*kafka.Event, TFact]
 }
 
 type Listener[TCmd behavior.ICmd] struct {

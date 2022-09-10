@@ -6,14 +6,14 @@ import (
 )
 
 type IController interface {
-	comps.IMediatorReactor
+	comps.IMediatorReaction
 	Register(topic string, action interface{}, transactional bool)
 	IAmController()
 	GetProxy() IProxy
 }
 
 type Controller struct {
-	*comps.MsgReactor
+	*comps.MsgReaction
 	proxy IProxy
 }
 
@@ -26,9 +26,9 @@ func NewController(name schema.Name,
 	c := &Controller{
 		proxy: proxy,
 	}
-	b := comps.NewMsgReactor(msgType, onMsg)
+	b := comps.NewMsgReaction(msgType, onMsg)
 	b.Name = name
-	c.MsgReactor = b
+	c.MsgReaction = b
 	return c
 }
 

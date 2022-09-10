@@ -45,8 +45,8 @@ type ICmdHandler interface {
 type IGenCmdHandler[T behavior.ICmd] interface {
 	GenCommandHandler[T]
 	GetTopic() behavior.Topic
-	GetAggregateStore() IBehaviorStore
-	GetAggregate(ID schema.IIdentity) behavior.IBehavior
+	GetBehaviorStore() IBehaviorStore
+	GetBehavior(ID schema.IIdentity) behavior.IBehavior
 	SetTopic(topic behavior.Topic)
 }
 
@@ -112,42 +112,42 @@ type IDeactivate interface {
 	Deactivate(ctx context.Context) error
 }
 
-type ILinkReactor interface {
-	IMediatorReactor
-	IAmLinkReactor()
+type IBehaviorLink interface {
+	IMediatorReaction
+	IAmBehaviorLink()
 }
 
-type IGenMediatorReactor[TEvt behavior.IEvt] interface {
-	IReactor
+type IGenMediatorReaction[TEvt behavior.IEvt] interface {
+	IReaction
 	behavior.EvtTypeGetter
 	behavior.IGenReacter[TEvt]
 }
 
-//IMediatorReactor is an Injector for a mediator Subscriber.
-//Will be replaced with IGenMediatorReactor at some point.
-type IMediatorReactor interface {
-	IReactor
+//IMediatorReaction is an Injector for a mediator Subscriber.
+//Will be replaced with IGenMediatorReaction at some point.
+type IMediatorReaction interface {
+	IReaction
 	behavior.EvtTypeGetter
 	behavior.Reacter
 }
 
-type IGenEvtReactor[TEvt behavior.IEvt] interface {
-	IGenMediatorReactor[TEvt]
+type IGenEvtReaction[TEvt behavior.IEvt] interface {
+	IGenMediatorReaction[TEvt]
 }
 
-type IEvtReactor interface {
-	IMediatorReactor
+type IEvtReaction interface {
+	IMediatorReaction
 }
 
 type IProjector interface {
-	IReactor
+	IReaction
 	behavior.Reacter
 	Project(ctx context.Context, prefixes []string, poolSize int) error
 	Inject(handlers ...IProjection)
 }
 
 type IResponder interface {
-	IReactor
+	IReaction
 	IAmResponder()
 	GetHopeType() contract.HopeType
 }
@@ -170,8 +170,8 @@ type IRequester interface {
 type RequesterFtor func() (IRequester, error)
 type GenRequesterFtor[THope contract.IHope] func() (IGenRequester[THope], error)
 
-//IReactor is a base Injector for Spoke plugins
-type IReactor interface {
+//IReaction is a base Injector for Spoke plugins
+type IReaction interface {
 	IComponent
 	IActivate
 	IDeactivate
@@ -180,20 +180,20 @@ type IReactor interface {
 //IListener is an injector for all components that listen for Facts on a
 //message bus.
 type IListener interface {
-	IReactor
+	IReaction
 	IAmFactListener()
 }
 
-type IGenFactListener[TMsg interface{}, TFact contract.IFact] interface {
+type IGenListener[TMsg interface{}, TFact contract.IFact] interface {
 	IListener
 }
 
 // IEmitter is the injector for components that emit facts to message brokers.
-// It specializes the IMediatorReactor as it registers at the mediator,
+// It specializes the IMediatorReaction as it registers at the mediator,
 // where it listens for specific events that must be emitted from the domain to other systems.
 type IEmitter interface {
-	IReactor
-	IMediatorReactor
+	IReaction
+	IMediatorReaction
 	IAmEmitter()
 }
 
@@ -202,7 +202,7 @@ type IShutdown interface {
 }
 
 type IQueryProvider interface {
-	IReactor
+	IReaction
 	IAmQueryProvider()
 	RunQuery(ctx context.Context, qry contract.IReq) contract.IRsp
 }

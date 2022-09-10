@@ -13,10 +13,11 @@ import (
 
 type OnEvtFunc func(ctx context.Context, evt behavior.IEvt) error
 
-type EvtReactorFtor func() IEvtReactor
-type GenEvtReactorFtor[TEvt behavior.IEvt] func() IGenEvtReactor[TEvt]
+type EvtReactionFtor func() IEvtReaction
+type GenEvtReactionFtor[TEvt behavior.IEvt] func() IGenEvtReaction[TEvt]
 
-type EventReactor struct {
+// EventReaction is a base structure for implementing specialized Reactions to Events
+type EventReaction struct {
 	*Component
 	mediator  mediator.IMediator
 	evtType   behavior.EventType
@@ -24,15 +25,15 @@ type EventReactor struct {
 	whenMutex *sync.Mutex
 }
 
-const EventReactorFmt = "%+v.EvtReactor"
+const EventReactionFmt = "%+v.EvtReaction"
 
-func NewEventReactor(
+func NewEventReaction(
 	eventType behavior.EventType,
 	react OnEvtFunc,
-) *EventReactor {
-	name := fmt.Sprintf(EventReactorFmt, eventType)
+) *EventReaction {
+	name := fmt.Sprintf(EventReactionFmt, eventType)
 	base := NewComponent(schema.Name(name))
-	result := &EventReactor{
+	result := &EventReaction{
 		Component: base,
 		evtType:   eventType,
 		react:     react,
@@ -41,7 +42,7 @@ func NewEventReactor(
 	return result
 }
 
-func (er *EventReactor) Deactivate(ctx context.Context) error {
+func (er *EventReaction) Deactivate(ctx context.Context) error {
 	if er.evtType == behavior.AllTopics {
 		er.UnsubscribeAll(er.React)
 		return nil
@@ -55,11 +56,11 @@ func (er *EventReactor) Deactivate(ctx context.Context) error {
 
 }
 
-func (er *EventReactor) Unsubscribe(topic string, fn OnEvtFunc) error {
+func (er *EventReaction) Unsubscribe(topic string, fn OnEvtFunc) error {
 	return er.unsub(topic, fn)
 }
 
-func (er *EventReactor) unsub(topic string, fn interface{}) error {
+func (er *EventReaction) unsub(topic string, fn interface{}) error {
 	err := er.GetMediator().Unregister(topic, fn)
 	if err != nil {
 		er.GetLogger().Error(err)
@@ -69,11 +70,12 @@ func (er *EventReactor) unsub(topic string, fn interface{}) error {
 	return nil
 }
 
-func (er *EventReactor) GetEventType() behavior.EventType {
+func (er *EventReaction) GetEventType() behavior.EventType {
 	return er.evtType
 }
 
-func (er *EventReactor) React(ctx context.Context, evt behavior.IEvt) error {
+// React is the function that is responsible for handling events.
+func (er *EventReaction) React(ctx context.Context, evt behavior.IEvt) error {
 	if er.react == nil {
 		return nil
 	}
@@ -83,17 +85,18 @@ func (er *EventReactor) React(ctx context.Context, evt behavior.IEvt) error {
 	return er.react(ctx, evt)
 }
 
-func (er *EventReactor) Activate(ctx context.Context) error {
+// Activate activates the Reaction and subscribes to the specific Event type on the Mediator
+func (er *EventReaction) Activate(ctx context.Context) error {
 	if er.evtType == behavior.AllTopics {
 		er.SubscribeAll(ctx, er.React, true)
 		return nil
 	}
 	wg, ctx := errgroup.WithContext(ctx)
-	wg.Go(er.subWorker(ctx, string(er.evtType), er.React, true))
+	wg.Go(er.reactWorker(ctx, string(er.evtType), er.React, true))
 	return wg.Wait()
 }
 
-func (er *EventReactor) subWorker(ctx context.Context, topic string, fn interface{}, transactional bool) func() error {
+func (er *EventReaction) reactWorker(ctx context.Context, topic string, fn interface{}, transactional bool) func() error {
 	return func() error {
 		select {
 		case <-ctx.Done():
@@ -112,22 +115,24 @@ func (er *EventReactor) subWorker(ctx context.Context, topic string, fn interfac
 	}
 }
 
-func (er *EventReactor) SubscribeAll(ctx context.Context, when OnEvtFunc, transactional bool) error {
+// SubscribeAll subscribes to all events that appear on the Mediator
+func (er *EventReaction) SubscribeAll(ctx context.Context, when OnEvtFunc, transactional bool) error {
 	wg, ctx := errgroup.WithContext(ctx)
 	topics := er.GetMediator().KnownTopics()
 	for topic := range topics {
-		wg.Go(er.subWorker(ctx, topic, when, transactional))
+		wg.Go(er.reactWorker(ctx, topic, when, transactional))
 	}
 	return wg.Wait()
 }
 
-func (er *EventReactor) Subscribe(ctx context.Context, topic string, when OnEvtFunc, transactional bool) error {
+// Subscribe connects the Reaction to a specific Event that appears on the Mediator
+func (er *EventReaction) Subscribe(ctx context.Context, topic string, when OnEvtFunc, transactional bool) error {
 	wg, ctx := errgroup.WithContext(ctx)
-	wg.Go(er.subWorker(ctx, topic, when, transactional))
+	wg.Go(er.reactWorker(ctx, topic, when, transactional))
 	return wg.Wait()
 }
 
-func (er *EventReactor) SubscribeAllAsync(events chan behavior.IEvt, transactional bool) map[string]error {
+func (er *EventReaction) SubscribeAllAsync(events chan behavior.IEvt, transactional bool) map[string]error {
 	res := make(map[string]error)
 	topics := er.GetMediator().KnownTopics()
 	for topic := range topics {
@@ -140,7 +145,7 @@ func (er *EventReactor) SubscribeAllAsync(events chan behavior.IEvt, transaction
 	return res
 }
 
-func (er *EventReactor) subAsync(topic string, events chan behavior.IEvt, transactional bool) error {
+func (er *EventReaction) subAsync(topic string, events chan behavior.IEvt, transactional bool) error {
 	err := er.GetMediator().RegisterAsync(topic, func(evt behavior.IEvt) {
 		events <- evt
 	}, transactional)
@@ -152,11 +157,12 @@ func (er *EventReactor) subAsync(topic string, events chan behavior.IEvt, transa
 	return nil
 }
 
-func (er *EventReactor) SubscribeAsync(events chan behavior.IEvt, transactional bool) error {
+func (er *EventReaction) SubscribeAsync(events chan behavior.IEvt, transactional bool) error {
 	return er.subAsync(string(er.evtType), events, transactional)
 }
 
-func (er *EventReactor) UnsubscribeAll(when OnEvtFunc) map[string]error {
+// UnsubscribeAll disconnects the Reaction from all topics.
+func (er *EventReaction) UnsubscribeAll(when OnEvtFunc) map[string]error {
 	errs := make(map[string]error, 0)
 	topics := er.GetMediator().KnownTopics()
 	for topic := range topics {

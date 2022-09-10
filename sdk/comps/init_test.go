@@ -13,7 +13,6 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
 	"reflect"
-	"sync"
 )
 
 const (
@@ -88,7 +87,7 @@ func newMyTestEvt() (iMyEvt, error) {
 }
 
 type iMyEvtHandler interface {
-	IGenMediatorReactor[iMyEvt]
+	IGenMediatorReaction[iMyEvt]
 }
 
 type myGenEvtHandler struct {
@@ -99,8 +98,6 @@ func (h *myGenEvtHandler) handleEvt(ctx context.Context, evt behavior.IEvt) erro
 	h.GetLogger().Info(reflect.TypeOf(evt))
 	return nil
 }
-
-var hMutex = &sync.Mutex{}
 
 func newMyGenHandler() iMyEvtHandler {
 	h := &myGenEvtHandler{}
@@ -113,8 +110,8 @@ const (
 	MY_EVT_TOPIC = "my-evt-topic"
 )
 
-func NewMyEvtHandler() GenEvtReactorFtor[iMyEvt] {
-	return func() IGenEvtReactor[iMyEvt] {
+func NewMyEvtHandler() GenEvtReactionFtor[iMyEvt] {
+	return func() IGenEvtReaction[iMyEvt] {
 		return newMyGenHandler()
 	}
 }

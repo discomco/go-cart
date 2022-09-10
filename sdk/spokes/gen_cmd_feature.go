@@ -17,12 +17,12 @@ type GenCmdSpoke struct {
 	*Spoke
 	responders []comps.IResponder
 	listeners  []comps.IListener
-	handlers   []comps.IMediatorReactor
+	reactions  []comps.IMediatorReaction
 }
 
 func (f *GenCmdSpoke) up(ctx context.Context) error {
 	errors := multierror.Error{}
-	for _, handler := range f.handlers {
+	for _, handler := range f.reactions {
 		err := handler.Activate(ctx)
 		if err != nil {
 			errors.Errors = append(errors.Errors, err)
@@ -49,7 +49,7 @@ func (f *GenCmdSpoke) up(ctx context.Context) error {
 
 func (f *GenCmdSpoke) down(ctx context.Context) {
 	errors := multierror.Error{}
-	for _, handler := range f.handlers {
+	for _, handler := range f.reactions {
 		err := handler.Deactivate(ctx)
 		if err != nil {
 			errors.Errors = append(errors.Errors, err)
@@ -73,29 +73,29 @@ func (f *GenCmdSpoke) down(ctx context.Context) {
 	}
 }
 
-func (f *GenCmdSpoke) registerReactors(plugins []comps.IReactor) {
-	if len(plugins) == 0 {
+func (f *GenCmdSpoke) registerReactions(reactions []comps.IReaction) {
+	if len(reactions) == 0 {
 		return
 	}
-	for _, plugin := range plugins {
+	for _, plugin := range reactions {
 		switch plugin.(type) {
 		case comps.IResponder:
 			f.responders = append(f.responders, plugin.(comps.IResponder))
 		case comps.IListener:
 			f.listeners = append(f.listeners, plugin.(comps.IListener))
-		case comps.IMediatorReactor:
-			f.handlers = append(f.handlers, plugin.(comps.IMediatorReactor))
+		case comps.IMediatorReaction:
+			f.reactions = append(f.reactions, plugin.(comps.IMediatorReaction))
 		}
 	}
 }
 
 func NewGenCmdSpoke(name schema.Name) *GenCmdSpoke {
 	f := &GenCmdSpoke{
-		handlers:   make([]comps.IMediatorReactor, 0),
+		reactions:  make([]comps.IMediatorReaction, 0),
 		responders: make([]comps.IResponder, 0),
 		listeners:  make([]comps.IListener, 0),
 	}
-	base := NewSpoke(name, f.up, f.down, f.registerReactors)
+	base := NewSpoke(name, f.up, f.down, f.registerReactions)
 	f.Spoke = base
 	return f
 }

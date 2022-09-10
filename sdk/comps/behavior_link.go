@@ -5,24 +5,24 @@ import (
 	"github.com/discomco/go-cart/sdk/schema"
 )
 
-type LinkReactor struct {
-	*EventReactor
+type BehaviorLink struct {
+	*EventReaction
 	NewCH CmdHandlerFtor
 }
 
-func NewLinkReactor(
+func NewBehaviorLink(
 	name schema.Name,
 	eventType behavior.EventType,
 	onEvt OnEvtFunc,
 	newCH CmdHandlerFtor,
-) *LinkReactor {
-	dl := &LinkReactor{
+) *BehaviorLink {
+	dl := &BehaviorLink{
 		NewCH: newCH,
 	}
-	eh := NewEventReactor(eventType, onEvt)
-	dl.EventReactor = eh
+	eh := NewEventReaction(eventType, onEvt)
+	dl.EventReaction = eh
 	dl.Name = name
 	return dl
 }
 
-func (h *LinkReactor) IAmLinkReactor() {}
+func (h *BehaviorLink) IAmBehaviorLink() {}

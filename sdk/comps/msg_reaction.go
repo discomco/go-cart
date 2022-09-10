@@ -10,10 +10,11 @@ import (
 	"sync"
 )
 
-type IMsgReactor interface {
-	IComponent
-	IActivate
-	IDeactivate
+type IMsgReaction interface {
+	IReaction
+	//IComponent
+	//IActivate
+	//IDeactivate
 	//IAmMsgHandler()
 	//GetMsgType() MsgType
 	//UnsubscribeAll(when OnMsgFunc) map[string]error
@@ -27,17 +28,17 @@ type IMsgReactor interface {
 	//SubscribeAsync(msgs chanmodel.IMsg, transactional bool) error
 }
 
-type IGenMsgReactor[TMsg schema.IMsg] interface {
-	IMsgReactor
+type IGenMsgReaction[TMsg schema.IMsg] interface {
+	IMsgReaction
 	GenWhen(ctx context.Context, msg TMsg)
 }
 
 type OnMsgFunc func(ctx context.Context, msg schema.IMsg) error
 
-type MsgReactorFtor func() IMsgReactor
-type GenMsgReactorFtor[TMsg schema.IMsg] func() IGenMsgReactor[TMsg]
+type MsgReactionFtor func() IMsgReaction
+type GenMsgReactionFtor[TMsg schema.IMsg] func() IGenMsgReaction[TMsg]
 
-type MsgReactor struct {
+type MsgReaction struct {
 	*Component
 	mediator  mediator.IMediator
 	msgType   schema.MsgType
@@ -45,16 +46,16 @@ type MsgReactor struct {
 	whenMutex *sync.Mutex
 }
 
-const MsgReactorFmt = "%+v.MsgReactor"
+const MsgReactionFmt = "%+v.MsgReaction"
 const AllTopics = "*"
 
-func NewMsgReactor(
+func NewMsgReaction(
 	msgType schema.MsgType,
 	react OnMsgFunc,
-) *MsgReactor {
-	name := fmt.Sprintf(MsgReactorFmt, msgType)
+) *MsgReaction {
+	name := fmt.Sprintf(MsgReactionFmt, msgType)
 	base := NewComponent(schema.Name(name))
-	result := &MsgReactor{
+	result := &MsgReaction{
 		Component: base,
 		msgType:   msgType,
 		react:     react,
@@ -63,7 +64,7 @@ func NewMsgReactor(
 	return result
 }
 
-func (h *MsgReactor) Deactivate(ctx context.Context) error {
+func (h *MsgReaction) Deactivate(ctx context.Context) error {
 	if h.msgType == AllTopics {
 		h.UnsubscribeAll(h.When)
 		return nil
@@ -77,11 +78,11 @@ func (h *MsgReactor) Deactivate(ctx context.Context) error {
 
 }
 
-func (h *MsgReactor) Unsubscribe(topic string, fn OnMsgFunc) error {
+func (h *MsgReaction) Unsubscribe(topic string, fn OnMsgFunc) error {
 	return h.unsub(topic, fn)
 }
 
-func (h *MsgReactor) unsub(topic string, fn interface{}) error {
+func (h *MsgReaction) unsub(topic string, fn interface{}) error {
 	err := h.GetMediator().Unregister(topic, fn)
 	if err != nil {
 		h.GetLogger().Error(err)
@@ -91,11 +92,11 @@ func (h *MsgReactor) unsub(topic string, fn interface{}) error {
 	return nil
 }
 
-func (h *MsgReactor) GetMsgType() schema.MsgType {
+func (h *MsgReaction) GetMsgType() schema.MsgType {
 	return h.msgType
 }
 
-func (h *MsgReactor) When(ctx context.Context, msg schema.IMsg) error {
+func (h *MsgReaction) When(ctx context.Context, msg schema.IMsg) error {
 	if h.react == nil {
 		return nil
 	}
@@ -105,7 +106,7 @@ func (h *MsgReactor) When(ctx context.Context, msg schema.IMsg) error {
 	return h.react(ctx, msg)
 }
 
-func (h *MsgReactor) Activate(ctx context.Context) error {
+func (h *MsgReaction) Activate(ctx context.Context) error {
 	if h.msgType == AllTopics {
 		h.SubscribeAll(ctx, h.When, true)
 		return nil
@@ -115,7 +116,7 @@ func (h *MsgReactor) Activate(ctx context.Context) error {
 	return wg.Wait()
 }
 
-func (h *MsgReactor) subWorker(ctx context.Context, topic string, fn interface{}, transactional bool) func() error {
+func (h *MsgReaction) subWorker(ctx context.Context, topic string, fn interface{}, transactional bool) func() error {
 	return func() error {
 		select {
 		case <-ctx.Done():
@@ -134,7 +135,7 @@ func (h *MsgReactor) subWorker(ctx context.Context, topic string, fn interface{}
 	}
 }
 
-func (h *MsgReactor) SubscribeAll(ctx context.Context, when OnMsgFunc, transactional bool) error {
+func (h *MsgReaction) SubscribeAll(ctx context.Context, when OnMsgFunc, transactional bool) error {
 	wg, ctx := errgroup.WithContext(ctx)
 	topics := h.GetMediator().KnownTopics()
 	for topic := range topics {
@@ -143,13 +144,13 @@ func (h *MsgReactor) SubscribeAll(ctx context.Context, when OnMsgFunc, transacti
 	return wg.Wait()
 }
 
-func (h *MsgReactor) Subscribe(ctx context.Context, topic string, when OnMsgFunc, transactional bool) error {
+func (h *MsgReaction) Subscribe(ctx context.Context, topic string, when OnMsgFunc, transactional bool) error {
 	wg, ctx := errgroup.WithContext(ctx)
 	wg.Go(h.subWorker(ctx, topic, when, transactional))
 	return wg.Wait()
 }
 
-func (h *MsgReactor) SubscribeAllAsync(msgs chan schema.IMsg, transactional bool) map[string]error {
+func (h *MsgReaction) SubscribeAllAsync(msgs chan schema.IMsg, transactional bool) map[string]error {
 	res := make(map[string]error)
 	topics := h.GetMediator().KnownTopics()
 	for topic := range topics {
@@ -162,7 +163,7 @@ func (h *MsgReactor) SubscribeAllAsync(msgs chan schema.IMsg, transactional bool
 	return res
 }
 
-func (h *MsgReactor) subAsync(topic string, msgs chan schema.IMsg, transactional bool) error {
+func (h *MsgReaction) subAsync(topic string, msgs chan schema.IMsg, transactional bool) error {
 	err := h.GetMediator().RegisterAsync(topic, func(msg schema.IMsg) {
 		msgs <- msg
 	}, transactional)
@@ -174,11 +175,11 @@ func (h *MsgReactor) subAsync(topic string, msgs chan schema.IMsg, transactional
 	return nil
 }
 
-func (h *MsgReactor) SubscribeAsync(msgs chan schema.IMsg, transactional bool) error {
+func (h *MsgReaction) SubscribeAsync(msgs chan schema.IMsg, transactional bool) error {
 	return h.subAsync(string(h.msgType), msgs, transactional)
 }
 
-func (h *MsgReactor) UnsubscribeAll(when OnMsgFunc) map[string]error {
+func (h *MsgReaction) UnsubscribeAll(when OnMsgFunc) map[string]error {
 	errs := make(map[string]error, 0)
 	topics := h.GetMediator().KnownTopics()
 	for topic := range topics {

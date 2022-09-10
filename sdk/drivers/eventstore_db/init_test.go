@@ -21,7 +21,7 @@ var (
 	testConfig         config.IAppConfig
 	testMed            mediator.IMediator
 	testStreamIDs      []string
-	testLoggingHandler comps.ILoggingReactor
+	testLoggingHandler comps.IMediatorLogger
 )
 
 func init() {
@@ -34,7 +34,7 @@ func init() {
 		esFtor comps.EventStoreFtor,
 		prjFtor comps.ProjectorFtor,
 		med mediator.IMediator,
-		medLogger comps.ILoggingReactor) {
+		medLogger comps.IMediatorLogger) {
 		testConfig = cfg
 		testLogger = log
 		testProjector = prjFtor()

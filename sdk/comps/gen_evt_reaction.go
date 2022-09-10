@@ -71,7 +71,7 @@ func newGenEvtHandler[TEvt behavior.IEvt](
 	eventType behavior.EventType,
 	onEvt OnEvtFunc,
 ) *GenEvtReactor[TEvt] {
-	name := fmt.Sprintf(EventReactorFmt, eventType)
+	name := fmt.Sprintf(EventReactionFmt, eventType)
 	base := NewComponent(schema.Name(name))
 	result := &GenEvtReactor[TEvt]{
 		Component: base,
@@ -82,6 +82,6 @@ func newGenEvtHandler[TEvt behavior.IEvt](
 }
 
 func NewGenEvtHandler[TEvt behavior.IEvt](eventType behavior.EventType,
-	onEvt OnEvtFunc) IGenEvtReactor[TEvt] {
+	onEvt OnEvtFunc) IGenEvtReaction[TEvt] {
 	return newGenEvtHandler[TEvt](eventType, onEvt)
 }

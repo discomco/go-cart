@@ -13,7 +13,7 @@ import (
 )
 
 type IProxy interface {
-	comps.IMsgReactor
+	comps.IMsgReaction
 	IAmProxy()
 	Inject(requesters ...comps.IRequester)
 	RefreshList(ctx context.Context, key string) error
@@ -22,7 +22,7 @@ type IProxy interface {
 }
 
 type Proxy[TDoc schema.IReadModel, TList schema.IReadModel] struct {
-	*comps.MsgReactor
+	*comps.MsgReaction
 	requesters map[contract.HopeType]comps.IRequester
 	docStore   behavior.IReadModelStore[TDoc]
 	listStore  behavior.IReadModelStore[TList]
@@ -83,9 +83,9 @@ func newProxy[TDoc schema.IReadModel, TList schema.IReadModel](
 		requesters: make(map[contract.HopeType]comps.IRequester),
 		model:      newModel(),
 	}
-	b := comps.NewMsgReactor(app_topics.AppInitialized, onAppInitialized)
+	b := comps.NewMsgReaction(app_topics.AppInitialized, onAppInitialized)
 	b.Name = name
-	p.MsgReactor = b
+	p.MsgReaction = b
 	return p
 }
 

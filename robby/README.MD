@@ -30,8 +30,27 @@ It illustrates how the various types of application are manufactured and deploye
   - [Execute Game](https://miro.com/app/board/uXjVPa2FWuY=/)
 
 ## Getting Started.
+
+### Setting up the local development environment
+
+For local development, we recommend the [compose-dev-stack](https://github.com/rgfaber/compose-dev-stack).
+>Please Note: 
+>some tests expect this environment to be up.
+
+
+<br>
+
+usage:
+```bash
+git clone https://github.com/rgfaber/compose-dev-stack
+./run-minimal.sh -d
+```
+
+
+
+
 The Purposeful Method starts with a *Discovery Phase* which results in:
-- Context *Map* (aka 'The Big Picture')
+- A *Context Map* (aka 'The Big Picture')
 - A number of *Contexts* with for each context:
   - The Behavioral Model (from Event Storming)
   - The Structural Model (from DDD)

@@ -3,7 +3,7 @@ package comps
 import (
 	"context"
 	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	testing2 "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/testing"
+	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -27,7 +27,7 @@ func TestThatWeCanRequestAGameInitialization(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)
 	// AND
-	hope, err := testing2.RandomHope()
+	hope, err := contract.RandomHope()
 	assert.NoError(t, err)
 	assert.NotNil(t, hope)
 	// AND
