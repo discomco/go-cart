@@ -64,7 +64,7 @@ func (m *metrics) Run(ctx context.Context) func() error {
 	}
 }
 
-func (m *metrics) Inject(plugins ...comps.IReaction) spokes.ISpoke {
+func (m *metrics) Inject(plugins ...comps.ISpokePlugin) spokes.ISpoke {
 	for _, plugin := range plugins {
 		switch plugin.(type) {
 		case IMetricsCounter:
@@ -105,7 +105,7 @@ func newMetrics(name schema.Name, probesConfig config.IProbesConfig) IMetrics {
 }
 
 type IMetricsCounter interface {
-	comps.IReaction
+	comps.ISpokePlugin
 	IAmMetricsCounter()
 }
 

@@ -73,7 +73,7 @@ func (f *GenCmdSpoke) down(ctx context.Context) {
 	}
 }
 
-func (f *GenCmdSpoke) registerReactions(reactions []comps.IReaction) {
+func (f *GenCmdSpoke) registerReactions(reactions []comps.ISpokePlugin) {
 	if len(reactions) == 0 {
 		return
 	}

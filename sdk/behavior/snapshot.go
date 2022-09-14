@@ -14,7 +14,7 @@ type Snapshot struct {
 }
 
 // NewSnapshotFromBehavior create new snapshot from the Aggregate state.
-func NewSnapshotFromBehavior[T schema.IWriteModel](behavior IBehavior) (*Snapshot, error) {
+func NewSnapshotFromBehavior[T schema.IWriteSchema](behavior IBehavior) (*Snapshot, error) {
 	state, err := json.Marshal(behavior.GetState())
 	if err != nil {
 		return nil, err

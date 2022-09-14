@@ -13,7 +13,7 @@ var (
 	ErrBehaviorCannotBeNil = fmt.Errorf(CannotBeNil)
 )
 
-type applyEvtToStateFunc func(evt IEvt, state schema.IWriteModel) error
+type applyEvtToStateFunc func(evt IEvt, state schema.IWriteSchema) error
 
 type ApplyEvt struct {
 	behavior        IBehavior
@@ -21,7 +21,7 @@ type ApplyEvt struct {
 	applyEvtToState applyEvtToStateFunc
 }
 
-func (a *ApplyEvt) ApplyEvent(event IEvt, state schema.IWriteModel) error {
+func (a *ApplyEvt) ApplyEvent(event IEvt, state schema.IWriteSchema) error {
 	return a.applyEvtToState(event, state)
 }
 

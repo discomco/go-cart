@@ -47,7 +47,7 @@ func (f *ProjectionSpoke) registerProjector(projector comps.IProjector) {
 	f.projector = projector
 }
 
-func (f *ProjectionSpoke) registerReactions(reactions []comps.IReaction) {
+func (f *ProjectionSpoke) registerReactions(reactions []comps.ISpokePlugin) {
 	for _, plugin := range reactions {
 		switch plugin.(type) {
 		case comps.IMediatorReaction:

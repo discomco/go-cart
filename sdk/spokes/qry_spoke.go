@@ -14,7 +14,7 @@ type QrySpoke struct {
 	tirol     tirol.ITirol
 }
 
-func (qs *QrySpoke) registerReactors(plugins []comps.IReaction) {
+func (qs *QrySpoke) registerReactors(plugins []comps.ISpokePlugin) {
 	for _, plugin := range plugins {
 		switch plugin.(type) {
 		case comps.IQueryProvider:

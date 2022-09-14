@@ -14,11 +14,11 @@ func init() {
 }
 
 type ICar interface {
-	schema.IWriteModel
+	schema.IWriteSchema
 }
 
 type IHuman interface {
-	schema.IWriteModel
+	schema.IWriteSchema
 }
 
 type HumansAndCars struct {

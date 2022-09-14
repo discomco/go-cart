@@ -13,14 +13,14 @@ const (
 )
 
 type ModelFtor func() IModel
-type GenModelFtor[TDoc schema.IReadModel, TList schema.IReadModel] func() IGenModel[TDoc, TList]
+type GenModelFtor[TDoc schema.ISchema, TList schema.ISchema] func() IGenModel[TDoc, TList]
 
 type IModel interface {
 	comps.IComponent
 	IAmModel()
 }
 
-type IGenModel[TDoc schema.IReadModel, TList schema.IReadModel] interface {
+type IGenModel[TDoc schema.ISchema, TList schema.ISchema] interface {
 	IModel
 	GetDocChangedTopic() string
 	GetListChangedTopic() string
@@ -30,7 +30,7 @@ type IGenModel[TDoc schema.IReadModel, TList schema.IReadModel] interface {
 	SetList(list *TList)
 }
 
-type innerModel[TDoc schema.IReadModel, TList schema.IReadModel] struct {
+type innerModel[TDoc schema.ISchema, TList schema.ISchema] struct {
 	*comps.Component
 	doc  *TDoc
 	list *TList
@@ -69,7 +69,7 @@ func (m *innerModel[TDoc, TList]) SetList(list *TList) {
 	m.GetMediator().Broadcast(m.GetListChangedTopic(), nil, m.list)
 }
 
-func newModel[TDoc schema.IReadModel, TList schema.IReadModel](
+func newModel[TDoc schema.ISchema, TList schema.ISchema](
 	name schema.Name,
 	docFtor schema.DocFtor[TDoc],
 	listFtor schema.DocFtor[TList],
@@ -83,7 +83,7 @@ func newModel[TDoc schema.IReadModel, TList schema.IReadModel](
 	return m
 }
 
-func NewModel[TDoc schema.IReadModel, TList schema.IReadModel](
+func NewModel[TDoc schema.ISchema, TList schema.ISchema](
 	name schema.Name,
 	docFtor schema.DocFtor[TDoc],
 	listFtor schema.DocFtor[TList],

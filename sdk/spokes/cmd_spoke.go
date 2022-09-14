@@ -46,6 +46,7 @@ func (f *CmdSpoke) up(ctx context.Context) error {
 			errors.Errors = append(errors.Errors, err)
 		}
 	}
+
 	if len(errors.Errors) > 0 {
 		err := multierror.Flatten(&errors)
 		return err
@@ -85,7 +86,7 @@ func (f *CmdSpoke) down(ctx context.Context) {
 	}
 }
 
-func (f *CmdSpoke) registerReactors(plugins []comps.IReaction) {
+func (f *CmdSpoke) registerPlugins(plugins []comps.ISpokePlugin) {
 	if len(plugins) == 0 {
 		return
 	}
@@ -114,7 +115,7 @@ func NewCmdFeature(name schema.Name) *CmdSpoke {
 		listeners:  make([]comps.IListener, 0),
 		projector:  nil,
 	}
-	base := NewSpoke(name, f.up, f.down, f.registerReactors)
+	base := NewSpoke(name, f.up, f.down, f.registerPlugins)
 	f.Spoke = base
 	return f
 }

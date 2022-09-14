@@ -8,9 +8,9 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-type QryWorker[TReadModel schema.IReadModel] func(ctx context.Context, store behavior.IReadModelStore[TReadModel], qry contract.IReq) contract.IRsp
+type QryWorker[TReadModel schema.ISchema] func(ctx context.Context, store behavior.IReadModelStore[TReadModel], qry contract.IReq) contract.IRsp
 
-type QryProvider[TReadModel schema.IReadModel] struct {
+type QryProvider[TReadModel schema.ISchema] struct {
 	*Component
 	newStore     behavior.StoreFtor[TReadModel]
 	newQryWorker QryWorker[TReadModel]
@@ -54,7 +54,7 @@ func (p *QryProvider[TReadModel]) runWorker(ctx context.Context, qry contract.IR
 	}
 }
 
-func NewQryProvider[TReadModel schema.IReadModel](
+func NewQryProvider[TReadModel schema.ISchema](
 	name schema.Name,
 	storeFtor behavior.StoreFtor[TReadModel],
 	qryWorker QryWorker[TReadModel],

@@ -3,7 +3,7 @@ package spoke
 import (
 	"context"
 	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/comps"
-	testing2 "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/testing"
+	change_game_details_contract "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/contract"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/sync/errgroup"
@@ -71,7 +71,7 @@ func requestWorker(ctx context.Context, fbks chan contract.IFbk) func() error {
 			return ctx.Err()
 		default:
 			for i := 0; i < 20; i++ {
-				hope, err := testing2.RandomHope()
+				hope, err := change_game_details_contract.RandomHope()
 				if err != nil {
 					return err
 				}

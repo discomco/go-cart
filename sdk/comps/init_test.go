@@ -6,12 +6,14 @@ import (
 	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/core/builder"
 	"github.com/discomco/go-cart/sdk/core/ioc"
+	"github.com/discomco/go-cart/sdk/core/logger"
 	"github.com/discomco/go-cart/sdk/drivers/convert"
 	"github.com/discomco/go-cart/sdk/schema"
 	"github.com/discomco/go-cart/sdk/test"
 	"github.com/gofrs/uuid"
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
+	"log"
 	"reflect"
 )
 
@@ -21,17 +23,28 @@ const (
 )
 
 var (
-	testEnv ioc.IDig
+	testEnv    ioc.IDig
+	testLogger logger.IAppLogger
 )
 
 func init() {
 	testEnv = buildTestEnv()
+	err := testEnv.Invoke(func(
+		al logger.IAppLogger,
+	) {
+		testLogger = al
+	})
+	if err != nil {
+		log.Fatal(err)
+		panic(err)
+	}
 }
 
 func buildTestEnv() ioc.IDig {
 	dig := builder.InjectCoLoMed(CfgPath)
 	return dig.Inject(dig,
 		NewMyEvtHandler,
+		GeneralMediatorLogger,
 	)
 }
 

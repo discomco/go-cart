@@ -8,19 +8,19 @@ import (
 )
 
 type (
-	runSpokeFunc          func(ctx context.Context) error
-	downSpokeFunc         func(ctx context.Context)
-	registerReactionsFunc func(reactions []comps.IReaction)
-	SpokeFtor             func() ISpoke
-	SpokeBuilder          func() ISpoke
+	runSpokeFunc        func(ctx context.Context) error
+	downSpokeFunc       func(ctx context.Context)
+	registerPluginsFunc func(plugins []comps.ISpokePlugin)
+	SpokeFtor           func() ISpoke
+	SpokeBuilder        func() ISpoke
 )
 
 // Spoke is the base struct to use when implementing new types of modules.
 type Spoke struct {
 	*comps.Component
-	run          runSpokeFunc
-	down         downSpokeFunc
-	regReactions registerReactionsFunc
+	run        runSpokeFunc
+	down       downSpokeFunc
+	regPlugins registerPluginsFunc
 }
 
 // Shutdown gracefully shuts down the Spoke
@@ -45,12 +45,12 @@ func (f *Spoke) Run(ctx context.Context) func() error {
 }
 
 // Inject allows you to inject Reactions into the Spoke
-func (f *Spoke) Inject(reactors ...comps.IReaction) ISpoke {
-	if len(reactors) == 0 {
+func (f *Spoke) Inject(plugins ...comps.ISpokePlugin) ISpoke {
+	if len(plugins) == 0 {
 		return f
 	}
-	if f.regReactions != nil {
-		f.regReactions(reactors)
+	if f.regPlugins != nil {
+		f.regPlugins(plugins)
 	}
 	return f
 }
@@ -60,7 +60,7 @@ func NewSpoke(
 	name schema.Name,
 	run runSpokeFunc,
 	down downSpokeFunc,
-	regReactions registerReactionsFunc,
+	regPlugins registerPluginsFunc,
 ) *Spoke {
 	if name == "" {
 		name = "Spoke"
@@ -68,9 +68,9 @@ func NewSpoke(
 	base := comps.NewComponent(name)
 	base.Name = name
 	f := &Spoke{
-		run:          run,
-		down:         down,
-		regReactions: regReactions,
+		run:        run,
+		down:       down,
+		regPlugins: regPlugins,
 	}
 	f.Component = base
 	dig := ioc.SingleIoC()
@@ -79,6 +79,5 @@ func NewSpoke(
 			app.Inject(f)
 		}
 	})
-
 	return f
 }

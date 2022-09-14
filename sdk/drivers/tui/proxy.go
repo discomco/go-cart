@@ -21,7 +21,7 @@ type IProxy interface {
 	Request(ctx context.Context, hopeType contract.HopeType, hope contract.IHope, timeout time.Duration) contract.IFbk
 }
 
-type Proxy[TDoc schema.IReadModel, TList schema.IReadModel] struct {
+type Proxy[TDoc schema.ISchema, TList schema.ISchema] struct {
 	*comps.MsgReaction
 	requesters map[contract.HopeType]comps.IRequester
 	docStore   behavior.IReadModelStore[TDoc]
@@ -70,7 +70,7 @@ func (p *Proxy[TDoc, TList]) Inject(requesters ...comps.IRequester) {
 
 func (p *Proxy[TDoc, TList]) IAmProxy() {}
 
-func newProxy[TDoc schema.IReadModel, TList schema.IReadModel](
+func newProxy[TDoc schema.ISchema, TList schema.ISchema](
 	name schema.Name,
 	onAppInitialized comps.OnMsgFunc,
 	newDocStore behavior.StoreFtor[TDoc],
@@ -89,7 +89,7 @@ func newProxy[TDoc schema.IReadModel, TList schema.IReadModel](
 	return p
 }
 
-func NewProxy[TDoc schema.IReadModel, TList schema.IReadModel](
+func NewProxy[TDoc schema.ISchema, TList schema.ISchema](
 	name schema.Name,
 	onAppInitialized comps.OnMsgFunc,
 	newDocStore behavior.StoreFtor[TDoc],

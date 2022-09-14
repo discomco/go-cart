@@ -1,4 +1,4 @@
-package bogus
+package tests
 
 // TestMsg
 type TestMsg struct {

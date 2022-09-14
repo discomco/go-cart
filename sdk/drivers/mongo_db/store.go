@@ -9,13 +9,13 @@ import (
 	"golang.org/x/net/context"
 )
 
-type MongoDbStoreFtor[TModel schema.IReadModel] func() IStore[TModel]
+type MongoDbStoreFtor[TModel schema.ISchema] func() IStore[TModel]
 
-type IStore[T schema.IReadModel] interface {
+type IStore[T schema.ISchema] interface {
 	behavior.IReadModelStore[T]
 }
 
-type store[T schema.IReadModel] struct {
+type store[T schema.ISchema] struct {
 	mongo   *mongo.Client
 	dbName  string
 	colName string
@@ -75,7 +75,7 @@ func (s *store[T]) Delete(ctx context.Context, key string) (*T, error) {
 	panic("implement me")
 }
 
-func newStore[T schema.IReadModel](mongo *mongo.Client, dbName string, colName string) *store[T] {
+func newStore[T schema.ISchema](mongo *mongo.Client, dbName string, colName string) *store[T] {
 	return &store[T]{
 		mongo:   mongo,
 		dbName:  dbName,
@@ -83,7 +83,7 @@ func newStore[T schema.IReadModel](mongo *mongo.Client, dbName string, colName s
 	}
 }
 
-func NewMongoStore[TModel schema.IReadModel](newMongoDb MongoDbClientFtor, dbName string, colName string) MongoDbStoreFtor[TModel] {
+func NewMongoStore[TModel schema.ISchema](newMongoDb MongoDbClientFtor, dbName string, colName string) MongoDbStoreFtor[TModel] {
 	return func() IStore[TModel] {
 		clt := newMongoDb()
 		return newStore[TModel](clt, dbName, colName)

@@ -35,7 +35,7 @@ type IBehaviorPlugin interface {
 type IApplyEvt interface {
 	IBehaviorPlugin
 	EvtTypeGetter
-	ApplyEvent(evt IEvt, state schema.IWriteModel) error
+	ApplyEvent(evt IEvt, state schema.IWriteSchema) error
 }
 
 // ITryCmd is an IBehaviorPlugin injector that allows us to inject Command Executors into the Aggregate
@@ -70,7 +70,7 @@ type ISimpleBehavior interface {
 	String() string
 	TryCommand(ctx context.Context, command ICmd) (IEvt, contract.IFbk)
 	ApplyEvent(event IEvt, isCommitted bool) error
-	GetState() schema.IWriteModel
+	GetState() schema.IWriteSchema
 	GetUncommittedEvents() []IEvt
 	ClearUncommittedEvents()
 	SetAppliedEvents(events []IEvt)
@@ -83,7 +83,7 @@ type ISimpleBehavior interface {
 }
 
 type BehaviorFtor func() IBehavior
-type GenBehaviorFtor[TDoc schema.IReadModel] func() IBehavior
+type GenBehaviorFtor[TDoc schema.ISchema] func() IBehavior
 type BehaviorBuilder func() IBehavior
 type BehaviorPluginFtor func() IBehaviorPlugin
 
@@ -97,13 +97,13 @@ type behavior struct {
 	UncommittedEvents []IEvt
 	Type              BehaviorType
 	withAppliedEvents bool
-	state             schema.IWriteModel
+	state             schema.IWriteSchema
 	executors         map[CommandType]ITryCmd
 	appliers          map[EventType]IApplyEvt
 }
 
 // NewBehavior initializes a new empty Aggregate
-func NewBehavior(behaviorType BehaviorType, state schema.IWriteModel) IBehavior {
+func NewBehavior(behaviorType BehaviorType, state schema.IWriteSchema) IBehavior {
 	result := &behavior{
 		Version:           aggregateStartVersion,
 		AppliedEvents:     make([]IEvt, 0, aggregateAppliedEventsInitialCap),
@@ -249,7 +249,7 @@ func (a *behavior) String() string {
 		len(a.GetUncommittedEvents()))
 }
 
-func (a *behavior) GetState() schema.IWriteModel {
+func (a *behavior) GetState() schema.IWriteSchema {
 	return a.state
 }
 

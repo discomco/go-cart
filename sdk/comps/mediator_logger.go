@@ -24,7 +24,7 @@ type mediatorLogger struct {
 
 func (h *mediatorLogger) logEvent(ctx context.Context, evt behavior.IEvt) error {
 	h.GetLogger().
-		Debugf("[Logging Reactor for %+v] Handling domain.Evt [%+v]", evt.GetEventType(), evt)
+		Debugf("[Logging for %+v] Handling domain.Evt [%+v]", evt.GetEventType(), evt)
 	return nil
 }
 

@@ -118,7 +118,7 @@ type IBehaviorLink interface {
 }
 
 type IGenMediatorReaction[TEvt behavior.IEvt] interface {
-	IReaction
+	ISpokePlugin
 	behavior.EvtTypeGetter
 	behavior.IGenReacter[TEvt]
 }
@@ -126,7 +126,7 @@ type IGenMediatorReaction[TEvt behavior.IEvt] interface {
 //IMediatorReaction is an Injector for a mediator Subscriber.
 //Will be replaced with IGenMediatorReaction at some point.
 type IMediatorReaction interface {
-	IReaction
+	ISpokePlugin
 	behavior.EvtTypeGetter
 	behavior.Reacter
 }
@@ -140,14 +140,14 @@ type IEvtReaction interface {
 }
 
 type IProjector interface {
-	IReaction
+	ISpokePlugin
 	behavior.Reacter
 	Project(ctx context.Context, prefixes []string, poolSize int) error
 	Inject(handlers ...IProjection)
 }
 
 type IResponder interface {
-	IReaction
+	ISpokePlugin
 	IAmResponder()
 	GetHopeType() contract.HopeType
 }
@@ -170,8 +170,8 @@ type IRequester interface {
 type RequesterFtor func() (IRequester, error)
 type GenRequesterFtor[THope contract.IHope] func() (IGenRequester[THope], error)
 
-//IReaction is a base Injector for Spoke plugins
-type IReaction interface {
+//ISpokePlugin is a base Injector for Spoke plugins
+type ISpokePlugin interface {
 	IComponent
 	IActivate
 	IDeactivate
@@ -180,7 +180,7 @@ type IReaction interface {
 //IListener is an injector for all components that listen for Facts on a
 //message bus.
 type IListener interface {
-	IReaction
+	ISpokePlugin
 	IAmFactListener()
 }
 
@@ -192,7 +192,7 @@ type IGenListener[TMsg interface{}, TFact contract.IFact] interface {
 // It specializes the IMediatorReaction as it registers at the mediator,
 // where it listens for specific events that must be emitted from the domain to other systems.
 type IEmitter interface {
-	IReaction
+	ISpokePlugin
 	IMediatorReaction
 	IAmEmitter()
 }
@@ -202,7 +202,7 @@ type IShutdown interface {
 }
 
 type IQueryProvider interface {
-	IReaction
+	ISpokePlugin
 	IAmQueryProvider()
 	RunQuery(ctx context.Context, qry contract.IReq) contract.IRsp
 }

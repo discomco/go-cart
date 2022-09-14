@@ -31,15 +31,15 @@ var (
 	cMutex    = &sync.Mutex{}
 )
 
-// AStore is an Injection that injects a functor for IBehaviorStore
-func AStore(log logger.IAppLogger, newDb EventStoreDBFtor) comps.BehaviorStoreFtor {
+// BehaviorStore is an Injection that injects a functor for IBehaviorStore
+func BehaviorStore(log logger.IAppLogger, newDb EventStoreDBFtor) comps.BehaviorStoreFtor {
 	return func() comps.IBehaviorStore {
 		db := newDb()
-		return aStore(log, db)
+		return behaviorStore(log, db)
 	}
 }
 
-func aStore(log logger.IAppLogger, db *esdb.Client) comps.IBehaviorStore {
+func behaviorStore(log logger.IAppLogger, db *esdb.Client) comps.IBehaviorStore {
 	return &aggregateStore{log: log, db: db}
 }
 
@@ -85,9 +85,10 @@ func (a *aggregateStore) Load(ctx context.Context, aggregate behavior.IBehavior)
 }
 
 func (a *aggregateStore) Save(ctx context.Context, aggregate behavior.IBehavior) error {
+
 	span, ctx := opentracing.StartSpanFromContext(ctx, "aggregateStore.Save")
 	defer span.Finish()
-	span.LogFields(log.String("domain", aggregate.String()))
+	span.LogFields(log.String("behavior", aggregate.String()))
 
 	if len(aggregate.GetUncommittedEvents()) == 0 {
 		a.log.Debugf("(Save) [no uncommittedEvents] len: {%d}", len(aggregate.GetUncommittedEvents()))

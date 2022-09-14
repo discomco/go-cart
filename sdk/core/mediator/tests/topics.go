@@ -1,4 +1,4 @@
-package bogus
+package tests
 
 const (
 	TestTopic = "topic.-base"

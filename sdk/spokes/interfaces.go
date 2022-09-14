@@ -10,7 +10,7 @@ type ISpoke interface {
 	comps.IComponent
 	comps.IShutdown
 	Run(ctx context.Context) func() error
-	Inject(reactions ...comps.IReaction) ISpoke
+	Inject(reactions ...comps.ISpokePlugin) ISpoke
 }
 
 type IMediatorSpoke interface {

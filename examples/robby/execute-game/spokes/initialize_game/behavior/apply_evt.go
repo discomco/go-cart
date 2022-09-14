@@ -18,7 +18,7 @@ type apply struct {
 	*behavior.ApplyEvt
 }
 
-func (a *apply) applyEvt(evt behavior.IEvt, state schema.IWriteModel) error {
+func (a *apply) applyEvt(evt behavior.IEvt, state schema.IWriteSchema) error {
 	// EXTRACT Payload
 	var pl contract.Payload
 	err := evt.GetPayload(&pl)

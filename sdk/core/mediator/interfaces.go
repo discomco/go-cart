@@ -15,6 +15,8 @@ type IMediator interface {
 	RegisterOnceAsync(topic string, fn interface{}) error
 	WaitAsync()
 	KnownTopics() map[string]interface{}
+	RegisterTopic(topic string)
+	UnregisterTopic(topic string)
 }
 
 type IBroadcaster interface {

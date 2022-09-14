@@ -24,7 +24,7 @@ type anApply struct {
 	*ApplyEvt
 }
 
-func (a *anApply) applyEvt(evt IEvt, state schema.IWriteModel) error {
+func (a *anApply) applyEvt(evt IEvt, state schema.IWriteSchema) error {
 	return nil
 }
 

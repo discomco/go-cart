@@ -9,15 +9,15 @@ import (
 	"sync"
 )
 
-type ProjFtor[TEvt behavior.IEvt, TState schema.IReadModel] func() IProjection
-type GenProjFtor[TEvt behavior.IEvt, TState schema.IReadModel] func() IGenProjection[TEvt, TState]
+type ProjFtor[TEvt behavior.IEvt, TState schema.ISchema] func() IProjection
+type GenProjFtor[TEvt behavior.IEvt, TState schema.ISchema] func() IGenProjection[TEvt, TState]
 
 type IProjection interface {
 	IMediatorReaction
 	IAmProjection()
 }
 
-type GenProjection[TEvt behavior.IEvt, TState schema.IReadModel] struct {
+type GenProjection[TEvt behavior.IEvt, TState schema.ISchema] struct {
 	*EventReaction
 	store     behavior.IReadModelStore[TState]
 	evt2Doc   behavior.Evt2ModelFunc[TEvt, TState]
@@ -27,7 +27,7 @@ type GenProjection[TEvt behavior.IEvt, TState schema.IReadModel] struct {
 
 var cMutex = &sync.Mutex{}
 
-func newGenProjection[TEvt behavior.IEvt, TState schema.IReadModel](
+func newGenProjection[TEvt behavior.IEvt, TState schema.ISchema](
 	name schema.Name,
 	eventType behavior.EventType,
 	store behavior.IReadModelStore[TState],
@@ -53,7 +53,7 @@ func (ph *GenProjection[TEvt, TState]) IAmProjection() {}
 func (ph *GenProjection[TEvt, TState]) loadEvent(ctx context.Context, evt behavior.IEvt) error {
 	lMutex.Lock()
 	defer lMutex.Unlock()
-	var doc schema.IReadModel
+	var doc schema.ISchema
 	key := evt.GetAggregateId()
 	if ph.getDocKey != nil {
 		key = ph.getDocKey()
@@ -61,6 +61,7 @@ func (ph *GenProjection[TEvt, TState]) loadEvent(ctx context.Context, evt behavi
 	doc, err := ph.store.Get(ctx, key)
 	if err != nil {
 		if err != redis.Error(redis.Nil) {
+			//		if	!errors.Is(err, behavior.ErrAggregateNotFound) {
 			return errors.Wrapf(err, "loadEvent: failed to get aggregate %s from cache", evt.GetAggregateId())
 		}
 		doc = ph.newDoc()
@@ -76,7 +77,7 @@ func (ph *GenProjection[TEvt, TState]) loadEvent(ctx context.Context, evt behavi
 	return err
 }
 
-func NewProjection[TEvt behavior.IEvt, TState schema.IReadModel](
+func NewProjection[TEvt behavior.IEvt, TState schema.ISchema](
 	name schema.Name,
 	eventType behavior.EventType,
 	newStore behavior.StoreFtor[TState],

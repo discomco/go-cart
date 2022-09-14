@@ -32,8 +32,8 @@ func DefaultCMD(cfgPath string) ioc.IDig {
 		comps.CmdHandler,
 	).Inject(dig,
 		eventstore_db.SingletonESClient,
-		eventstore_db.EStore,
-		eventstore_db.AStore,
+		eventstore_db.EventStore,
+		eventstore_db.BehaviorStore,
 	).Inject(dig,
 		nats.SingleNATS,
 	)
@@ -56,8 +56,8 @@ func DefaultPRJ(cfgPath string) ioc.IDig {
 	dig := builder.InjectCoLoMed(cfgPath)
 	return dig.Inject(dig,
 		eventstore_db.SingletonESClient,
-		eventstore_db.EStore,
-		eventstore_db.AStore,
+		eventstore_db.EventStore,
+		eventstore_db.BehaviorStore,
 		eventstore_db.EvtProjFtor,
 		eventstore_db.EventProjector,
 	)

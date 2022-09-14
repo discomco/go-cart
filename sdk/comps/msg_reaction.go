@@ -11,7 +11,7 @@ import (
 )
 
 type IMsgReaction interface {
-	IReaction
+	ISpokePlugin
 	//IComponent
 	//IActivate
 	//IDeactivate

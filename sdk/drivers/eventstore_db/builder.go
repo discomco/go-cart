@@ -10,8 +10,8 @@ func EventSourcing(cfgPath config.Path) ioc.IDig {
 	ioc := builder.InjectCoLoMed(string(cfgPath))
 	return ioc.Inject(ioc,
 		SingletonESClient,
-		EStore,
-		AStore)
+		EventStore,
+		BehaviorStore)
 }
 
 func AddESProjector(ioc ioc.IDig) ioc.IDig {

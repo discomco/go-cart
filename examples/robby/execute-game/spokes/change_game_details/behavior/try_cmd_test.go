@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/discomco/go-cart/robby/execute-game/schema"
 	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	change_game_details_testing "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/testing"
+	change_game_details_contract "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/contract"
 	initialize_game_behavior "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
 	initialize_game_contract "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/test"
@@ -39,7 +39,7 @@ func TestThatWeCanInitializeABehaviorAndChangeItsDetails(t *testing.T) {
 	assert.Equal(t, fbk.GetAggregateStatus(), int(state.Status))
 
 	// CHANGE DETAILS
-	changeDetailsPl := change_game_details_testing.RandomPayload()
+	changeDetailsPl := change_game_details_contract.RandomPayload()
 	assert.NotNil(t, changeDetailsPl)
 	changeDetailsCmd, err := NewCmd(ID, *changeDetailsPl)
 	assert.NotNil(t, changeDetailsCmd)

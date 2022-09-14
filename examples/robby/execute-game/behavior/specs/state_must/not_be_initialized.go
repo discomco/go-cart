@@ -10,7 +10,7 @@ import (
 
 const AllReadyInitialized = "allReadyInitialized"
 
-func NotBeInitialized(s sdk_model.IWriteModel, fbk contract.IFbk) {
+func NotBeInitialized(s sdk_model.IWriteSchema, fbk contract.IFbk) {
 	state := s.(*schema.GameDoc)
 	if status.HasFlag(state.Status, doc.Initialized) {
 		fbk.SetError(AllReadyInitialized)

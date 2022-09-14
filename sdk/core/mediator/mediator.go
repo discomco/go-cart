@@ -18,6 +18,20 @@ type mediator struct {
 	knownTopics map[string]interface{}
 }
 
+func (b *mediator) RegisterTopic(topic string) {
+	_, ok := b.knownTopics[topic]
+	if !ok {
+		b.knownTopics[topic] = &struct{}{}
+	}
+}
+
+func (b *mediator) UnregisterTopic(topic string) {
+	_, ok := b.knownTopics[topic]
+	if ok {
+		delete(b.knownTopics, topic)
+	}
+}
+
 var singleMediator IMediator
 
 func newMediator() *mediator {
