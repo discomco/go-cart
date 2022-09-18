@@ -7,9 +7,16 @@
   - [DESCRIPTION](#description)
   - [MOTIVATIONS](#motivations)
   - [WHAT IS PURPOSEFUL ARCHITECTURE?](#what-is-purposeful-architecture)
+  - [STRUCTURE OF GO-CART Applications](#structure-of-go-cart-applications)
+    - [Command Sequence](#command-sequence)
+    - [Projection Sequence](#projection-sequence)
+    - [Query Sequence](#query-sequence)
+  - [UNIT OF DEPLOYMENT](#unit-of-deployment)
     - [Cartwheel Deployment](#cartwheel-deployment)
     - [Railroad Deployment](#railroad-deployment)
   - [DEVELOPING GO-CART Applications](#developing-go-cart-applications)
+    - [Default Dependencies](#default-dependencies)
+    - [On the Roadmap](#on-the-roadmap)
     - [Setting up the local development environment](#setting-up-the-local-development-environment)
     - [Reference Implementation](#reference-implementation)
   - [SOME REFERENCES](#some-references)
@@ -44,7 +51,29 @@ This SDK provides a basis for developing modular applications for EventSourcing/
 > 
 > This results in a very modular codebase that offers great flexibility in the choice of Unit of Deployment. 
 > 
-> GO-CART applications can be deployed as either Modular Monoliths (Cartwheel deployment), Micro Services (Railroad deployment) and we are investigating options for serverless deployment as well. (OpenFaaS)
+> GO-CART applications can be deployed as either Modular Monoliths (Cartwheel deployment) or Micro Services (Railroad deployment) and we are investigating options for serverless deployment as well. (OpenFaaS)
+
+
+## STRUCTURE OF GO-CART Applications
+
+This SDK produces applications that are modular, based on reactive (behavior-centric) design, immutable architecture (Event Sourcing/CQRS) and choreography.
+This means that these applications implement a process logic, rather than just "dumb" data-structures and that there are two different models in play: the behavioral (write) model, that identifies events and commands and the static (read) model that represents the data structures. 
+*Event Storming* has proven to be a useful technique for discovering behavior, while *Domain Driven Design* is best fit for discovering the static model.
+Additionally, such applications need to implement three data-flows: *COMMANDS, PROJECTIONS and QUERIES*.
+
+### Command Sequence
+
+![CMD Sequence](image/README/1663492191135.png)
+
+### Projection Sequence
+
+![PRJ Sequence](image/README/1663492324954.png)
+
+### Query Sequence
+
+![QRY Sequence](image/README/1663494623224.png)
+
+## UNIT OF DEPLOYMENT
 
 ### Cartwheel Deployment
 
@@ -54,13 +83,27 @@ This SDK provides a basis for developing modular applications for EventSourcing/
 
 ![Railroad Deployment](image/README/1663486266033.png)
 
+
+
+
+
 ## DEVELOPING GO-CART Applications
 
-The GO-CART SDK makes use of a number of backend services:
+### Default Dependencies
+
+The GO-CART SDK defaults to the use of these backend services:
 
 - [EventStoreDB](https://www.eventstore.com/eventstoredb)
 - [Core NATS](https://nats.io/)
 - [Redis](https://redis.io/)
+
+### On the Roadmap
+
+We are aiming to implement drivers to integrate with 
+
+- [RabbitMQ](https://www.rabbitmq.com/)
+- [Kafka](https://kafka.apache.org/)
+- [Elastic](https://www.elastic.co/)
 
 
 ### Setting up the local development environment
