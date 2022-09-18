@@ -121,7 +121,7 @@ git clone https://github.com/rgfaber/compose-dev-stack
 ### Reference Implementation
 
 We are working on training material, but for now, 
-please check out the *./robby* folder for a reference implementation. 
+please check out the *./examples* folder for reference implementations.
 
 
 
