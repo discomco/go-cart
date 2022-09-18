@@ -2,11 +2,11 @@ package comps
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/behavior"
-	contract2 "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/contract"
-	behavior2 "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_details/behavior"
+	contract2 "github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_details/contract"
+	behavior2 "github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/behavior"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
 	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/pkg/errors"
@@ -30,7 +30,7 @@ func (l *link) onEvtFunc(ctx context.Context, evt sdk_behavior.IEvt) error {
 	defer wMutex.Unlock()
 	docID, err := evt.GetAggregateID()
 	if err != nil {
-		return errors.Wrapf(err, "failed to get aggregate ID from event %v", evt)
+		return errors.Wrapf(err, "failed to get aggregate Id from event %v", evt)
 	}
 	var pl contract.Payload
 	err = evt.GetPayload(&pl)

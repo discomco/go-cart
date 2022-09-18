@@ -6,6 +6,9 @@
   - [OUTLINE](#outline)
   - [DESCRIPTION](#description)
   - [MOTIVATIONS](#motivations)
+  - [WHAT IS PURPOSEFUL ARCHITECTURE?](#what-is-purposeful-architecture)
+    - [Cartwheel Deployment](#cartwheel-deployment)
+    - [Railroad Deployment](#railroad-deployment)
   - [DEVELOPING GO-CART Applications](#developing-go-cart-applications)
     - [Setting up the local development environment](#setting-up-the-local-development-environment)
     - [Reference Implementation](#reference-implementation)
@@ -33,8 +36,28 @@ This SDK provides a basis for developing modular applications for EventSourcing/
    - and can **avoid to implement recurring boilerplate code**
 
 
+## WHAT IS PURPOSEFUL ARCHITECTURE?
+
+> Purposeful Architecture is an architectural style, that is derived from _Screaming Architecture_, with a strong focus on communicating the intent of the application to all stakeholders. 
+> Additionally, it builds on the concept of [Inverted Architecture](https://dev.to/discomco/inverted-architecture-the-state-of-the-art-31hi) and relies heavily on composition, internal decoupling and reactive design.
+> This results in a very modular codebase that offers great flexibility in the choice of Unit of Deployment. 
+> GO-CART applications can be deployed as either Modular Monoliths (Cartwheel deployment), Micro Services (Railroad deployment) and we are investigating options for serverless deployment as well. (OpenFaaS)
+
+### Cartwheel Deployment
+
+![Cartwheel Deployment](image/README/1663485777664.png)
+
+### Railroad Deployment
+
+![Railroad Deployment](image/README/1663486266033.png)
+
 ## DEVELOPING GO-CART Applications
 
+The GO-CART SDK makes use of a number of backend services:
+
+- [EventStoreDB](https://www.eventstore.com/eventstoredb)
+- [Core NATS](https://nats.io/)
+- [Redis](https://redis.io/)
 
 
 ### Setting up the local development environment

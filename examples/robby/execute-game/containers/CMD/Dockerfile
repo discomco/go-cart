@@ -1,5 +1,5 @@
 FROM golang:1.18-alpine3.15 AS builder
-ARG GO_MODULE="github.com/discomco/go-cart/robby"
+ARG GO_MODULE="github.com/discomco/go-cart/examples/robby"
 ARG PA_CONTEXT="execute-game"
 ARG CQRS_SERVICE="command"
 

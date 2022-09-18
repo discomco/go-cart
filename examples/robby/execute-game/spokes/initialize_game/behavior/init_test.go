@@ -1,8 +1,8 @@
 package behavior
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
-	"github.com/discomco/go-cart/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/ftor"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
 	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/core/builder"
 	"github.com/discomco/go-cart/sdk/core/ioc"

@@ -2,12 +2,12 @@ package comps
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/behavior"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/contract"
-	initialize_game "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
-	contract2 "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema/doc"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/behavior"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/contract"
+	initialize_game "github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/behavior"
+	contract2 "github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -31,7 +31,7 @@ func TestThatWeCanExecuteAChangeEventSettingsCmd(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, newTestCmdHandler)
 	// AND
-	//	ID, err := root.NewGameIDFromString(test.CLEAN_TEST_UUID)
+	//	Id, err := root.NewGameIDFromString(test.CLEAN_TEST_UUID)
 	ID, err := doc.NewGameID()
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)

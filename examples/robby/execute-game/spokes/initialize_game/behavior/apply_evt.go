@@ -1,9 +1,9 @@
 package behavior
 
 import (
-	read_model "github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
+	read_model "github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema/doc"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/core/utils/status"
 	"github.com/discomco/go-cart/sdk/schema"

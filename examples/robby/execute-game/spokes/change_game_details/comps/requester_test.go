@@ -2,8 +2,8 @@ package comps
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	change_game_details_contract "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/contract"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema/doc"
+	change_game_details_contract "github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_details/contract"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

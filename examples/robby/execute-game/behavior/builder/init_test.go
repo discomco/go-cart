@@ -1,8 +1,8 @@
 package builder
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
-	"github.com/discomco/go-cart/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/ftor"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"

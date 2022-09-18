@@ -1,7 +1,7 @@
 package behavior
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/contract"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/contract"
 	"github.com/discomco/go-cart/sdk/behavior"
 	sdk_contract "github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/schema"

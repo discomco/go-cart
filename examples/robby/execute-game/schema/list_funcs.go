@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/schema/list"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema/list"
 	"github.com/discomco/go-cart/sdk/schema"
 	"log"
 )

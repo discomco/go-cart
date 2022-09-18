@@ -1,8 +1,8 @@
 package comps
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/behavior"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/contract"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/behavior"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/contract"
 	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/drivers/nats"
 )

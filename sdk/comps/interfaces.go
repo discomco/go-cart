@@ -95,6 +95,8 @@ type IBehaviorStore interface {
 }
 
 type IEventStore interface {
+	IBehaviorStore
+	ISnapshotStore
 	SaveEvents(ctx context.Context, streamID string, events []behavior.IEvt) error
 	LoadEvents(ctx context.Context, streamID string) ([]behavior.IEvt, error)
 }

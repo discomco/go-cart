@@ -21,7 +21,7 @@ const (
 	count = math.MaxInt64
 )
 
-type aggregateStore struct {
+type evtStoreDB struct {
 	log logger.IAppLogger
 	db  *esdb.Client
 }
@@ -40,15 +40,15 @@ func BehaviorStore(log logger.IAppLogger, newDb EventStoreDBFtor) comps.Behavior
 }
 
 func behaviorStore(log logger.IAppLogger, db *esdb.Client) comps.IBehaviorStore {
-	return &aggregateStore{log: log, db: db}
+	return &evtStoreDB{log: log, db: db}
 }
 
-func (a *aggregateStore) Load(ctx context.Context, aggregate behavior.IBehavior) error {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "aggregateStore.Load")
+func (es *evtStoreDB) Load(ctx context.Context, aggregate behavior.IBehavior) error {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "evtStoreDB.Load")
 	defer span.Finish()
 	span.LogFields(log.String("aggregateID", aggregate.GetID().Id()))
 
-	stream, err := a.db.ReadStream(ctx, aggregate.GetID().Id(), esdb.ReadStreamOptions{}, count)
+	stream, err := es.db.ReadStream(ctx, aggregate.GetID().Id(), esdb.ReadStreamOptions{}, count)
 	if err != nil {
 		jaeger.TraceErr(span, err)
 		return errors.Wrap(err, "db.ReadStream")
@@ -77,21 +77,21 @@ func (a *aggregateStore) Load(ctx context.Context, aggregate behavior.IBehavior)
 			jaeger.TraceErr(span, err)
 			return errors.Wrap(err, "RaiseEvent")
 		}
-		a.log.Debugf("(Load) esEvent: {%s}", esEvent.String())
+		es.log.Debugf("(Load) esEvent: {%s}", esEvent.String())
 	}
 
-	a.log.Debugf("(Load) domain: {%s}", aggregate.String())
+	es.log.Debugf("(Load) domain: {%s}", aggregate.String())
 	return nil
 }
 
-func (a *aggregateStore) Save(ctx context.Context, aggregate behavior.IBehavior) error {
+func (es *evtStoreDB) Save(ctx context.Context, aggregate behavior.IBehavior) error {
 
-	span, ctx := opentracing.StartSpanFromContext(ctx, "aggregateStore.Save")
+	span, ctx := opentracing.StartSpanFromContext(ctx, "evtStoreDB.Save")
 	defer span.Finish()
 	span.LogFields(log.String("behavior", aggregate.String()))
 
 	if len(aggregate.GetUncommittedEvents()) == 0 {
-		a.log.Debugf("(Save) [no uncommittedEvents] len: {%d}", len(aggregate.GetUncommittedEvents()))
+		es.log.Debugf("(Save) [no uncommittedEvents] len: {%d}", len(aggregate.GetUncommittedEvents()))
 		return nil
 	}
 
@@ -104,9 +104,9 @@ func (a *aggregateStore) Save(ctx context.Context, aggregate behavior.IBehavior)
 	var expectedRevision esdb.ExpectedRevision
 	if aggregate.GetVersion() == 0 {
 		expectedRevision = esdb.NoStream{}
-		a.log.Debugf("(Save) expectedRevision: {%TA}", expectedRevision)
+		es.log.Debugf("(Save) expectedRevision: {%TA}", expectedRevision)
 
-		appendStream, err := a.db.AppendToStream(
+		appendStream, err := es.db.AppendToStream(
 			ctx,
 			aggregate.GetID().Id(),
 			esdb.AppendToStreamOptions{ExpectedRevision: expectedRevision},
@@ -117,12 +117,12 @@ func (a *aggregateStore) Save(ctx context.Context, aggregate behavior.IBehavior)
 			return errors.Wrap(err, "db.AppendToStream")
 		}
 
-		a.log.Debugf("(Save) stream: {%+v}", appendStream)
+		es.log.Debugf("(Save) stream: {%+v}", appendStream)
 		return nil
 	}
 
 	readOps := esdb.ReadStreamOptions{Direction: esdb.Backwards, From: esdb.End{}}
-	stream, err := a.db.ReadStream(context.Background(), aggregate.GetID().Id(), readOps, 1)
+	stream, err := es.db.ReadStream(context.Background(), aggregate.GetID().Id(), readOps, 1)
 	if err != nil {
 		jaeger.TraceErr(span, err)
 		return errors.Wrap(err, "db.ReadStream")
@@ -136,9 +136,9 @@ func (a *aggregateStore) Save(ctx context.Context, aggregate behavior.IBehavior)
 	}
 
 	expectedRevision = esdb.Revision(lastEvent.OriginalEvent().EventNumber)
-	a.log.Debugf("(Save) expectedRevision: {%TA}", expectedRevision)
+	es.log.Debugf("(Save) expectedRevision: {%TA}", expectedRevision)
 
-	appendStream, err := a.db.AppendToStream(
+	appendStream, err := es.db.AppendToStream(
 		ctx,
 		aggregate.GetID().Id(),
 		esdb.AppendToStreamOptions{ExpectedRevision: expectedRevision},
@@ -149,24 +149,24 @@ func (a *aggregateStore) Save(ctx context.Context, aggregate behavior.IBehavior)
 		return errors.Wrap(err, "db.AppendToStream")
 	}
 
-	a.log.Debugf("(Save) stream: {%+v}", appendStream)
+	es.log.Debugf("(Save) stream: {%+v}", appendStream)
 	aggregate.ClearUncommittedEvents()
 	return nil
 }
 
-func (a *aggregateStore) Close() error {
-	return a.db.Close()
+func (es *evtStoreDB) Close() error {
+	return es.db.Close()
 }
 
 // Exists checks whether the Event Stream identified by streamID exists in the EventStore.
-func (a *aggregateStore) Exists(ctx context.Context, streamID string) error {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "aggregateStore.Exists")
+func (es *evtStoreDB) Exists(ctx context.Context, streamID string) error {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "evtStoreDB.Exists")
 	defer span.Finish()
 	span.LogFields(log.String("aggregateID", streamID))
 
 	readStreamOptions := esdb.ReadStreamOptions{Direction: esdb.Backwards, From: esdb.Revision(1)}
 
-	stream, err := a.db.ReadStream(ctx, streamID, readStreamOptions, 1)
+	stream, err := es.db.ReadStream(ctx, streamID, readStreamOptions, 1)
 	if err != nil {
 		return errors.Wrap(err, "db.ReadStream")
 	}

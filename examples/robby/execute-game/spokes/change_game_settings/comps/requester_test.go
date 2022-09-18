@@ -2,7 +2,7 @@ package comps
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema/doc"
 
 	"github.com/stretchr/testify/assert"
 	"testing"

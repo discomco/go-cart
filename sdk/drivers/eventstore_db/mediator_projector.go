@@ -22,6 +22,36 @@ type ProjectionWorkerFunc func(ctx context.Context, stream *esdb.PersistentSubsc
 type SubscriptionGroupName string
 type ProjectorName string
 
+type eventProjector struct {
+	*comps.Component
+	handlers    map[behavior.EventType]comps.IProjection
+	esdb        *esdb.Client
+	handleMutex *sync.Mutex
+}
+
+var (
+	singletonProjector comps.IProjector
+	cPMutex            = &sync.Mutex{}
+)
+
+const (
+	ProjectorFmt = "eventstoreDB.Projector"
+)
+
+func newProjector(
+	esdb *esdb.Client,
+) *eventProjector {
+	name := ProjectorFmt
+	base := comps.NewComponent(schema.Name(name))
+	p := &eventProjector{
+		esdb:        esdb,
+		handlers:    make(map[behavior.EventType]comps.IProjection),
+		handleMutex: &sync.Mutex{},
+	}
+	p.Component = base
+	return p
+}
+
 //EvtProjFtor is a functor for Projectors that marshal events onto the Mediator
 //where they can be handled by all kinds of GenProjection Handlers.
 func EvtProjFtor(newClient EventStoreDBFtor) comps.ProjectorFtor {
@@ -30,11 +60,6 @@ func EvtProjFtor(newClient EventStoreDBFtor) comps.ProjectorFtor {
 		return newProjector(clt)
 	}
 }
-
-var (
-	singletonProjector comps.IProjector
-	cPMutex            = &sync.Mutex{}
-)
 
 //EventProjector is a Projector that marshals events onto the Mediator
 func EventProjector(newClient EventStoreDBFtor) comps.IProjector {
@@ -47,18 +72,10 @@ func EventProjector(newClient EventStoreDBFtor) comps.IProjector {
 	return singletonProjector
 }
 
-type eventProjector struct {
-	*comps.Component
-	handlers    map[behavior.EventType]comps.IProjection
-	esdb        *esdb.Client
-	handleMutex *sync.Mutex
-}
-
+//Activate activates the eventProjector
 func (o *eventProjector) Activate(ctx context.Context) error {
-	//	o.GetLogger().Infof("Activating eventProjector [%+v] with %+v handlers", o.Name, len(o.handlers))
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
-
 	defer func() {
 		if r := recover(); r != nil {
 			o.GetLogger().Errorf("Mitigating (Activate.processStream) panic: {%v}", r)
@@ -66,24 +83,12 @@ func (o *eventProjector) Activate(ctx context.Context) error {
 			o.Activate(ctx)
 		}
 	}()
-
 	g, ctx := errgroup.WithContext(ctx)
 	g.Go(o.subscriberFunc(ctx, cancel))
 	return g.Wait()
 }
 
-func (o *eventProjector) subscriberFunc(ctx context.Context, cancel context.CancelFunc) func() error {
-	cfg := o.GetConfig().GetProjectionConfig()
-	return func() error {
-		err := o.Project(ctx, []string{cfg.GetEventPrefix()}, cfg.GetPoolSize())
-		if err != nil {
-			o.GetLogger().Errorf("EventStoreDB.Projector [%+v] error: %v", o.Name, err)
-			cancel()
-		}
-		return err
-	}
-}
-
+//Deactivate deactivates the eventProjector
 func (o *eventProjector) Deactivate(ctx context.Context) error {
 	cfg := o.GetConfig().GetProjectionConfig()
 	o.GetLogger().Infof("Deactivating eventProjector [%+v] for Subscription Group [%+v]", o.Name, cfg.GetGroup())
@@ -91,33 +96,8 @@ func (o *eventProjector) Deactivate(ctx context.Context) error {
 	return nil
 }
 
-const (
-	ProjectorFmt = "ESDBProjector"
-)
-
-func newProjector(
-	esdb *esdb.Client,
-) *eventProjector {
-	name := ProjectorFmt
-	base := comps.NewComponent(schema.Name(name))
-	base.Name = "eventstoreDB.Projector"
-	p := &eventProjector{
-		esdb:        esdb,
-		handlers:    make(map[behavior.EventType]comps.IProjection),
-		handleMutex: &sync.Mutex{},
-	}
-	p.Component = base
-	return p
-}
-
 func (o *eventProjector) GetESDB() *esdb.Client {
 	return o.esdb
-}
-
-func (o *eventProjector) runWorker(ctx context.Context, worker ProjectionWorkerFunc, stream *esdb.PersistentSubscription, i int) func() error {
-	return func() error {
-		return worker(ctx, stream, i)
-	}
 }
 
 func (o *eventProjector) Inject(projections ...comps.IProjection) {
@@ -132,7 +112,7 @@ func (o *eventProjector) Inject(projections ...comps.IProjection) {
 
 func (o *eventProjector) Project(ctx context.Context, prefixes []string, poolSize int) error {
 	cfg := o.GetConfig().GetProjectionConfig()
-	//	o.GetLogger().Infof("(starting subscription [%+v], group [%+v]) prefixes: {%+v}", cfg.GetName(), cfg.GetGroup(), prefixes)
+	o.GetLogger().Debugf("(starting subscription [%+v], group [%+v]) prefixes: {%+v}", cfg.GetName(), cfg.GetGroup(), prefixes)
 	err := o.GetESDB().CreatePersistentSubscriptionToAll(ctx, cfg.GetGroup(), esdb.PersistentAllSubscriptionOptions{
 		Filter: &esdb.SubscriptionFilter{Type: esdb.StreamFilterType, Prefixes: prefixes},
 	})
@@ -164,12 +144,41 @@ func (o *eventProjector) Project(ctx context.Context, prefixes []string, poolSiz
 	for i := 0; i <= poolSize; i++ {
 		g.Go(o.runWorker(ctx, o.processStream, stream, i))
 	}
+
 	return g.Wait()
 }
 
-func (o *eventProjector) processStream(ctx context.Context, stream *esdb.PersistentSubscription, workerID int) error {
+func (o *eventProjector) React(ctx context.Context, evt behavior.IEvt) error {
+	ctx, span := jaeger.StartProjectionTracerSpan(ctx, "GenProjection.React", evt)
+	defer span.Finish()
+	span.LogFields(
+		log.String("Id [%+v]", evt.GetAggregateId()),
+		log.String("EventType", evt.GetEventTypeString()))
+	o.GetLogger().Debugf("(GenProjection.React) event_type: [%v], event  {%+v}", evt.GetEventType(), evt)
+	topic := evt.GetEventTypeString()
+	o.GetMediator().Broadcast(topic, ctx, evt)
+	return nil
+}
 
-	// TODO: check for context cancellation
+func (o *eventProjector) subscriberFunc(ctx context.Context, cancel context.CancelFunc) func() error {
+	cfg := o.GetConfig().GetProjectionConfig()
+	return func() error {
+		err := o.Project(ctx, []string{cfg.GetEventPrefix()}, cfg.GetPoolSize())
+		if err != nil {
+			o.GetLogger().Errorf("EventStoreDB.Projector [%+v] error: %v", o.Name, err)
+			cancel()
+		}
+		return err
+	}
+}
+
+func (o *eventProjector) runWorker(ctx context.Context, worker ProjectionWorkerFunc, stream *esdb.PersistentSubscription, i int) func() error {
+	return func() error {
+		return worker(ctx, stream, i)
+	}
+}
+
+func (o *eventProjector) processStream(ctx context.Context, stream *esdb.PersistentSubscription, workerID int) error {
 
 	c := o.GetConfig().GetProjectionConfig()
 	for {
@@ -206,16 +215,4 @@ func (o *eventProjector) processStream(ctx context.Context, stream *esdb.Persist
 			}
 		}
 	}
-}
-
-func (o *eventProjector) React(ctx context.Context, evt behavior.IEvt) error {
-	ctx, span := jaeger.StartProjectionTracerSpan(ctx, "GenProjection.React", evt)
-	defer span.Finish()
-	span.LogFields(
-		log.String("Id [%+v]", evt.GetAggregateId()),
-		log.String("EventType", evt.GetEventTypeString()))
-	o.GetLogger().Debugf("(GenProjection.React) event_type: [%v], event  {%+v}", evt.GetEventType(), evt)
-	topic := evt.GetEventTypeString()
-	o.GetMediator().Broadcast(topic, ctx, evt)
-	return nil
 }

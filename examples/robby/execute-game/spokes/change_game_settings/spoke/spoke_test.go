@@ -2,8 +2,8 @@ package spoke
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/comps"
-	change_game_settings_contract "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/contract"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/comps"
+	change_game_settings_contract "github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/contract"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/sync/errgroup"

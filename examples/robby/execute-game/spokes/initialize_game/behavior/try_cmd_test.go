@@ -2,9 +2,9 @@ package behavior
 
 import (
 	"context"
-	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema/doc"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/test"
 	"github.com/stretchr/testify/assert"
 	"testing"

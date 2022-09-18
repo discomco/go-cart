@@ -1,7 +1,7 @@
 package ftor
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
 	"github.com/discomco/go-cart/sdk/behavior"
 	sdk_schema "github.com/discomco/go-cart/sdk/schema"
 	"github.com/stretchr/testify/assert"

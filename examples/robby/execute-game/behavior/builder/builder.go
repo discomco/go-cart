@@ -1,10 +1,10 @@
 package builder
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/schema"
-	change_game_details "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/behavior"
-	change_game_settings "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/behavior"
-	initialize_game "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	change_game_details "github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_details/behavior"
+	change_game_settings "github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/behavior"
+	initialize_game "github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/behavior"
 	"github.com/discomco/go-cart/sdk/behavior"
 )
 

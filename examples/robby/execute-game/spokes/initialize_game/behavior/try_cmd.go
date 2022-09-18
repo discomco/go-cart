@@ -3,8 +3,8 @@ package behavior
 import (
 	"context"
 	"fmt"
-	"github.com/discomco/go-cart/robby/execute-game/behavior/specs/state_must"
-	initialize_game "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/specs/state_must"
+	initialize_game "github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
 	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/pkg/errors"

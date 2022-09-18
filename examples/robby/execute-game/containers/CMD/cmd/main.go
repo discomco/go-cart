@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"github.com/discomco/go-cart/robby/execute-game/containers/CMD/cartwheel"
+	"github.com/discomco/go-cart/examples/robby/execute-game/containers/CMD/cartwheel"
 	"os"
 )
 

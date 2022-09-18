@@ -1,12 +1,12 @@
 package spoke
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/behavior/builder"
-	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
-	"github.com/discomco/go-cart/robby/execute-game/drivers/redis"
-	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/behavior"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/comps"
+	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/builder"
+	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/ftor"
+	"github.com/discomco/go-cart/examples/robby/execute-game/drivers/redis"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/behavior"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/comps"
 	sdk_comps "github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/container"

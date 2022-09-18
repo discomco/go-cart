@@ -1,8 +1,8 @@
 package comps
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/behavior"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/behavior"
 	behavior2 "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/comps"
 	schema2 "github.com/discomco/go-cart/sdk/schema"

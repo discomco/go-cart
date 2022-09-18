@@ -1,13 +1,13 @@
 package cartwheel
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/behavior/builder"
-	"github.com/discomco/go-cart/robby/execute-game/behavior/ftor"
-	"github.com/discomco/go-cart/robby/execute-game/drivers/redis"
-	"github.com/discomco/go-cart/robby/execute-game/schema"
-	change_game_details "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_details/spoke"
-	change_game_settings "github.com/discomco/go-cart/robby/execute-game/spokes/change_game_settings/spoke"
-	initialize_game "github.com/discomco/go-cart/robby/execute-game/spokes/initialize_game/spoke"
+	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/builder"
+	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/ftor"
+	"github.com/discomco/go-cart/examples/robby/execute-game/drivers/redis"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	change_game_details "github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_details/spoke"
+	change_game_settings "github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/spoke"
+	initialize_game "github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/spoke"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/drivers/eventstore_db"

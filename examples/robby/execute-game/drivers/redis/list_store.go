@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
 	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/drivers/redis"

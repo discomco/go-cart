@@ -1,8 +1,8 @@
 package contract
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/schema"
-	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema/doc"
 	"math/rand"
 	"sync"
 )

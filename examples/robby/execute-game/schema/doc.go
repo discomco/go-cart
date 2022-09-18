@@ -1,8 +1,8 @@
 package schema
 
 import (
-	"github.com/discomco/go-cart/robby/execute-game/schema/avatar"
-	"github.com/discomco/go-cart/robby/execute-game/schema/doc"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema/avatar"
+	"github.com/discomco/go-cart/examples/robby/execute-game/schema/doc"
 	"github.com/discomco/go-cart/sdk/schema"
 )
 
