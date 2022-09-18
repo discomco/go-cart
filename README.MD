@@ -38,9 +38,12 @@ This SDK provides a basis for developing modular applications for EventSourcing/
 
 ## WHAT IS PURPOSEFUL ARCHITECTURE?
 
-> Purposeful Architecture is an architectural style, that is derived from _Screaming Architecture_, with a strong focus on communicating the intent of the application to all stakeholders. 
+> [Purposeful Architecture](https://dev.to/discomco/purposeful-architecture-requirements-13ad) is an architectural style, that is derived from _Screaming Architecture_, with a strong focus on communicating the intent of the application to all stakeholders. 
+> 
 > Additionally, it builds on the concept of [Inverted Architecture](https://dev.to/discomco/inverted-architecture-the-state-of-the-art-31hi) and relies heavily on composition, internal decoupling and reactive design.
+> 
 > This results in a very modular codebase that offers great flexibility in the choice of Unit of Deployment. 
+> 
 > GO-CART applications can be deployed as either Modular Monoliths (Cartwheel deployment), Micro Services (Railroad deployment) and we are investigating options for serverless deployment as well. (OpenFaaS)
 
 ### Cartwheel Deployment
