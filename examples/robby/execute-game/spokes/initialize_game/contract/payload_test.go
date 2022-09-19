@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestThatWeCanCreateAnInitializePayload(t *testing.T) {
+func TestThatWeCanCreateAnInitializeGamePayload(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
 	assert.NotNil(t, testLogger)

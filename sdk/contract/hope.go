@@ -20,9 +20,9 @@ type Hope struct {
 	*Dto
 }
 
-func newHope(aggregateId string, payload schema.IPayload) (*Hope, error) {
+func newHope(behaviorId string, payload schema.IPayload) (*Hope, error) {
 	res := &Hope{}
-	dto, err := NewDto(aggregateId, payload)
+	dto, err := NewDto(behaviorId, payload)
 	if err != nil {
 		return nil, err
 	}
@@ -30,8 +30,8 @@ func newHope(aggregateId string, payload schema.IPayload) (*Hope, error) {
 	return res, nil
 }
 
-func NewHope(aggregateId string, payload schema.IPayload) (*Hope, error) {
-	return newHope(aggregateId, payload)
+func NewHope(behaviorId string, payload schema.IPayload) (*Hope, error) {
+	return newHope(behaviorId, payload)
 }
 
 var cM = &sync.Mutex{}

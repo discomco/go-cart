@@ -1,0 +1,4 @@
+github.com/discomco/go-cart v0.0.0-20220910183319-c84545420b9e h1:EJd0GQV0x3POBDoY2NgGxLNSPW3KTKLh4paqtHsYAe4=
+github.com/discomco/go-cart v0.0.0-20220910183319-c84545420b9e/go.mod h1:AAi1TKsrb2FLZut+cpUGMB5tDjAazEmigunNT+1UnUM=
+github.com/discomco/go-status v0.0.2 h1:peZkmaoZxTNGSfQIOVX3VgLs+xqT1kUqNfglUlUMgmM=
+github.com/discomco/go-status v0.0.2/go.mod h1:ye/w4bk/4HpIII7PhaUJoD438jqaRLQj0HrB18t81Jk=

@@ -4,8 +4,6 @@ import (
 	sdk_model "github.com/discomco/go-cart/sdk/schema"
 )
 
-//type DocFtor sdk_model.DocFtor[GameDoc]
-
 func (r *GameDoc) GetStatus() int {
 	return int(r.Status)
 }

@@ -5,6 +5,7 @@ type GetDocKeyFunc func() string
 
 //IWriteSchema is an Injector that represents the Write-Model Type in a CQRS Context
 type IWriteSchema interface {
+	ISchema
 	GetStatus() int
 }
 

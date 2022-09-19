@@ -63,25 +63,25 @@ Additionally, such applications need to implement three data-flows: *COMMANDS, P
 
 ### Command Sequence
 
-![CMD Sequence](image/README/1663492191135.png)
+![CMD Sequence](docs/image/README/1663492191135.png)
 
 ### Projection Sequence
 
-![PRJ Sequence](image/README/1663492324954.png)
+![PRJ Sequence](docs/image/README/1663492324954.png)
 
 ### Query Sequence
 
-![QRY Sequence](image/README/1663494623224.png)
+![QRY Sequence](docs/image/README/1663494623224.png)
 
 ## UNIT OF DEPLOYMENT
 
 ### Cartwheel Deployment
 
-![Cartwheel Deployment](image/README/1663485777664.png)
+![Cartwheel Deployment](docs/image/README/1663485777664.png)
 
 ### Railroad Deployment
 
-![Railroad Deployment](image/README/1663486266033.png)
+![Railroad Deployment](docs/image/README/1663486266033.png)
 
 
 
@@ -132,5 +132,3 @@ please check out the *./examples* folder for reference implementations.
 - [Microservices - Allard Buijze](https://youtu.be/jrbWIS7BH70)
 
 
-## SERVERLESS DEPLOYMENT
-One may notice that this architecture, due to its decoupled and modular nature, has many similarities with the concept of **Functions as a Service** (FaaS). One of the major issues that FaaS platforms struggle with is how to implement event sourced systems. This architecture does not pretend to have the solution for this problem, but **Behavior Composition** may offer a path forward. Should decomposing the Screaming Monolith into functional nanoservices become an option or a necessity one day, packaging each feature as a function and deploying it to a "serverless" infrastructure like OpenFaaS, should require minimal effort.

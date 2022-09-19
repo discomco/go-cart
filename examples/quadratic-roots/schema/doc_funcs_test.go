@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func TestThatWeCanCreateAGameDoc(t *testing.T) {
+func TestThatWeCanCreateAQuadraticDoc(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
 	// WHEN
-	var newDoc schema.DocFtor[GameDoc]
-	err := testEnv.Invoke(func(new schema.DocFtor[GameDoc]) {
+	var newDoc schema.DocFtor[QuadraticDoc]
+	err := testEnv.Invoke(func(new schema.DocFtor[QuadraticDoc]) {
 		newDoc = new
 	})
 	// THEN
