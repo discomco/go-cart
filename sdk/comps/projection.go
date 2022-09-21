@@ -61,7 +61,7 @@ func (ph *GenProjection[TEvt, TState]) loadEvent(ctx context.Context, evt behavi
 	doc, err := ph.store.Get(ctx, key)
 	if err != nil {
 		if err != redis.Error(redis.Nil) {
-			//		if	!errors.Is(err, behavior.ErrAggregateNotFound) {
+			//		if	!errors.Is(err, behavior.ErrBehaviorNotFound) {
 			return errors.Wrapf(err, "loadEvent: failed to get aggregate %s from cache", evt.GetBehaviorId())
 		}
 		doc = ph.newDoc()

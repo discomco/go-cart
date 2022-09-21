@@ -6,8 +6,8 @@ import (
 	"github.com/discomco/go-cart/sdk/behavior"
 )
 
-// CalculationBuilder returns a builder function that composes the behavior for the process.
-func CalculationBuilder(newCalculation behavior.GenBehaviorFtor[schema.QuadraticDoc]) behavior.BehaviorBuilder {
+// BehaviorBuilder returns a builder function that composes the behavior for the process.
+func BehaviorBuilder(newCalculation behavior.GenBehaviorFtor[schema.QuadraticDoc]) behavior.BehaviorBuilder {
 	return func() behavior.IBehavior {
 		calculation := newCalculation()
 		return calculation.Inject(calculation,

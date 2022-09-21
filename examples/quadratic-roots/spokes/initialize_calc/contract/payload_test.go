@@ -18,7 +18,7 @@ func TestThatWeCanCreateAnInitializeCalculationPayload(t *testing.T) {
 	a := 42.0
 	b := 4.2
 	c := 42.42
-	pl := NewPayload(a, b, c)
+	pl, _ := NewPayload(a, b, c)
 	// THEN
 	assert.NotNil(t, pl)
 	assert.NotNil(t, pl.Input)

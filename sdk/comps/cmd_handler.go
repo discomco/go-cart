@@ -47,7 +47,7 @@ var hMutex = &sync.Mutex{}
 func (h *cmdHandler) Handle(ctx context.Context, cmd behavior.ICmd) contract.IFbk {
 	hMutex.Lock()
 	defer hMutex.Unlock()
-	fbk := contract.NewFbk(cmd.GetAggregateID().Id(), -1, "")
+	fbk := contract.NewFbk(cmd.GetBehaviorID().Id(), -1, "")
 	cmd_must.NotBeNil(cmd, fbk)
 	cmd_must.HaveAggregateID(cmd, fbk)
 	if !fbk.IsSuccess() {
@@ -56,9 +56,9 @@ func (h *cmdHandler) Handle(ctx context.Context, cmd behavior.ICmd) contract.IFb
 
 	span, ctx := opentracing.StartSpanFromContext(ctx, "handler.Handle")
 	defer span.Finish()
-	span.LogFields(opentracing_log.String("aggregateID", cmd.GetAggregateID().Id()))
+	span.LogFields(opentracing_log.String("aggregateID", cmd.GetBehaviorID().Id()))
 
-	ID := cmd.GetAggregateID()
+	ID := cmd.GetBehaviorID()
 	h.behavior.SetID(ID)
 
 	// Do we have an Aggregate?

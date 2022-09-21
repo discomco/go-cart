@@ -3,8 +3,8 @@ package behavior
 import (
 	"context"
 	"fmt"
-	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/specs/state_must"
-	initialize_game "github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/examples/quadratic-roots/behavior/specs/doc_must"
+	initialize_calc "github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/contract"
 	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/pkg/errors"
@@ -22,33 +22,35 @@ type try struct {
 	*behavior.TryCmd
 }
 
-func (t *try) raiseEvent(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt, contract.IFbk) {
+func (t *try) fRaise(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt, contract.IFbk) {
 	// Initializations
-	aggID := cmd.GetAggregateID()
-	fbk := contract.NewFbk(aggID.Id(), -1, "")
+	behID := cmd.GetBehaviorID()
+	fbk := contract.NewFbk(behID.Id(), -1, "")
 	agg := t.GetAggregate()
 	state := agg.GetState()
+
 	// SPECIFICATIONS
-	state_must.NotBeInitialized(state, fbk)
+	doc_must.NotBeInitialized(state, fbk)
 	if !fbk.IsSuccess() {
 		return nil, fbk
 	}
 
 	// PREPARE EVENT
-	var pl initialize_game.Payload
+	var pl initialize_calc.Payload
 	err := cmd.GetJsonPayload(&pl)
 	if err != nil {
-		e := fmt.Sprint(errors.Wrapf(err, "(initialize.raiseEvent) could not extract payload"))
+		e := fmt.Sprint(errors.Wrapf(err, "(initialize_calc.fRaise) could not extract payload"))
 		fbk.SetError(e)
 	}
 	evt := NewEvt(agg, pl)
+
 	// RAISE Event
 	return evt, fbk
 }
 
 func newTry() *try {
 	t := &try{}
-	b := behavior.NewTryCmd(CMD_TOPIC, t.raiseEvent)
+	b := behavior.NewTryCmd(CMD_TOPIC, t.fRaise)
 	t.TryCmd = b
 	return t
 }

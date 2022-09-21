@@ -24,7 +24,7 @@ type anApply struct {
 	*ApplyEvt
 }
 
-func (a *anApply) applyEvt(evt IEvt, schema schema.ISchema) error {
+func (a *anApply) fApply(schema schema.ISchema, evt IEvt) error {
 	return nil
 }
 
@@ -34,7 +34,7 @@ type IAnApplyEvt interface {
 
 func newAnApply() IAnApplyEvt {
 	a := &anApply{}
-	b := NewApplyEvt(A_EVT_TOPIC, a.applyEvt)
+	b := NewFapply(A_EVT_TOPIC, a.fApply)
 	a.ApplyEvt = b
 	return a
 }

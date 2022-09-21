@@ -5,11 +5,12 @@ import (
 	"math/rand"
 )
 
-func RandomPayload() *Payload {
+func RandomPayload() (*Payload, error) {
 	return NewPayload(1_000*rand.NormFloat64(), 1_000*rand.NormFloat64(), 1_000*rand.NormFloat64())
 }
 
 func RandomHope() (IHope, error) {
 	ID, _ := doc.NewCalculationID()
-	return NewHope(ID.Id(), RandomPayload())
+	pl, _ := RandomPayload()
+	return NewHope(ID.Id(), pl)
 }

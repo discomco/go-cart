@@ -10,11 +10,13 @@ const (
 	behaviorName = "quadratic-roots"
 )
 
+// IBehavior is the injection discriminator for the quadratic-roots behavior.
 type IBehavior interface {
 	sdk_behavior.IBehavior
 }
 
-func CalculationFtor(newDoc sdk_schema.DocFtor[schema.QuadraticDoc]) sdk_behavior.GenBehaviorFtor[schema.QuadraticDoc] {
+// BehaviorFtor returns a function that creates an empty behavior, using the DocFtor to instantiate a new State for the Behavior.
+func BehaviorFtor(newDoc sdk_schema.DocFtor[schema.QuadraticDoc]) sdk_behavior.GenBehaviorFtor[schema.QuadraticDoc] {
 	return func() sdk_behavior.IBehavior {
 		return sdk_behavior.NewBehavior(behaviorName, newDoc())
 	}

@@ -30,7 +30,7 @@ func TestThatWeCanInitializeACalculation(t *testing.T) {
 	ctx, expired := context.WithTimeout(context.Background(), 10*time.Second)
 	defer expired()
 
-	pl := contract.NewPayload(a, b, c)
+	pl, _ := contract.NewPayload(a, b, c)
 
 	initCmd, err := NewCmd(ID, *pl)
 

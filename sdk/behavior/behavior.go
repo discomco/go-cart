@@ -35,7 +35,7 @@ type IBehaviorPlugin interface {
 type IApplyEvt interface {
 	IBehaviorPlugin
 	IGetEvtType
-	ApplyEvent(evt IEvt, state schema.ISchema) error
+	ApplyEvent(state schema.ISchema, evt IEvt) error
 }
 
 // ITryCmd is an IBehaviorPlugin injector that allows us to inject Command Executors into the Aggregate
@@ -126,7 +126,7 @@ func (a *behavior) SetID(identity schema.IIdentity) IBehavior {
 // GetID get behavior ID
 func (a *behavior) GetID() schema.IIdentity {
 	if a.ID == nil {
-		panic(ErrTheAggregateHasNoID)
+		panic(ErrTheBehaviorHasNoID)
 	}
 	return a.ID
 }
@@ -134,7 +134,7 @@ func (a *behavior) GetID() schema.IIdentity {
 // GetAggregateType get behavior BehaviorType
 func (a *behavior) GetBehaviorType() BehaviorType {
 	if a.Type == "" {
-		panic(ErrInvalidAggregateType)
+		panic(ErrInvalidBehaviorType)
 	}
 	return a.Type
 }
@@ -185,17 +185,17 @@ func (a *behavior) ApplyEvent(event IEvt, isCommitted bool) error {
 	aMutex.Lock()
 	defer aMutex.Unlock()
 	if event.GetBehaviorId() == "" {
-		return ErrEventHasNoAggregateID
+		return ErrEventHasNoBehaviorID
 	}
 	if event.GetBehaviorId() != a.GetID().Id() {
-		return ErrInvalidAggregate
+		return ErrInvalidBehavior
 	}
 	event.SetBehaviorType(a.GetBehaviorType())
 	apply, err := a.getApplyEvt(event.GetEventType())
 	if err != nil {
 		return err
 	}
-	if err := apply.ApplyEvent(event, a.state); err != nil {
+	if err := apply.ApplyEvent(a.state, event); err != nil {
 		return err
 	}
 	a.Version++
@@ -216,7 +216,7 @@ func (a *behavior) RaiseEvent(event IEvt) error {
 	raiseMutex.Lock()
 	defer raiseMutex.Unlock()
 	if event.GetBehaviorId() != a.GetID().Id() {
-		return ErrInvalidAggregateID
+		return ErrInvalidBehaviorID
 	}
 	if a.GetVersion() >= event.GetVersion() {
 		return ErrInvalidEventVersion
@@ -258,16 +258,16 @@ var tryMutex = &sync.Mutex{}
 func (a *behavior) TryCommand(ctx context.Context, cmd ICmd) (IEvt, contract.IFbk) {
 	tryMutex.Lock()
 	defer tryMutex.Unlock()
-	fbk := contract.NewFbk(cmd.GetAggregateID().Id(), -1, "")
+	fbk := contract.NewFbk(cmd.GetBehaviorID().Id(), -1, "")
 	if cmd == nil {
 		fbk.SetError(CommandCannotBeNil)
 		return nil, fbk
 	}
-	if cmd.GetAggregateID() == nil {
-		fbk.SetError(CommandMustHaveAggregateID)
+	if cmd.GetBehaviorID() == nil {
+		fbk.SetError(CommandMustHaveBehaviorID)
 		return nil, fbk
 	}
-	a.SetID(cmd.GetAggregateID())
+	a.SetID(cmd.GetBehaviorID())
 	if cmd.GetCommandType() == "" {
 		fbk.SetError(CommandTypeMustNotBeEmpty)
 		return nil, fbk
@@ -281,7 +281,7 @@ func (a *behavior) TryCommand(ctx context.Context, cmd ICmd) (IEvt, contract.IFb
 	if !f.IsSuccess() {
 		return nil, f
 	}
-	e.SetBehaviorId(cmd.GetAggregateID().Id())
+	e.SetBehaviorId(cmd.GetBehaviorID().Id())
 	er := a.ApplyEvent(e, false)
 	if er != nil {
 		f.SetError(er.Error())

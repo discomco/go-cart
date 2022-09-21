@@ -27,8 +27,8 @@ func buildTestEnv() ioc.IDig {
 	dig.Inject(dig,
 		schema.DocFtor,
 	).Inject(dig,
-		ftor.CalculationFtor,
-		CalculationBuilder,
+		ftor.BehaviorFtor,
+		BehaviorBuilder,
 	)
 	return resolve(dig)
 }

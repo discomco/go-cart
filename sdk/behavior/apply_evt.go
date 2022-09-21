@@ -13,7 +13,7 @@ var (
 	ErrBehaviorCannotBeNil = fmt.Errorf(CannotBeNil)
 )
 
-type FApply func(evt IEvt, state schema.ISchema) error
+type FApply func(state schema.ISchema, evt IEvt) error
 
 type ApplyEvt struct {
 	behavior  IBehavior
@@ -21,8 +21,8 @@ type ApplyEvt struct {
 	fApply    FApply
 }
 
-func (a *ApplyEvt) ApplyEvent(event IEvt, state schema.ISchema) error {
-	return a.fApply(event, state)
+func (a *ApplyEvt) ApplyEvent(state schema.ISchema, event IEvt) error {
+	return a.fApply(state, event)
 }
 
 func (a *ApplyEvt) GetAggregate() IBehavior {
@@ -37,9 +37,9 @@ func (a *ApplyEvt) SetBehavior(agg IBehavior) {
 	a.behavior = agg
 }
 
-// NewApplyEvt lets you create an Event Applier and requires that you pass an FApply function.
+// NewFapply lets you create an Event Applier and requires that you pass an FApply function.
 // your Event Applier is automatically injected into the Aggregate.
-func NewApplyEvt(
+func NewFapply(
 	eventType EventType,
 	fApply FApply,
 ) *ApplyEvt {

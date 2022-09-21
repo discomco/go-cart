@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/specs/state_must"
 	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
-	change_game_details "github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_details/contract"
+	change_game_settings "github.com/discomco/go-cart/examples/robby/execute-game/spokes/change_game_settings/contract"
 	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/pkg/errors"
@@ -23,9 +23,9 @@ type try struct {
 	*behavior.TryCmd
 }
 
-func (t *try) raiseEvent(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt, contract.IFbk) {
+func (t *try) fRaise(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt, contract.IFbk) {
 	// Initializations
-	aggID := cmd.GetAggregateID()
+	aggID := cmd.GetBehaviorID()
 	fbk := contract.NewFbk(aggID.Id(), -1, "")
 	agg := t.GetAggregate()
 	state := agg.GetState()
@@ -36,10 +36,10 @@ func (t *try) raiseEvent(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt,
 	}
 
 	// PREPARE EVENT
-	var pl change_game_details.Payload
+	var pl change_game_settings.Payload
 	err := cmd.GetJsonPayload(&pl)
 	if err != nil {
-		e := fmt.Sprint(errors.Wrapf(err, "(changeEventDetails.raiseEvent) could not extract payload"))
+		e := fmt.Sprint(errors.Wrapf(err, "(changeEventDetails.fRaise) could not extract payload"))
 		fbk.SetError(e)
 	}
 	evt := NewEvt(agg, pl)
@@ -49,7 +49,7 @@ func (t *try) raiseEvent(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt,
 
 func newTry() *try {
 	t := &try{}
-	b := behavior.NewTryCmd(CMD_TOPIC, t.raiseEvent)
+	b := behavior.NewTryCmd(CMD_TOPIC, t.fRaise)
 	t.TryCmd = b
 	return t
 }

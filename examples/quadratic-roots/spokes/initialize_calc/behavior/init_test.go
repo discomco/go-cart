@@ -40,7 +40,7 @@ func buildTestEnv() ioc.IDig {
 	dig := builder.InjectCoLoMed(ConfigPath)
 	dig.Inject(dig,
 		schema.DocFtor,
-		ftor.CalculationFtor,
+		ftor.BehaviorFtor,
 		localBuilder,
 	)
 	return resolveTestEnv(dig)

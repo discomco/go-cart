@@ -16,8 +16,15 @@
 
 ## Description
 
-Calculating quadratic equations (a*x^2 + b*x + c = 0) is something we have all learned in highschool and offers a nice "hello-world"-level use-case.
-We'll do this by implementing a simple behavior that follows 
+Calculating quadratic equations (a*x^2 + b*x + c = 0) is something we have all learned in high school and offers a nice "hello-world"-level use-case.
+We understand that using the framework to do this is *massive* overkill, but it serves just as an example.
+We'll do this by implementing a simple behavior that consists of 3 steps:
+
+- Initialize the Calculation
+- Calculate the Discriminator
+- Calculate the Roots
+
+
 
 ## Diagrams
 

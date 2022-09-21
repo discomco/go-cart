@@ -166,7 +166,7 @@ func (e *Event) SetBehaviorId(id string) {
 }
 
 func (e *Event) String() string {
-	return fmt.Sprintf("(Event): aggregateID: {%s}, Version: {%d}, EventType: {%s}, BehaviorType: {%s}, Metadata: {%s}, TimeStamp: {%s}",
+	return fmt.Sprintf("(Event): behaviorID: {%s}, Version: {%d}, EventType: {%s}, BehaviorType: {%s}, Metadata: {%s}, TimeStamp: {%s}",
 		e.AggregateID,
 		e.Version,
 		e.EventType,

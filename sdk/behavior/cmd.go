@@ -13,14 +13,14 @@ type GenData2CmdFunc[TCmd ICmd] func([]byte) (TCmd, error)
 // ICmd is an injector that represents a behavior.Cmd
 type ICmd interface {
 	IGetCmdType
-	GetAggregateID() schema.IIdentity
+	GetBehaviorID() schema.IIdentity
 	GetPayload() []byte                      //
 	GetJsonPayload(pl schema.IPayload) error //
 	SetJsonPayload(pl schema.IPayload) error
 }
 
 type Cmd struct {
-	aggregateID schema.IIdentity
+	behaviorID  schema.IIdentity
 	payload     []byte
 	commandType CommandType
 }
@@ -52,20 +52,20 @@ func (c *Cmd) GetPayload() []byte {
 	return c.payload
 }
 
-func NewCmd(aggregateID schema.IIdentity, commandType CommandType, payload []byte) (*Cmd, error) {
-	if aggregateID == nil {
-		return nil, ErrAggregateIDCannotBeNil
+func NewCmd(behaviorID schema.IIdentity, commandType CommandType, payload []byte) (*Cmd, error) {
+	if behaviorID == nil {
+		return nil, ErrBehaviorIDCannotBeNil
 	}
 	if commandType == "" {
 		return nil, ErrInvalidCommandType
 	}
 	return &Cmd{
-		aggregateID: aggregateID,
+		behaviorID:  behaviorID,
 		commandType: commandType,
 		payload:     payload,
 	}, nil
 }
 
-func (c *Cmd) GetAggregateID() schema.IIdentity {
-	return c.aggregateID
+func (c *Cmd) GetBehaviorID() schema.IIdentity {
+	return c.behaviorID
 }

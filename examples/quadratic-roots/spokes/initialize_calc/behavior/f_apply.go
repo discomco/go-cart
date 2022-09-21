@@ -16,7 +16,7 @@ type apply struct {
 	*behavior.ApplyEvt
 }
 
-func (a *apply) applyEvt(evt behavior.IEvt, state schema.ISchema) error {
+func (a *apply) fApply(state schema.ISchema, evt behavior.IEvt) error {
 	// EXTRACT Payload
 	var pl contract.Payload
 	err := evt.GetPayload(&pl)
@@ -32,7 +32,7 @@ func (a *apply) applyEvt(evt behavior.IEvt, state schema.ISchema) error {
 
 func newApply() IApplyEvt {
 	a := &apply{}
-	b := behavior.NewApplyEvt(EVT_TOPIC, a.applyEvt)
+	b := behavior.NewFapply(EVT_TOPIC, a.fApply)
 	a.ApplyEvt = b
 	return a
 }

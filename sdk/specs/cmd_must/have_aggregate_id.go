@@ -6,7 +6,7 @@ import (
 )
 
 func HaveAggregateID(cmd behavior.ICmd, fbk contract.IFbk) {
-	if cmd.GetAggregateID() == nil {
-		fbk.SetError(behavior.CommandMustHaveAggregateID)
+	if cmd.GetBehaviorID() == nil {
+		fbk.SetError(behavior.CommandMustHaveBehaviorID)
 	}
 }
