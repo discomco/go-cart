@@ -6,19 +6,19 @@ import (
 	"time"
 )
 
-type Evt2ModelFtor[TEvt IEvt, TReadModel schema.ISchema] func() Evt2ModelFunc[TEvt, TReadModel]
+type Evt2SchemaFtor[TEvt IEvt, TSchema schema.ISchema] func() FEvt2Schema[TEvt, TSchema]
 
-type Evt2ModelFunc[TEvt IEvt, TReadModel schema.ISchema] func(evt TEvt, model *TReadModel) error
-type Evt2CmdFunc func(evt IEvt) (ICmd, error)
-type Evt2FactFunc func(evt IEvt) (contract.IFact, error)
-type GenEvt2FactFunc[TFact contract.IFact] func(evt IEvt) (TFact, error)
+type FEvt2Schema[TEvt IEvt, TSchema schema.ISchema] func(evt TEvt, model *TSchema) error
+type FEvt2Cmd func(evt IEvt) (ICmd, error)
+type FEvt2Fact func(evt IEvt) (contract.IFact, error)
+type FGenEvt2Fact[TFact contract.IFact] func(evt IEvt) (TFact, error)
 
 type IEvt interface {
-	EvtTypeGetter
-	BehaviorTypeGetter
-	BehaviorTypeSetter
-	GetAggregateID() (schema.IIdentity, error)
-	GetStreamID() string
+	IGetEvtType
+	IGetBehaviorType
+	ISetBehaviorType
+	GetBehaviorID() (schema.IIdentity, error)
+	GetStreamId() string
 	EventNumber() uint64
 	CreatedDate() time.Time
 	GetEventId() string
@@ -28,21 +28,21 @@ type IEvt interface {
 	GetPayload(data interface{}) error
 	SetPayload(data interface{}) error
 	GetEventTypeString() string
-	GetAggregateId() string
+	GetBehaviorId() string
 	GetVersion() int64
-	SetVersion(aggregateVersion int64)
+	SetVersion(version int64)
 	GetMetadata() []byte
 	SetMetadata(metaData interface{}) error
 	GetJsonMetadata(metaData interface{}) error
 	GetString() string
 	String() string
-	SetAggregateId(id string)
+	SetBehaviorId(id string)
 }
 
-type BehaviorTypeSetter interface {
+type ISetBehaviorType interface {
 	SetBehaviorType(behaviorType BehaviorType)
 }
 
-type BehaviorTypeGetter interface {
+type IGetBehaviorType interface {
 	GetBehaviorType() BehaviorType
 }

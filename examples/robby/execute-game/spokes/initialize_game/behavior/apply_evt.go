@@ -18,7 +18,7 @@ type apply struct {
 	*behavior.ApplyEvt
 }
 
-func (a *apply) applyEvt(evt behavior.IEvt, state schema.IWriteSchema) error {
+func (a *apply) applyEvt(evt behavior.IEvt, state schema.IModel) error {
 	// EXTRACT Payload
 	var pl contract.Payload
 	err := evt.GetPayload(&pl)
@@ -26,7 +26,7 @@ func (a *apply) applyEvt(evt behavior.IEvt, state schema.IWriteSchema) error {
 		return errors.Wrapf(err, "(applyEvent) could not extract payload")
 	}
 	s := state.(*read_model.GameDoc)
-	ID, _ := evt.GetAggregateID()
+	ID, _ := evt.GetBehaviorID()
 	s.ID = ID.(*schema.Identity)
 	s.Details = pl.Details
 	go_status.SetStatus(&s.Status, doc.Initialized)

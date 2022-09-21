@@ -152,7 +152,7 @@ func (o *eventProjector) React(ctx context.Context, evt behavior.IEvt) error {
 	ctx, span := jaeger.StartProjectionTracerSpan(ctx, "GenProjection.React", evt)
 	defer span.Finish()
 	span.LogFields(
-		log.String("Id [%+v]", evt.GetAggregateId()),
+		log.String("Id [%+v]", evt.GetBehaviorId()),
 		log.String("EventType", evt.GetEventTypeString()))
 	o.GetLogger().Debugf("(GenProjection.React) event_type: [%v], event  {%+v}", evt.GetEventType(), evt)
 	topic := evt.GetEventTypeString()

@@ -8,14 +8,14 @@ import (
 	"github.com/pkg/errors"
 )
 
-func EvtToList() behavior.Evt2ModelFunc[IEvt, schema.GameList] {
+func EvtToList() behavior.FEvt2Schema[IEvt, schema.GameList] {
 	return func(evt IEvt, list *schema.GameList) error {
 		return evtToList(evt, list)
 	}
 }
 
 func evtToList(evt IEvt, list *schema.GameList) error {
-	gameId := evt.GetAggregateId()
+	gameId := evt.GetBehaviorId()
 	gameIt := list.GetItem(gameId)
 	var pl contract.Payload
 	err := evt.GetPayload(&pl)

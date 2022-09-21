@@ -8,7 +8,7 @@ import (
 )
 
 type IListStore interface {
-	behavior.IReadModelStore[schema.GameList]
+	behavior.IModelStore[schema.GameList]
 }
 
 func newListStore(cfg config.IAppConfig) IListStore {
@@ -17,7 +17,7 @@ func newListStore(cfg config.IAppConfig) IListStore {
 }
 
 func ListStore(config config.IAppConfig) behavior.StoreFtor[schema.GameList] {
-	return func() behavior.IReadModelStore[schema.GameList] {
+	return func() behavior.IModelStore[schema.GameList] {
 		return newListStore(config)
 	}
 }

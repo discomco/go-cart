@@ -121,7 +121,7 @@ type IBehaviorLink interface {
 
 type IGenMediatorReaction[TEvt behavior.IEvt] interface {
 	ISpokePlugin
-	behavior.EvtTypeGetter
+	behavior.IGetEvtType
 	behavior.IGenReacter[TEvt]
 }
 
@@ -129,7 +129,7 @@ type IGenMediatorReaction[TEvt behavior.IEvt] interface {
 //Will be replaced with IGenMediatorReaction at some point.
 type IMediatorReaction interface {
 	ISpokePlugin
-	behavior.EvtTypeGetter
+	behavior.IGetEvtType
 	behavior.Reacter
 }
 

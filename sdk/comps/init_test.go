@@ -95,7 +95,7 @@ func newMyTestEvt() (iMyEvt, error) {
 		err := errors.Wrap(err, "newMyTestEvt")
 		return nil, err
 	}
-	evt.SetAggregateId(id.Id())
+	evt.SetBehaviorId(id.Id())
 	return evt, err
 }
 

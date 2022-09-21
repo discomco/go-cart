@@ -18,7 +18,7 @@ type IToRedisList interface {
 
 func ToRedisList(
 	newStore behavior2.StoreFtor[schema.GameList],
-	newMapper behavior2.Evt2ModelFunc[behavior.IEvt, schema.GameList],
+	newMapper behavior2.FEvt2Schema[behavior.IEvt, schema.GameList],
 	newList schema2.DocFtor[schema.GameList],
 ) IToRedisList {
 	return comps.NewProjection[behavior.IEvt, schema.GameList](

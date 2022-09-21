@@ -37,7 +37,7 @@ nats:
   user: "a"
   password: "a"
 projection:
-  poolSize: 6
-  eventPrefix: "sdk-"
-  group: "sdk-med"
-  name: "sdkProjector"
+  poolSize: 60
+  eventPrefix: "quadratic-"
+  group: "quadratic-roots"
+  name: "mediator.Projector"

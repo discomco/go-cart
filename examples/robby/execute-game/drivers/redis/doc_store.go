@@ -9,7 +9,7 @@ import (
 )
 
 type IDocStore interface {
-	behavior.IReadModelStore[schema.GameDoc]
+	behavior.IModelStore[schema.GameDoc]
 }
 
 func newDocStore(cfg config.IAppConfig) IDocStore {
@@ -18,7 +18,7 @@ func newDocStore(cfg config.IAppConfig) IDocStore {
 }
 
 func DocStore(config config.IAppConfig) behavior.StoreFtor[schema.GameDoc] {
-	return func() behavior.IReadModelStore[schema.GameDoc] {
+	return func() behavior.IModelStore[schema.GameDoc] {
 		return newDocStore(config)
 	}
 }

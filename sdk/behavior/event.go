@@ -51,7 +51,7 @@ func newEvent(aggregate IBehavior, eventType EventType) *Event {
 	}
 }
 
-func (e *Event) GetAggregateID() (schema.IIdentity, error) {
+func (e *Event) GetBehaviorID() (schema.IIdentity, error) {
 	return schema.IdentityFromPrefixedId(e.AggregateID)
 }
 
@@ -59,7 +59,7 @@ func (e *Event) GetEventType() EventType {
 	return e.EventType
 }
 
-func (e *Event) GetStreamID() string {
+func (e *Event) GetStreamId() string {
 	return e.EventId
 }
 
@@ -122,7 +122,7 @@ func (e *Event) SetBehaviorType(aggregateType BehaviorType) {
 }
 
 // GeTAID is the Id of the IBehavior that the Event belongs to
-func (e *Event) GetAggregateId() string {
+func (e *Event) GetBehaviorId() string {
 	return e.AggregateID
 }
 
@@ -161,7 +161,7 @@ func (e *Event) GetString() string {
 	return fmt.Sprintf("event: %+v", e)
 }
 
-func (e *Event) SetAggregateId(id string) {
+func (e *Event) SetBehaviorId(id string) {
 	e.AggregateID = id
 }
 

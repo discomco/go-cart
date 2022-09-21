@@ -16,15 +16,15 @@ func init() {
 func newTestEnv() ioc.IDig {
 	ioc := builder.InjectCoLoMed(CfgPath)
 	return ioc.Inject(ioc,
-		AnAggFtor,
-		AnAggBuilder)
+		ABehaviorFtor,
+		ABehaviorBuilder)
 }
 
 type anApply struct {
 	*ApplyEvt
 }
 
-func (a *anApply) applyEvt(evt IEvt, state schema.IWriteSchema) error {
+func (a *anApply) applyEvt(evt IEvt, schema schema.ISchema) error {
 	return nil
 }
 

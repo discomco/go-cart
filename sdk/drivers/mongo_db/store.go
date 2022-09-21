@@ -12,7 +12,7 @@ import (
 type MongoDbStoreFtor[TModel schema.ISchema] func() IStore[TModel]
 
 type IStore[T schema.ISchema] interface {
-	behavior.IReadModelStore[T]
+	behavior.IModelStore[T]
 }
 
 type store[T schema.ISchema] struct {

@@ -1,7 +1,7 @@
 package behavior
 
 import (
-	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/contract"
 	"github.com/discomco/go-cart/sdk/behavior"
 )
 
@@ -9,8 +9,9 @@ type IEvt interface {
 	behavior.IEvt
 }
 
-func NewEvt(aggregate behavior.IBehavior, payload contract.Payload) IEvt {
-	e := behavior.NewEvt(aggregate, EVT_TOPIC)
+// NewEvt creates a new instance of IEvt
+func NewEvt(beh behavior.IBehavior, payload contract.Payload) IEvt {
+	e := behavior.NewEvt(beh, EVT_TOPIC)
 	e.SetPayload(payload)
 	return e
 }

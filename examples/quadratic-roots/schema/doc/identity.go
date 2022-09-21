@@ -6,12 +6,12 @@ const (
 	IdPrefix = "quadratic"
 )
 
-// NewDocID creates a new Identity for the document, based on the IdPrefix
-func NewDocID() (*schema.Identity, error) {
+// NewCalculationID creates a new Identity for the document, based on the IdPrefix
+func NewCalculationID() (*schema.Identity, error) {
 	return schema.NewIdentity(IdPrefix)
 }
 
-// NewDocIDFromString takes a string and attempts to create a new identity from it.
-func NewDocIDFromString(id string) (*schema.Identity, error) {
+// NewCalculationIDFromString takes a string and attempts to create a new identity from it.
+func NewCalculationIDFromString(id string) (*schema.Identity, error) {
 	return schema.NewIdentityFrom(IdPrefix, id)
 }

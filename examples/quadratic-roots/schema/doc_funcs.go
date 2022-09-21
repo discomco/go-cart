@@ -23,3 +23,11 @@ func newDoc() *QuadraticDoc {
 	}
 	return qd
 }
+
+func NewInput(a float64, b float64, c float64) *Input {
+	return &Input{
+		A: a,
+		B: b,
+		C: c,
+	}
+}

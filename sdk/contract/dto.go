@@ -42,7 +42,7 @@ func (d *Dto) GetPayload(payload schema.IPayload) error {
 	return nil
 }
 
-// GetAggregateId returns the NewDto's Id as a string
+// GetBehaviorId returns the NewDto's Id as a string
 func (d *Dto) GetId() string {
 	return d.Id
 }

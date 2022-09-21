@@ -12,7 +12,7 @@ type GenData2CmdFunc[TCmd ICmd] func([]byte) (TCmd, error)
 
 // ICmd is an injector that represents a behavior.Cmd
 type ICmd interface {
-	CmdTypeGetter
+	IGetCmdType
 	GetAggregateID() schema.IIdentity
 	GetPayload() []byte                      //
 	GetJsonPayload(pl schema.IPayload) error //

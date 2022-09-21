@@ -8,14 +8,14 @@ import (
 	"github.com/pkg/errors"
 )
 
-func EvtToDoc() behavior.Evt2ModelFunc[IEvt, schema.GameDoc] {
+func EvtToDoc() behavior.FEvt2Schema[IEvt, schema.GameDoc] {
 	return func(evt IEvt, schema *schema.GameDoc) error {
 		return evt2Doc(evt, schema)
 	}
 }
 
 func evt2Doc(evt IEvt, doc *schema.GameDoc) error {
-	aggID, err := evt.GetAggregateID()
+	aggID, err := evt.GetBehaviorID()
 	if err != nil {
 		return errors.Wrapf(err, "(change_game_details.evt2Doc) failed to get aggregate Id from evt")
 	}

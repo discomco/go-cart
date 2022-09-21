@@ -59,7 +59,7 @@ func (c *cache[T]) Delete(ctx context.Context, key string) (*T, error) {
 	return ref, nil
 }
 
-func newRedis[T schema.ISchema](cfg config.IAppConfig) (behavior.IReadModelStore[T], error) {
+func newRedis[T schema.ISchema](cfg config.IAppConfig) (behavior.IModelStore[T], error) {
 	c := &cache[T]{}
 	opts, err := redis.ParseURL(cfg.GetRedisConfig().GetUrl())
 	if err != nil {
@@ -70,7 +70,7 @@ func newRedis[T schema.ISchema](cfg config.IAppConfig) (behavior.IReadModelStore
 	return c, nil
 }
 
-func oneRedis[T schema.ISchema](cfg config.IAppConfig) (behavior.IReadModelStore[T], error) {
+func oneRedis[T schema.ISchema](cfg config.IAppConfig) (behavior.IModelStore[T], error) {
 	cMutex.Lock()
 	defer cMutex.Unlock()
 	if singleton == nil {
@@ -84,7 +84,7 @@ func oneRedis[T schema.ISchema](cfg config.IAppConfig) (behavior.IReadModelStore
 }
 
 func NewRedisStore[T schema.ISchema](config config.IAppConfig) behavior.StoreFtor[T] {
-	return func() behavior.IReadModelStore[T] {
+	return func() behavior.IModelStore[T] {
 		c, err := newRedis[T](config)
 		if err != nil {
 			log.Fatal(err)
@@ -95,7 +95,7 @@ func NewRedisStore[T schema.ISchema](config config.IAppConfig) behavior.StoreFto
 }
 
 func SingleRedisStore[T schema.ISchema](config config.IAppConfig) behavior.StoreFtor[T] {
-	return func() behavior.IReadModelStore[T] {
+	return func() behavior.IModelStore[T] {
 		c, err := oneRedis[T](config)
 		if err != nil {
 			log.Fatal(err)

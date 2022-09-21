@@ -36,7 +36,7 @@ func TestThatWeCanInitializeABehaviorAndChangeItsSettings(t *testing.T) {
 	assert.NotNil(t, evt)
 	assert.NotNil(t, fbk)
 	assert.True(t, fbk.IsSuccess())
-	assert.Equal(t, fbk.GetAggregateStatus(), int(state.Status))
+	assert.Equal(t, fbk.GetStatus(), int(state.Status))
 
 	// CHANGE DETAILS
 	changeSettingsPl := contract.RandomPayload()

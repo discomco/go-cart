@@ -2,37 +2,47 @@ package behavior
 
 import (
 	"context"
-	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
-	"github.com/discomco/go-cart/examples/robby/execute-game/schema/doc"
-	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/examples/quadratic-roots/schema"
+	"github.com/discomco/go-cart/examples/quadratic-roots/schema/doc"
+	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/contract"
 	"github.com/discomco/go-cart/sdk/test"
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
 	"time"
 )
 
-func TestThatWeCanInitializeAnAggregate(t *testing.T) {
+func TestThatWeCanInitializeACalculation(t *testing.T) {
 	// GIVEN
-	assert.NotNil(t, newTestBehavior)
+	assert.NotNil(t, newTestCalculation)
+	a := 1_000 * rand.NormFloat64()
+	b := 1_000 * rand.NormFloat64()
+	c := 1_000 * rand.NormFloat64()
 	// WHEN
-	agg := newTestBehavior()
-	assert.NotNil(t, agg)
+	calculation := newTestCalculation()
+	assert.NotNil(t, calculation)
 
-	ID, err := doc.NewGameIDFromString(test.CLEAN_TEST_UUID)
+	ID, err := doc.NewCalculationIDFromString(test.CLEAN_TEST_UUID)
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)
-	agg.SetID(ID)
+	calculation.SetID(ID)
 
 	ctx, expired := context.WithTimeout(context.Background(), 10*time.Second)
 	defer expired()
-	pl := contract.NewPayload(ID.Id(), "New GameDoc", 42, 42, 42, 12)
+
+	pl := contract.NewPayload(a, b, c)
+
 	initCmd, err := NewCmd(ID, *pl)
 
-	evt, fbk := agg.TryCommand(ctx, initCmd)
-	state := agg.GetState().(*schema.GameDoc)
+	evt, fbk := calculation.TryCommand(ctx, initCmd)
+	state := calculation.GetState().(*schema.QuadraticDoc)
 
 	assert.NotNil(t, evt)
 	assert.NotNil(t, fbk)
+	assert.NotNil(t, state.Input)
+	assert.Equal(t, a, state.Input.A)
+	assert.Equal(t, b, state.Input.B)
+	assert.Equal(t, c, state.Input.C)
 	assert.True(t, fbk.IsSuccess())
-	assert.Equal(t, fbk.GetAggregateStatus(), int(state.Status))
+	assert.Equal(t, fbk.GetStatus(), int(state.Status))
 }

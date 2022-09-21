@@ -1,9 +1,7 @@
-package builder
+package redis
 
 import (
-	"github.com/discomco/go-cart/examples/quadratic-roots/behavior/ftor"
-	"github.com/discomco/go-cart/examples/quadratic-roots/schema"
-	"github.com/discomco/go-cart/sdk/container"
+	"github.com/discomco/go-cart/sdk/core/builder"
 	"github.com/discomco/go-cart/sdk/core/ioc"
 	"github.com/discomco/go-cart/sdk/core/logger"
 	"log"
@@ -23,19 +21,17 @@ func init() {
 }
 
 func buildTestEnv() ioc.IDig {
-	dig := container.DefaultCMD(ConfigPath)
+	dig := builder.InjectCoLoMed(ConfigPath)
 	dig.Inject(dig,
-		schema.DocFtor,
-	).Inject(dig,
-		ftor.CalculationFtor,
-		CalculationBuilder,
+		DocStore,
+		ListStore,
 	)
 	return resolve(dig)
 }
 
 func resolve(dig ioc.IDig) ioc.IDig {
-	err := dig.Invoke(func(appLogger logger.IAppLogger) {
-		testLogger = appLogger
+	err := dig.Invoke(func(tl logger.IAppLogger) {
+		testLogger = tl
 	})
 	if err != nil {
 		log.Fatal(err)

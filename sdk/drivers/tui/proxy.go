@@ -24,8 +24,8 @@ type IProxy interface {
 type Proxy[TDoc schema.ISchema, TList schema.ISchema] struct {
 	*comps.MsgReaction
 	requesters map[contract.HopeType]comps.IRequester
-	docStore   behavior.IReadModelStore[TDoc]
-	listStore  behavior.IReadModelStore[TList]
+	docStore   behavior.IModelStore[TDoc]
+	listStore  behavior.IModelStore[TList]
 	model      IGenModel[TDoc, TList]
 }
 

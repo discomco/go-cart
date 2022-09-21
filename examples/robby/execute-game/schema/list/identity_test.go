@@ -8,7 +8,7 @@ import (
 func TestThatWeCanGetTheDefaultListID(t *testing.T) {
 	// GIVEN
 	// WHEN
-	ID, err := DefaultID()
+	ID, err := DefaultCalcListID()
 	// THEN
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)

@@ -1,7 +1,7 @@
 package behavior
 
 import (
-	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/contract"
 	"github.com/discomco/go-cart/sdk/behavior"
 	sdk_contract "github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/schema"
@@ -15,11 +15,11 @@ func Hope2Cmd() behavior.Hope2CmdFunc[contract.IHope, ICmd] {
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to extract payload from hope: %v", err)
 		}
-		gameID, err := schema.IdentityFromPrefixedId(pl.GameId)
+		calcID, err := schema.IdentityFromPrefixedId(hope.Id)
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to extract gameId from hope: %v", err)
 		}
-		cmd, err := NewCmd(gameID, pl)
+		cmd, err := NewCmd(calcID, pl)
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to create Cmd from Hope: %v", err)
 		}

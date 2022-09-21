@@ -12,7 +12,7 @@ func TestThatWeCanCreateAnInitializeCalculationPayload(t *testing.T) {
 	assert.NotNil(t, testEnv)
 	assert.NotNil(t, testLogger)
 	// WHEN
-	ID, err := doc.NewDocIDFromString(test.CLEAN_TEST_UUID)
+	ID, err := doc.NewCalculationIDFromString(test.CLEAN_TEST_UUID)
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)
 	a := 42.0
@@ -21,7 +21,8 @@ func TestThatWeCanCreateAnInitializeCalculationPayload(t *testing.T) {
 	pl := NewPayload(a, b, c)
 	// THEN
 	assert.NotNil(t, pl)
-	assert.Equal(t, a, pl.A)
-	assert.Equal(t, b, pl.B)
-	assert.Equal(t, c, pl.C)
+	assert.NotNil(t, pl.Input)
+	assert.Equal(t, a, pl.Input.A)
+	assert.Equal(t, b, pl.Input.B)
+	assert.Equal(t, c, pl.Input.C)
 }

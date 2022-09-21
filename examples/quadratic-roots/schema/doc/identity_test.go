@@ -10,7 +10,7 @@ func TestThatWeCanCreateADocID(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
 	// WHEN
-	ID, err := NewDocID()
+	ID, err := NewCalculationID()
 	// THEN
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)
@@ -21,7 +21,7 @@ func TestThatWeCanCreateADocIDFromString(t *testing.T) {
 	assert.NotNil(t, testEnv)
 	id := test.CLEAN_TEST_UUID
 	// WHEN
-	ID, err := NewDocIDFromString(id)
+	ID, err := NewCalculationIDFromString(id)
 	// THEN
 	assert.NoError(t, err)
 	assert.NotNil(t, ID)

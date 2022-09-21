@@ -3,8 +3,8 @@ package schema
 type DocFtor[TModel ISchema] func() *TModel
 type GetDocKeyFunc func() string
 
-//IWriteSchema is an Injector that represents the Write-Model Type in a CQRS Context
-type IWriteSchema interface {
+//IModel is an Injector that represents the Write-Model Type in a CQRS Context
+type IModel interface {
 	ISchema
 	GetStatus() int
 }

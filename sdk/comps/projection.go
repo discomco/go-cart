@@ -19,8 +19,8 @@ type IProjection interface {
 
 type GenProjection[TEvt behavior.IEvt, TState schema.ISchema] struct {
 	*EventReaction
-	store     behavior.IReadModelStore[TState]
-	evt2Doc   behavior.Evt2ModelFunc[TEvt, TState]
+	store     behavior.IModelStore[TState]
+	evt2Doc   behavior.FEvt2Schema[TEvt, TState]
 	newDoc    schema.DocFtor[TState]
 	getDocKey schema.GetDocKeyFunc
 }
@@ -30,8 +30,8 @@ var cMutex = &sync.Mutex{}
 func newGenProjection[TEvt behavior.IEvt, TState schema.ISchema](
 	name schema.Name,
 	eventType behavior.EventType,
-	store behavior.IReadModelStore[TState],
-	evt2doc behavior.Evt2ModelFunc[TEvt, TState],
+	store behavior.IModelStore[TState],
+	evt2doc behavior.FEvt2Schema[TEvt, TState],
 	newDoc schema.DocFtor[TState],
 	getDocKey schema.GetDocKeyFunc,
 ) *GenProjection[TEvt, TState] {
@@ -54,7 +54,7 @@ func (ph *GenProjection[TEvt, TState]) loadEvent(ctx context.Context, evt behavi
 	lMutex.Lock()
 	defer lMutex.Unlock()
 	var doc schema.ISchema
-	key := evt.GetAggregateId()
+	key := evt.GetBehaviorId()
 	if ph.getDocKey != nil {
 		key = ph.getDocKey()
 	}
@@ -62,7 +62,7 @@ func (ph *GenProjection[TEvt, TState]) loadEvent(ctx context.Context, evt behavi
 	if err != nil {
 		if err != redis.Error(redis.Nil) {
 			//		if	!errors.Is(err, behavior.ErrAggregateNotFound) {
-			return errors.Wrapf(err, "loadEvent: failed to get aggregate %s from cache", evt.GetAggregateId())
+			return errors.Wrapf(err, "loadEvent: failed to get aggregate %s from cache", evt.GetBehaviorId())
 		}
 		doc = ph.newDoc()
 	}
@@ -81,7 +81,7 @@ func NewProjection[TEvt behavior.IEvt, TState schema.ISchema](
 	name schema.Name,
 	eventType behavior.EventType,
 	newStore behavior.StoreFtor[TState],
-	evt2Doc behavior.Evt2ModelFunc[TEvt, TState],
+	evt2Doc behavior.FEvt2Schema[TEvt, TState],
 	newDoc schema.DocFtor[TState],
 	getDocKey schema.GetDocKeyFunc) *GenProjection[TEvt, TState] {
 	return newGenProjection[TEvt, TState](

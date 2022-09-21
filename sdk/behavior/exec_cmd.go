@@ -25,7 +25,7 @@ func (e *TryCmd) GetAggregate() IBehavior {
 }
 
 // SetAggregate
-func (e *TryCmd) SetAggregate(agg IBehavior) {
+func (e *TryCmd) SetBehavior(agg IBehavior) {
 	e.aggregate = agg
 }
 

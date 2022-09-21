@@ -49,7 +49,7 @@ func (l *GameList) DeleteItem(key string) {
 }
 
 func GameListKey() string {
-	ID, err := list.DefaultID()
+	ID, err := list.DefaultCalcListID()
 	if err != nil {
 		log.Fatal(err)
 		panic(err)

@@ -12,25 +12,25 @@ type IATryCmd interface {
 	ITryCmd
 }
 
-func AnAggBuilder(ftor BehaviorFtor) BehaviorBuilder {
+func ABehaviorBuilder(ftor BehaviorFtor) BehaviorBuilder {
 	return func() IBehavior {
 		return ftor()
 	}
 }
 
-func AnAggFtor() BehaviorFtor {
+func ABehaviorFtor() BehaviorFtor {
 	return func() IBehavior {
 		return NewBehavior(anAggType, newWriteModel())
 	}
 }
 
-type AWriteModel struct {
+type ASchema struct {
 	status int
 }
 
-func (c *AWriteModel) GetStatus() int {
+func (c *ASchema) GetStatus() int {
 	return c.status
 }
-func newWriteModel() *AWriteModel {
-	return &AWriteModel{}
+func newWriteModel() *ASchema {
+	return &ASchema{}
 }

@@ -6,14 +6,15 @@ import (
 )
 
 const (
-	LIST_PREFIX = "gamelst"
+	LIST_PREFIX = "calclst"
 	ListId      = "42424242-4242-4242-4242-424242424242"
 )
 
-func DefaultID() (*schema.Identity, error) {
+// DefaultCalcListID returns the ID for the default calculations list
+func DefaultCalcListID() (*schema.Identity, error) {
 	ID, err := schema.NewIdentityFrom(LIST_PREFIX, ListId)
 	if err != nil {
-		return nil, errors.Wrapf(err, "(gameList.DefaultID) failed to create identity")
+		return nil, errors.Wrapf(err, "(gameList.DefaultCalcListID) failed to create identity")
 	}
 	return ID, err
 }

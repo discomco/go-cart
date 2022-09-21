@@ -65,6 +65,6 @@ func TestThatWeCanExecuteAChangeEventSettingsCmd(t *testing.T) {
 	// THEN
 	assert.NotNil(t, fbk)
 	assert.True(t, fbk.IsSuccess())
-	assert.Equal(t, int(doc.Initialized), fbk.GetAggregateStatus())
+	assert.Equal(t, int(doc.Initialized), fbk.GetStatus())
 
 }

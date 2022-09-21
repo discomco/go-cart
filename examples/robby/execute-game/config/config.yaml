@@ -39,5 +39,5 @@ nats:
 projection:
   poolSize: 6
   eventPrefix: "sdk-"
-  group: "sdk-med"
-  name: "sdkProjector"
+  group: "robby"
+  name: "execute-game.Projector"

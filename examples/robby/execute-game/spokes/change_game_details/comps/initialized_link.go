@@ -28,7 +28,7 @@ var wMutex = &sync.Mutex{} //
 func (l *link) onEvtFunc(ctx context.Context, evt sdk_behavior.IEvt) error {
 	wMutex.Lock()
 	defer wMutex.Unlock()
-	docID, err := evt.GetAggregateID()
+	docID, err := evt.GetBehaviorID()
 	if err != nil {
 		return errors.Wrapf(err, "failed to get aggregate Id from event %v", evt)
 	}

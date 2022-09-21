@@ -9,39 +9,39 @@ import (
 )
 
 const (
-	aggregateStartVersion                = -1 // used for EventStoreDB
-	aggregateAppliedEventsInitialCap     = 10
-	aggregateUncommittedEventsInitialCap = 10
+	startVersion                = -1 // used for EventStoreDB
+	appliedEventsInitialCap     = 10
+	uncommittedEventsInitialCap = 10
 )
 
-type AggregateSetter interface {
-	SetAggregate(a IBehavior)
+type ISetBehavior interface {
+	SetBehavior(a IBehavior)
 }
 
-type EvtTypeGetter interface {
+type IGetEvtType interface {
 	GetEventType() EventType
 }
 
-type CmdTypeGetter interface {
+type IGetCmdType interface {
 	GetCommandType() CommandType
 }
 
 //IBehaviorPlugin  is an injector that allows us to inject ITryCmd and IApplyEvt injectors into the Aggregate in an elegant way.
 type IBehaviorPlugin interface {
-	AggregateSetter
+	ISetBehavior
 }
 
 // IApplyEvt is an IBehaviorPlugin injector that allows us to inject Event Appliers into the Aggregate
 type IApplyEvt interface {
 	IBehaviorPlugin
-	EvtTypeGetter
-	ApplyEvent(evt IEvt, state schema.IWriteSchema) error
+	IGetEvtType
+	ApplyEvent(evt IEvt, state schema.ISchema) error
 }
 
 // ITryCmd is an IBehaviorPlugin injector that allows us to inject Command Executors into the Aggregate
 type ITryCmd interface {
 	IBehaviorPlugin
-	CmdTypeGetter
+	IGetCmdType
 	TryCommand(ctx context.Context, command ICmd) (IEvt, contract.IFbk)
 }
 
@@ -66,11 +66,11 @@ type IBehavior interface {
 
 // ISimpleBehavior is an injector that abstracts the implementation of a traditional monolithic Aggregate.
 type ISimpleBehavior interface {
-	BehaviorTypeGetter
+	IGetBehaviorType
 	String() string
 	TryCommand(ctx context.Context, command ICmd) (IEvt, contract.IFbk)
 	ApplyEvent(event IEvt, isCommitted bool) error
-	GetState() schema.IWriteSchema
+	GetState() schema.IModel
 	GetUncommittedEvents() []IEvt
 	ClearUncommittedEvents()
 	SetAppliedEvents(events []IEvt)
@@ -97,17 +97,17 @@ type behavior struct {
 	UncommittedEvents []IEvt
 	Type              BehaviorType
 	withAppliedEvents bool
-	state             schema.IWriteSchema
+	state             schema.IModel
 	executors         map[CommandType]ITryCmd
 	appliers          map[EventType]IApplyEvt
 }
 
 // NewBehavior initializes a new empty Aggregate
-func NewBehavior(behaviorType BehaviorType, state schema.IWriteSchema) IBehavior {
+func NewBehavior(behaviorType BehaviorType, state schema.IModel) IBehavior {
 	result := &behavior{
-		Version:           aggregateStartVersion,
-		AppliedEvents:     make([]IEvt, 0, aggregateAppliedEventsInitialCap),
-		UncommittedEvents: make([]IEvt, 0, aggregateUncommittedEventsInitialCap),
+		Version:           startVersion,
+		AppliedEvents:     make([]IEvt, 0, appliedEventsInitialCap),
+		UncommittedEvents: make([]IEvt, 0, uncommittedEventsInitialCap),
 		withAppliedEvents: false,
 		executors:         make(map[CommandType]ITryCmd, 0),
 		appliers:          make(map[EventType]IApplyEvt, 0),
@@ -146,7 +146,7 @@ func (a *behavior) GetVersion() int64 {
 
 // ClearUncommittedEvents clear behavior uncommitted Event's
 func (a *behavior) ClearUncommittedEvents() {
-	a.UncommittedEvents = make([]IEvt, 0, aggregateUncommittedEventsInitialCap)
+	a.UncommittedEvents = make([]IEvt, 0, uncommittedEventsInitialCap)
 }
 
 // GetAppliedEvents get behavior applied Event's
@@ -184,10 +184,10 @@ var aMutex = &sync.Mutex{}
 func (a *behavior) ApplyEvent(event IEvt, isCommitted bool) error {
 	aMutex.Lock()
 	defer aMutex.Unlock()
-	if event.GetAggregateId() == "" {
+	if event.GetBehaviorId() == "" {
 		return ErrEventHasNoAggregateID
 	}
-	if event.GetAggregateId() != a.GetID().Id() {
+	if event.GetBehaviorId() != a.GetID().Id() {
 		return ErrInvalidAggregate
 	}
 	event.SetBehaviorType(a.GetBehaviorType())
@@ -215,7 +215,7 @@ var raiseMutex = sync.Mutex{}
 func (a *behavior) RaiseEvent(event IEvt) error {
 	raiseMutex.Lock()
 	defer raiseMutex.Unlock()
-	if event.GetAggregateId() != a.GetID().Id() {
+	if event.GetBehaviorId() != a.GetID().Id() {
 		return ErrInvalidAggregateID
 	}
 	if a.GetVersion() >= event.GetVersion() {
@@ -249,7 +249,7 @@ func (a *behavior) String() string {
 		len(a.GetUncommittedEvents()))
 }
 
-func (a *behavior) GetState() schema.IWriteSchema {
+func (a *behavior) GetState() schema.IModel {
 	return a.state
 }
 
@@ -281,7 +281,7 @@ func (a *behavior) TryCommand(ctx context.Context, cmd ICmd) (IEvt, contract.IFb
 	if !f.IsSuccess() {
 		return nil, f
 	}
-	e.SetAggregateId(cmd.GetAggregateID().Id())
+	e.SetBehaviorId(cmd.GetAggregateID().Id())
 	er := a.ApplyEvent(e, false)
 	if er != nil {
 		f.SetError(er.Error())
@@ -318,7 +318,7 @@ func (a *behavior) regTryCmd(execute ITryCmd) {
 	}
 	existing, _ := a.getExecCmd(execute.GetCommandType())
 	if existing == nil {
-		execute.SetAggregate(a)
+		execute.SetBehavior(a)
 		a.executors[execute.GetCommandType()] = execute
 	}
 }
@@ -331,7 +331,7 @@ func (a *behavior) regApplyEvt(apply IApplyEvt) {
 	}
 	existing, _ := a.getApplyEvt(apply.GetEventType())
 	if existing == nil {
-		apply.SetAggregate(a)
+		apply.SetBehavior(a)
 		a.appliers[apply.GetEventType()] = apply
 	}
 }

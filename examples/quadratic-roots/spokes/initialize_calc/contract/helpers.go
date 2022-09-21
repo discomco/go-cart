@@ -6,10 +6,10 @@ import (
 )
 
 func RandomPayload() *Payload {
-	return NewPayload(rand.NormFloat64(), rand.NormFloat64(), rand.NormFloat64())
+	return NewPayload(1_000*rand.NormFloat64(), 1_000*rand.NormFloat64(), 1_000*rand.NormFloat64())
 }
 
 func RandomHope() (IHope, error) {
-	ID, _ := doc.NewDocID()
+	ID, _ := doc.NewCalculationID()
 	return NewHope(ID.Id(), RandomPayload())
 }

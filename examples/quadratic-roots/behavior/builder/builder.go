@@ -2,13 +2,17 @@ package builder
 
 import (
 	"github.com/discomco/go-cart/examples/quadratic-roots/schema"
+	initialize_calc "github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/behavior"
 	"github.com/discomco/go-cart/sdk/behavior"
 )
 
-func BehaviorBuilder(newBehavior behavior.GenBehaviorFtor[schema.QuadraticDoc]) behavior.BehaviorBuilder {
+// CalculationBuilder returns a builder function that composes the behavior for the process.
+func CalculationBuilder(newCalculation behavior.GenBehaviorFtor[schema.QuadraticDoc]) behavior.BehaviorBuilder {
 	return func() behavior.IBehavior {
-		behavior := newBehavior()
-		// TODO: inject apply() and try() functions here
-		return behavior
+		calculation := newCalculation()
+		return calculation.Inject(calculation,
+			initialize_calc.TryCmd,
+			initialize_calc.ApplyEvt,
+		)
 	}
 }

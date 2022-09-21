@@ -14,7 +14,7 @@ type IBehavior interface {
 	sdk_behavior.IBehavior
 }
 
-func BehaviorFtor(newDoc sdk_schema.DocFtor[schema.QuadraticDoc]) sdk_behavior.GenBehaviorFtor[schema.QuadraticDoc] {
+func CalculationFtor(newDoc sdk_schema.DocFtor[schema.QuadraticDoc]) sdk_behavior.GenBehaviorFtor[schema.QuadraticDoc] {
 	return func() sdk_behavior.IBehavior {
 		return sdk_behavior.NewBehavior(behaviorName, newDoc())
 	}

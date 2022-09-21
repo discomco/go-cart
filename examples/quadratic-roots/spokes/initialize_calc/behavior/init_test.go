@@ -1,8 +1,8 @@
 package behavior
 
 import (
-	"github.com/discomco/go-cart/examples/robby/execute-game/behavior/ftor"
-	"github.com/discomco/go-cart/examples/robby/execute-game/schema"
+	"github.com/discomco/go-cart/examples/quadratic-roots/behavior/ftor"
+	"github.com/discomco/go-cart/examples/quadratic-roots/schema"
 	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/core/builder"
 	"github.com/discomco/go-cart/sdk/core/ioc"
@@ -15,16 +15,16 @@ const (
 )
 
 var (
-	testEnv         ioc.IDig
-	testLogger      logger.IAppLogger
-	newTestBehavior sdk_behavior.BehaviorBuilder
+	testEnv            ioc.IDig
+	testLogger         logger.IAppLogger
+	newTestCalculation sdk_behavior.BehaviorBuilder
 )
 
 func init() {
 	testEnv = buildTestEnv()
 }
 
-func localBuilder(ftor sdk_behavior.GenBehaviorFtor[schema.GameDoc]) sdk_behavior.BehaviorBuilder {
+func localBuilder(ftor sdk_behavior.GenBehaviorFtor[schema.QuadraticDoc]) sdk_behavior.BehaviorBuilder {
 	return func() sdk_behavior.IBehavior {
 		agg := ftor()
 		agg.Inject(agg,
@@ -40,7 +40,7 @@ func buildTestEnv() ioc.IDig {
 	dig := builder.InjectCoLoMed(ConfigPath)
 	dig.Inject(dig,
 		schema.DocFtor,
-		ftor.BehaviorFtor,
+		ftor.CalculationFtor,
 		localBuilder,
 	)
 	return resolveTestEnv(dig)
@@ -52,7 +52,7 @@ func resolveTestEnv(dig ioc.IDig) ioc.IDig {
 		newBeh sdk_behavior.BehaviorBuilder,
 	) {
 		testLogger = appLogger
-		newTestBehavior = newBeh
+		newTestCalculation = newBeh
 	})
 	if err != nil {
 		log.Fatal(err)
