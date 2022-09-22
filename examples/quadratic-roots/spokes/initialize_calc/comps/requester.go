@@ -14,8 +14,8 @@ func Requester() (IRequester, error) {
 	return nats.NewRequester[contract.IHope](contract.HopeTopic)
 }
 
-func RequesterFtor() comps.RequesterFtor {
-	return func() (comps.IRequester, error) {
+func RequesterFtor() comps.GenRequesterFtor[contract.IHope] {
+	return func() (comps.IGenRequester[contract.IHope], error) {
 		return Requester()
 	}
 }

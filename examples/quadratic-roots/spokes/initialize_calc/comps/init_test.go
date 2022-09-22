@@ -5,6 +5,7 @@ import (
 	"github.com/discomco/go-cart/examples/quadratic-roots/drivers/redis"
 	"github.com/discomco/go-cart/examples/quadratic-roots/schema"
 	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/behavior"
+	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/contract"
 	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/container"
@@ -22,6 +23,7 @@ var (
 	testLogger         logger.IAppLogger
 	newTestCalculation sdk_behavior.BehaviorBuilder
 	newTestCH          comps.CmdHandlerFtor
+	newTestRequester   comps.GenRequesterFtor[contract.IHope]
 )
 
 func init() {
@@ -54,6 +56,8 @@ func buildTestEnv() ioc.IDig {
 		redis.ListStore,
 		ToRedisDoc,
 		ToRedisList,
+	).Inject(dig,
+		RequesterFtor,
 	)
 	return resolveTestEnv(dig)
 }
@@ -63,10 +67,12 @@ func resolveTestEnv(dig ioc.IDig) ioc.IDig {
 		appLogger logger.IAppLogger,
 		newBeh sdk_behavior.BehaviorBuilder,
 		newCH comps.CmdHandlerFtor,
+		newRequester comps.GenRequesterFtor[contract.IHope],
 	) {
 		testLogger = appLogger
 		newTestCalculation = newBeh
 		newTestCH = newCH
+		newTestRequester = newRequester
 	}); err != nil {
 		log.Fatal(err)
 		panic(err)

@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"github.com/discomco/go-cart/examples/robby/execute-game/containers/CMD/cartwheel"
+	"github.com/discomco/go-cart/examples/quadratic-roots/containers/CMD/monolith/cartwheel"
 	"os"
 )
 
@@ -14,7 +14,7 @@ func init() {
 
 func main() {
 	flag.Parse()
-	err := cartwheel.RunCarthweel(configPath)
+	err := cartwheel.RunCartwheel(configPath)
 	if err != nil {
 		os.Exit(1)
 	}
