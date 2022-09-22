@@ -35,7 +35,7 @@ func (a *apply) fApply(state schema.ISchema, evt behavior.IEvt) error {
 
 func newApply() IApplyEvt {
 	a := &apply{}
-	b := behavior.NewFapply(EVT_TOPIC, a.fApply)
+	b := behavior.NewApplyEvt(EvtTopic, a.fApply)
 	a.ApplyEvt = b
 	return a
 }

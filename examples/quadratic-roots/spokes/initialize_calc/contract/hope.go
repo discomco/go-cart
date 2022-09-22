@@ -6,6 +6,6 @@ type IHope interface {
 	sdk_contract.IHope
 }
 
-func NewHope(calcId string, payload *Payload) (IHope, error) {
+func NewHope(calcId string, payload Payload) (IHope, error) {
 	return sdk_contract.NewHope(calcId, payload)
 }

@@ -1,10 +1,13 @@
 package contract
 
+import "fmt"
+
 type IFbk interface {
 	IDto
 	GetBehaviorId() string
 	IsSuccess() bool
 	GetErrors() []string
+	GetFlattenedErrors() string
 	GetStatus() int
 	SetError(s string)
 	SetWarning(s string)
@@ -12,7 +15,7 @@ type IFbk interface {
 	SetStatus(s int) int
 }
 
-type FFbk2Data func(fbk IFbk) ([]byte, error)
+type Fbk2DataFunc func(fbk IFbk) ([]byte, error)
 
 type Fbk struct {
 	*Dto
@@ -41,6 +44,14 @@ func (f *Fbk) IsSuccess() bool {
 
 func (f *Fbk) GetErrors() []string {
 	return f.Errors
+}
+
+func (f *Fbk) GetFlattenedErrors() string {
+	res := "errors:"
+	for _, e := range f.Errors {
+		res = fmt.Sprintf("%v\n%v", res, e)
+	}
+	return res
 }
 
 func (f *Fbk) SetError(s string) {

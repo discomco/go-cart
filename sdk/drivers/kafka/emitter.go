@@ -17,7 +17,7 @@ type IEmitter interface {
 
 type emitter struct {
 	*comps.EventReaction
-	evt2Fact behavior.FEvt2Fact
+	evt2Fact behavior.Evt2FactFunc
 	producer *kafka.Producer
 }
 
@@ -46,7 +46,7 @@ func (e *emitter) emit(ctx context.Context, evt behavior.IEvt) error {
 
 func newEmitter(name schema.Name,
 	eventType behavior.EventType,
-	evt2Fact behavior.FEvt2Fact) (*emitter, error) {
+	evt2Fact behavior.Evt2FactFunc) (*emitter, error) {
 	e := &emitter{
 		evt2Fact: evt2Fact,
 	}
@@ -68,6 +68,6 @@ func newEmitter(name schema.Name,
 
 func NewEmitter(name schema.Name,
 	eventType behavior.EventType,
-	evt2Fact behavior.FEvt2Fact) (IEmitter, error) {
+	evt2Fact behavior.Evt2FactFunc) (IEmitter, error) {
 	return newEmitter(name, eventType, evt2Fact)
 }

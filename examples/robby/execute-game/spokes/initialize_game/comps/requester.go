@@ -2,6 +2,7 @@ package comps
 
 import (
 	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
+	"github.com/discomco/go-cart/sdk/comps"
 	"github.com/discomco/go-cart/sdk/drivers/nats"
 )
 
@@ -10,5 +11,11 @@ type IRequester interface {
 }
 
 func Requester() (IRequester, error) {
-	return nats.NewRequester[contract.IHope](contract.HOPE_TOPIC)
+	return nats.NewRequester[contract.IHope](contract.HopeTopic)
+}
+
+func NewRequester() comps.RequesterFtor {
+	return func() (comps.IRequester, error) {
+		return Requester()
+	}
 }

@@ -12,7 +12,7 @@ type anExec struct {
 
 func (e *anExec) raiseEvt(ctx context.Context, cmd ICmd) (IEvt, contract.IFbk) {
 	fbk := contract.NewFbk(cmd.GetBehaviorID().Id(), -1, "")
-	evt := NewEvt(e.GetAggregate(), A_EVT_TOPIC)
+	evt := NewEvt(e.GetBehavior(), A_EVT_TOPIC)
 
 	return evt, fbk
 }

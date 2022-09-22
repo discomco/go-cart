@@ -18,7 +18,7 @@ type IToRedisDoc interface {
 
 func ToRedisDoc(
 	newStoreFtor sdk_behavior.StoreFtor[schema.GameDoc],
-	evt2Doc sdk_behavior.FEvt2Schema[behavior.IEvt, schema.GameDoc],
+	evt2Doc sdk_behavior.Evt2DocFunc[behavior.IEvt, schema.GameDoc],
 	newDocFtor sdk_schema.DocFtor[schema.GameDoc]) IToRedisDoc {
 	return comps.NewProjection[behavior.IEvt, schema.GameDoc](
 		ProjectionName,

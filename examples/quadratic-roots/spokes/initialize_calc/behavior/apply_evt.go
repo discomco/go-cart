@@ -1,7 +1,8 @@
 package behavior
 
 import (
-	read_model "github.com/discomco/go-cart/examples/quadratic-roots/schema"
+	app_schema "github.com/discomco/go-cart/examples/quadratic-roots/schema"
+	"github.com/discomco/go-cart/examples/quadratic-roots/schema/doc"
 	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/contract"
 	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/schema"
@@ -23,16 +24,17 @@ func (a *apply) fApply(state schema.ISchema, evt behavior.IEvt) error {
 	if err != nil {
 		return errors.Wrapf(err, "(applyEvent) could not extract payload")
 	}
-	s := state.(*read_model.QuadraticDoc)
+	s := state.(*app_schema.QuadraticDoc)
 	ID, _ := evt.GetBehaviorID()
 	s.ID = ID.(*schema.Identity)
 	s.Input = pl.Input
+	s.Status = doc.Initialized
 	return err
 }
 
 func newApply() IApplyEvt {
 	a := &apply{}
-	b := behavior.NewFapply(EVT_TOPIC, a.fApply)
+	b := behavior.NewApplyEvt(EvtTopic, a.fApply)
 	a.ApplyEvt = b
 	return a
 }

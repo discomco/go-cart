@@ -1,6 +1,6 @@
 service:
-  nameSpace: robby
-  subSystem: execute-game
+  nameSpace: quadratic-roots
+  subSystem: cmd
 grpc:
   port: :5001
   development: true

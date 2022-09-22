@@ -15,7 +15,7 @@ func Hope2Cmd() behavior.Hope2CmdFunc[contract.IHope, ICmd] {
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to extract payload from hope: %v", err)
 		}
-		calcID, err := schema.IdentityFromPrefixedId(pl.DocId)
+		calcID, err := schema.IdentityFromPrefixedId(hope.Id)
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to extract gameId from hope: %v", err)
 		}

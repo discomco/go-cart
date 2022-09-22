@@ -20,7 +20,7 @@ type IProjection interface {
 type GenProjection[TEvt behavior.IEvt, TState schema.ISchema] struct {
 	*EventReaction
 	store     behavior.IModelStore[TState]
-	evt2Doc   behavior.FEvt2Schema[TEvt, TState]
+	evt2Doc   behavior.Evt2DocFunc[TEvt, TState]
 	newDoc    schema.DocFtor[TState]
 	getDocKey schema.GetDocKeyFunc
 }
@@ -31,7 +31,7 @@ func newGenProjection[TEvt behavior.IEvt, TState schema.ISchema](
 	name schema.Name,
 	eventType behavior.EventType,
 	store behavior.IModelStore[TState],
-	evt2doc behavior.FEvt2Schema[TEvt, TState],
+	evt2doc behavior.Evt2DocFunc[TEvt, TState],
 	newDoc schema.DocFtor[TState],
 	getDocKey schema.GetDocKeyFunc,
 ) *GenProjection[TEvt, TState] {
@@ -81,7 +81,7 @@ func NewProjection[TEvt behavior.IEvt, TState schema.ISchema](
 	name schema.Name,
 	eventType behavior.EventType,
 	newStore behavior.StoreFtor[TState],
-	evt2Doc behavior.FEvt2Schema[TEvt, TState],
+	evt2Doc behavior.Evt2DocFunc[TEvt, TState],
 	newDoc schema.DocFtor[TState],
 	getDocKey schema.GetDocKeyFunc) *GenProjection[TEvt, TState] {
 	return newGenProjection[TEvt, TState](

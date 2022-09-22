@@ -15,12 +15,12 @@ func TestThatWeCanResolveAModule(t *testing.T) {
 	// GIVEN
 	assert.NotNil(t, testEnv)
 	// AND
-	var module ISpoke
-	err := testEnv.Invoke(func(mod ISpoke) {
-		module = mod
+	var spoke ISpoke
+	err := testEnv.Invoke(func(sp ISpoke) {
+		spoke = sp
 	})
 	assert.NoError(t, err)
-	assert.NotNil(t, module)
+	assert.NotNil(t, spoke)
 }
 
 func TestThatWeCanResolveARequester(t *testing.T) {

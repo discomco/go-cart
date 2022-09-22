@@ -108,7 +108,7 @@ func (f *CmdSpoke) registerProjector(projector comps.IProjector) {
 	f.projector = projector
 }
 
-func NewCmdFeature(name schema.Name) *CmdSpoke {
+func NewCmdSpoke(name schema.Name) *CmdSpoke {
 	f := &CmdSpoke{
 		reactions:  make([]comps.IMediatorReaction, 0),
 		responders: make([]comps.IResponder, 0),

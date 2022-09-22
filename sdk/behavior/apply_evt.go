@@ -37,9 +37,9 @@ func (a *ApplyEvt) SetBehavior(agg IBehavior) {
 	a.behavior = agg
 }
 
-// NewFapply lets you create an Event Applier and requires that you pass an FApply function.
+// NewApplyEvt lets you create an Event Applier and requires that you pass an FApply function.
 // your Event Applier is automatically injected into the Aggregate.
-func NewFapply(
+func NewApplyEvt(
 	eventType EventType,
 	fApply FApply,
 ) *ApplyEvt {

@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func EvtToList() behavior.FEvt2Schema[IEvt, schema.GameList] {
+func EvtToList() behavior.Evt2DocFunc[IEvt, schema.GameList] {
 	return func(evt IEvt, list *schema.GameList) error {
 		return evtToList(evt, list)
 	}

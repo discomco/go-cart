@@ -1,6 +1,6 @@
 package contract
 
 const (
-	HOPE_TOPIC = "robby.execute_game.initialize"
-	FACT_TOPIC = "robby.execute_game.initialized"
+	HopeTopic = "robby.execute_game.initialize.v1"
+	FactTopic = "robby.execute_game.initialized.v1"
 )

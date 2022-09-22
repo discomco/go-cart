@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func EvtToDoc() behavior.FEvt2Schema[IEvt, schema.QuadraticDoc] {
+func EvtToDoc() behavior.Evt2DocFunc[IEvt, schema.QuadraticDoc] {
 	return func(evt IEvt, schema *schema.QuadraticDoc) error {
 		return evt2Doc(evt, schema)
 	}

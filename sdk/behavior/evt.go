@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-type Evt2SchemaFtor[TEvt IEvt, TSchema schema.ISchema] func() FEvt2Schema[TEvt, TSchema]
+type Evt2DocFtor[TEvt IEvt, TDoc schema.ISchema] func() Evt2DocFunc[TEvt, TDoc]
 
-type FEvt2Schema[TEvt IEvt, TSchema schema.ISchema] func(evt TEvt, model *TSchema) error
-type FEvt2Cmd func(evt IEvt) (ICmd, error)
-type FEvt2Fact func(evt IEvt) (contract.IFact, error)
-type FGenEvt2Fact[TFact contract.IFact] func(evt IEvt) (TFact, error)
+type Evt2DocFunc[TEvt IEvt, TDoc schema.ISchema] func(evt TEvt, model *TDoc) error
+type Evt2CmdFunc func(evt IEvt) (ICmd, error)
+type Evt2FactFunc func(evt IEvt) (contract.IFact, error)
+type GenEvt2FactFunc[TFact contract.IFact] func(evt IEvt) (TFact, error)
 
 type IEvt interface {
 	IGetEvtType

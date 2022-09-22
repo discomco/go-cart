@@ -34,7 +34,7 @@ type IAnApplyEvt interface {
 
 func newAnApply() IAnApplyEvt {
 	a := &anApply{}
-	b := NewFapply(A_EVT_TOPIC, a.fApply)
+	b := NewApplyEvt(A_EVT_TOPIC, a.fApply)
 	a.ApplyEvt = b
 	return a
 }

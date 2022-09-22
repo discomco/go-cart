@@ -11,7 +11,7 @@ type IEvt interface {
 
 // NewEvt creates a new instance of IEvt
 func NewEvt(beh behavior.IBehavior, payload contract.Payload) IEvt {
-	e := behavior.NewEvt(beh, EVT_TOPIC)
+	e := behavior.NewEvt(beh, EvtTopic)
 	e.SetPayload(payload)
 	return e
 }

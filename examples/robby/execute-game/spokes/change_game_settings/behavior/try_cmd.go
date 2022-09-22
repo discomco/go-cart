@@ -27,7 +27,7 @@ func (t *try) fRaise(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt, con
 	// Initializations
 	aggID := cmd.GetBehaviorID()
 	fbk := contract.NewFbk(aggID.Id(), -1, "")
-	agg := t.GetAggregate()
+	agg := t.GetBehavior()
 	state := agg.GetState()
 	// SPECIFICATIONS
 	state_must.BeInitialized(state.(*schema.GameDoc), fbk)

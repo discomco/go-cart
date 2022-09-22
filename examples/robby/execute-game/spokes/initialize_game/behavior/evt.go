@@ -10,7 +10,7 @@ type IEvt interface {
 }
 
 func NewEvt(aggregate behavior.IBehavior, payload contract.Payload) IEvt {
-	e := behavior.NewEvt(aggregate, EVT_TOPIC)
+	e := behavior.NewEvt(aggregate, EvtTopic)
 	e.SetPayload(payload)
 	return e
 }

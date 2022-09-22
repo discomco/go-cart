@@ -17,9 +17,9 @@ func NewCmd(aggID schema.IIdentity, payload contract.Payload) (ICmd, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "(NewCmd) failed to convert payload %v", payload)
 	}
-	c, err := behavior.NewCmd(aggID, CMD_TOPIC, data)
+	c, err := behavior.NewCmd(aggID, CmdTopic, data)
 	if err != nil {
-		return nil, errors.Wrapf(err, "(NewCmd) failed to create ICmd for topic [%v]", CMD_TOPIC)
+		return nil, errors.Wrapf(err, "(NewCmd) failed to create ICmd for topic [%v]", CmdTopic)
 	}
 	return c, err
 }

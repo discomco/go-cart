@@ -1,0 +1,43 @@
+service:
+  nameSpace: Robby.execute-game
+  subSystem: CMD
+grpc:
+  port: :5001
+  development: true
+http:
+  port: :5007
+  development: true
+  basePath: /api/v1
+  appPath: /api/v1/sdk
+  debugErrorsResponse: true
+  ignoreLogUrls: [ "metrics" ]
+probes:
+  readinessPath: /ready
+  livenessPath: /live
+  port: :3001
+  pprof: :6001
+  prometheusPath: /metrics
+  prometheusPort: :8001
+  checkIntervalSeconds: 10
+logger:
+  level: debug
+  devMode: false
+  encoder: short-caller-console
+jaeger:
+  enable: true
+  serviceName: sdk
+  hostPort: "localhost:6831"
+  logSpans: false
+eventStoreDb:
+  connectionString: "esdb://localhost:2113?tls=false"
+redis:
+  url: "redis://localhost:6379/0"
+projection:
+  poolSize: 6
+  eventPrefix: "execgame-"
+  group: "robby-exec-game-med"
+  name: "MediatorProjector"
+nats:
+  url: "nats://localhost:4222"
+  user: "a"
+  password: "a"

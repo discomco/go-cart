@@ -13,7 +13,7 @@ type IResponder interface {
 
 func Responder(hope2Cmd sdk_behavior.Hope2CmdFunc[contract.IHope, behavior.ICmd]) (IResponder, error) {
 	return nats.NewResponder[contract.IHope, behavior.ICmd](
-		contract.HOPE_TOPIC,
+		contract.HopeTopic,
 		hope2Cmd,
 	)
 }

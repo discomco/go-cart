@@ -26,7 +26,7 @@ func (t *try) fRaise(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt, con
 	// Initializations
 	aggID := cmd.GetBehaviorID()
 	fbk := contract.NewFbk(aggID.Id(), -1, "")
-	agg := t.GetAggregate()
+	agg := t.GetBehavior()
 	state := agg.GetState()
 	// SPECIFICATIONS
 	state_must.NotBeInitialized(state, fbk)
@@ -48,7 +48,7 @@ func (t *try) fRaise(ctx context.Context, cmd behavior.ICmd) (behavior.IEvt, con
 
 func newTry() *try {
 	t := &try{}
-	b := behavior.NewTryCmd(CMD_TOPIC, t.fRaise)
+	b := behavior.NewTryCmd(CmdTopic, t.fRaise)
 	t.TryCmd = b
 	return t
 }

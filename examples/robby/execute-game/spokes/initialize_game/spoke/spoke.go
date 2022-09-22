@@ -21,7 +21,7 @@ type ISpoke interface {
 }
 
 func newCmdSpoke() ISpoke {
-	return spokes.NewCmdFeature(behavior.CMD_TOPIC)
+	return spokes.NewCmdSpoke(behavior.CmdTopic)
 }
 
 func Spoke(cfgPath config.Path) ISpoke {

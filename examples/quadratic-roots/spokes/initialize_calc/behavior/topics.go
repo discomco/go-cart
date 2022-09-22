@@ -1,6 +1,6 @@
 package behavior
 
 const (
-	EVT_TOPIC = "quadratic-roots:calculation_initialized"
-	CMD_TOPIC = "quadratic-roots:initialize_calculation"
+	EvtTopic = "quadratic-roots:calculation_initialized:v1"
+	CmdTopic = "quadratic-roots:initialize_calculation:v1"
 )

@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func EvtToList() behavior.FEvt2Schema[IEvt, schema.QuadraticList] {
+func EvtToList() behavior.Evt2DocFunc[IEvt, schema.QuadraticList] {
 	return func(evt IEvt, list *schema.QuadraticList) error {
 		return evtToList(evt, list)
 	}

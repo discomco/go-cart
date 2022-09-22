@@ -9,13 +9,13 @@ type IFact interface {
 	IDto
 }
 
-func NewFact(aggregateId string, p schema.IPayload) (*Fact, error) {
-	return newFact(aggregateId, p)
+func NewFact(behaviorId string, p schema.IPayload) (*Fact, error) {
+	return newFact(behaviorId, p)
 }
 
-func newFact(aggregateId string, p schema.IPayload) (*Fact, error) {
+func newFact(behaviorId string, p schema.IPayload) (*Fact, error) {
 	f := &Fact{}
-	dto, err := NewDto(aggregateId, p)
+	dto, err := NewDto(behaviorId, p)
 	if err != nil {
 		return nil, err
 	}

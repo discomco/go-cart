@@ -50,7 +50,7 @@ func (l *link) onEvtFunc(ctx context.Context, evt sdk_behavior.IEvt) error {
 func newLink(newCH comps.CmdHandlerFtor) *link {
 	l := &link{}
 	l.BehaviorLink = comps.NewBehaviorLink(
-		LinkName, behavior2.EVT_TOPIC, l.onEvtFunc, newCH)
+		LinkName, behavior2.EvtTopic, l.onEvtFunc, newCH)
 	return l
 }
 

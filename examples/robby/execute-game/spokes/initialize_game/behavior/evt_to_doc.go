@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func EvtToDoc() behavior.FEvt2Schema[IEvt, schema.GameDoc] {
+func EvtToDoc() behavior.Evt2DocFunc[IEvt, schema.GameDoc] {
 	return func(evt IEvt, schema *schema.GameDoc) error {
 		return evt2Doc(evt, schema)
 	}
