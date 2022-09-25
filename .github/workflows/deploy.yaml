@@ -8,7 +8,8 @@ concurrency:
   cancel-in-progress: true
 env:
   REGISTRY: ghcr.io
-  NAMESPACE: go-cart/examples
+  NAMESPACE: go-cart
+  CR_PAT: ${{ secrets.CR_PAT }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         service:
-        - quadratic-roots        
+        - examples/quadratic-roots/containers/CMD/monolith/cartwheel/
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2.4.0
@@ -25,8 +26,8 @@ jobs:
     - name: Docker login
       run: >-
         docker login
-        --username ${{ secrets.PARTNER_DOCKER_ID }}
-        --password ${{ secrets.PARTNER_DOCKER_PASSWORD }}
+        --username ${{ secrets.CR_PAT }}
+        --password-stdin
         ${{ env.REGISTRY }}
 
     # Docker registry doesn't support extra sub paths, so convert to hyphens.
@@ -41,7 +42,7 @@ jobs:
     - name: Build image
       run: >-
         docker build
-        --build-arg EBS_SERVICE=${{ matrix.service }}
+        --build-arg PA_SERVICE=${{ matrix.service }}
         --tag ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.name.outputs.value }}:latest
         --tag ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.name.outputs.value }}:${{ github.sha }}
         .
@@ -52,9 +53,9 @@ jobs:
         --all-tags
         ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.name.outputs.value }}
 
-    - name: Reload on K8S
-      env:
-        K8S_API_URL: https://partner-k8s-api.dev.merit.uw.systems/reload
-        K8S_PAYLOAD: '{"deployment":"${{ steps.name.outputs.value }}","namespace":"${{ env.NAMESPACE }}", "gitsha":"${{ github.sha }}"}'
-      run: |
-        test "$(curl -o /dev/null -w '%{http_code}' -s -X POST -k -d '${{env.K8S_PAYLOAD}}' -H 'Content-Type: application/json' -H 'Authorization: ${{secrets.PARTNER_K8S_DEV_TOKEN}}' '${{env.K8S_API_URL}}')" -eq "200"
+#    - name: Reload on K8S
+#      env:
+#        K8S_API_URL: https://partner-k8s-api.dev.merit.uw.systems/reload
+#        K8S_PAYLOAD: '{"deployment":"${{ steps.name.outputs.value }}","namespace":"${{ env.NAMESPACE }}", "gitsha":"${{ github.sha }}"}'
+#      run: |
+#        test "$(curl -o /dev/null -w '%{http_code}' -s -X POST -k -d '${{env.K8S_PAYLOAD}}' -H 'Content-Type: application/json' -H 'Authorization: ${{secrets.CR_PAT}}' '${{env.K8S_API_URL}}')" -eq "200"
