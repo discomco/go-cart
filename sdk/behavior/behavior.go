@@ -51,7 +51,7 @@ type ITryCmd interface {
 // Its main responsibilities are:
 //  1. to build a (volatile) State from an ordered list of previously committed Events, that are sourced from the Event Stream that is identified by the Id.
 //  2. CanAcceptName Command requests and applying business logic that checks whether the Command (ICmd) is allowed to be executed or not,
-//     according to a number of Specifications, the Current State (see 1.) and the Command's Payload
+//     according to a number of Specifications, the Current State (see 1.) and the Command's FactPayload
 //  3. If Command execution is allowed, Raise a new Event and ApplyEvent it to itself, as to update the Current State to the New State.
 // Specifically for GO-SCREAM CMD Applications, given their modular nature, we rely on Aggregate Composition.
 // Aggregate Composition is a technique that allows us to inject

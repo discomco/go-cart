@@ -31,3 +31,18 @@ func NewInput(a float64, b float64, c float64) *Input {
 		C: c,
 	}
 }
+
+func NewOutput() *Output {
+	return &Output{
+		D:  0.0,
+		X1: NewImaginaryNumber(0, 0),
+		X2: NewImaginaryNumber(0, 0),
+	}
+}
+
+func NewImaginaryNumber(real float64, imaginary float64) *ImaginaryNumber {
+	return &ImaginaryNumber{
+		Real:      real,
+		Imaginary: imaginary,
+	}
+}

@@ -1,0 +1,67 @@
+name: CI
+on:
+  push:
+env:
+  BUF_VERSION: "1.4.0"
+  GO_VERSION: "^1.18.1"
+  GOPRIVATE: "github.com/discomco/*"
+  GOLANGCI_LINT_VERSION: "v1.45.2"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      eventstore:
+        env:
+          EVENTSTORE_CLUSTER_SIZE: "1"
+          EVENTSTORE_RUN_PROJECTIONS: "All"
+          EVENTSTORE_START_STANDARD_PROJECTIONS: "true"
+          EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: "true"
+          EVENTSTORE_INSECURE: "true" 
+        image: eventstore/eventstore:21.10.6-buster-slim
+        ports:
+          - 2113:2113
+        options: >-
+          --health-cmd "curl -X GET -u admin:changeit http://localhost:2113/info" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+
+      nats:
+        env:
+          NATS_CLUSTER: "default"
+          NATS_CLIENT: "default"
+        image: nats:2.8.4-scratch
+        ports:
+          - 4222:4222
+          - 6222:6222
+          - 8222:8222
+      
+      redis:
+        image: redis:7.0.4-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          # Full clone - this is required for git-restore-mtimes to function. The time saved by git-restore-mtimes is
+          # greater than the time lost doing a full clone, so on balance it's worth it.
+          fetch-depth: 0
+      - name: Setup Go
+        uses: utilitywarehouse/actions-go/setup@main
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Run tests
+        run: make install-tools && make tests
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: utilitywarehouse/actions-go/setup@main
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Lint
+        run: make install-tools && make lint

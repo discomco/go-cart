@@ -2,6 +2,7 @@ package builder
 
 import (
 	"github.com/discomco/go-cart/examples/quadratic-roots/schema"
+	calc_roots "github.com/discomco/go-cart/examples/quadratic-roots/spokes/calc_roots/behavior"
 	initialize_calc "github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/behavior"
 	"github.com/discomco/go-cart/sdk/behavior"
 )
@@ -13,6 +14,8 @@ func BehaviorBuilder(newCalculation behavior.GenBehaviorFtor[schema.QuadraticDoc
 		return calculation.Inject(calculation,
 			initialize_calc.TryCmd,
 			initialize_calc.ApplyEvt,
+			calc_roots.TryCmd,
+			calc_roots.ApplyEvt,
 		)
 	}
 }

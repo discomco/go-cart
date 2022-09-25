@@ -40,8 +40,8 @@ func (l *link) onEvtFunc(ctx context.Context, evt sdk_behavior.IEvt) error {
 	ch := l.NewCH()
 	fbk := ch.Handle(ctx, cmd)
 	if !fbk.IsSuccess() {
-		err := errors.Wrapf(err, "failed(%+v)", fbk.GetErrors()[0])
-		l.GetLogger().Errorf("failed(%+v)", fbk.GetErrors()[0])
+		err := errors.Wrapf(err, "failed(%+v)", fbk.GetFlattenedErrors())
+		l.GetLogger().Errorf("failed(%+v)", fbk.GetFlattenedErrors())
 		return err
 	}
 	return nil

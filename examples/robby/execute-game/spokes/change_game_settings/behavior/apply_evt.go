@@ -17,7 +17,7 @@ type apply struct {
 }
 
 func (a *apply) fApply(state schema.ISchema, evt behavior.IEvt) error {
-	// EXTRACT Payload
+	// EXTRACT FactPayload
 	var pl contract.Payload
 	err := evt.GetPayload(&pl)
 	if err != nil {

@@ -1,12 +1,12 @@
 package behavior
 
 import (
-	read_model "github.com/discomco/go-cart/examples/robby/execute-game/schema"
-	"github.com/discomco/go-cart/examples/robby/execute-game/schema/doc"
-	"github.com/discomco/go-cart/examples/robby/execute-game/spokes/initialize_game/contract"
+	app_schema "github.com/discomco/go-cart/examples/quadratic-roots/schema"
+	"github.com/discomco/go-cart/examples/quadratic-roots/schema/doc"
+	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/calc_roots/contract"
 	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/schema"
-	go_status "github.com/discomco/go-status"
+	"github.com/discomco/go-status"
 	"github.com/pkg/errors"
 )
 
@@ -20,16 +20,16 @@ type apply struct {
 
 func (a *apply) fApply(state schema.ISchema, evt behavior.IEvt) error {
 	// EXTRACT FactPayload
-	var pl contract.Payload
+	var pl contract.FactPayload
 	err := evt.GetPayload(&pl)
 	if err != nil {
 		return errors.Wrapf(err, "(applyEvent) could not extract payload")
 	}
-	s := state.(*read_model.GameDoc)
+	s := state.(*app_schema.QuadraticDoc)
 	ID, _ := evt.GetBehaviorID()
 	s.ID = ID.(*schema.Identity)
-	s.Details = pl.Details
-	go_status.SetStatus(&s.Status, doc.Initialized)
+	s.Output = pl.Output
+	status.SetStatus(&s.Status, doc.RootsCalculated)
 	return err
 }
 

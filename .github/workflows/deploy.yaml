@@ -1,0 +1,60 @@
+name: Deploy
+on:
+  push:
+    branches:
+    - main
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+env:
+  REGISTRY: ghcr.io
+  NAMESPACE: go-cart/examples
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      # Don't cancel the whole job if one service in the matrix fails.
+      fail-fast: false
+      matrix:
+        service:
+        - quadratic-roots        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2.4.0
+
+    - name: Docker login
+      run: >-
+        docker login
+        --username ${{ secrets.PARTNER_DOCKER_ID }}
+        --password ${{ secrets.PARTNER_DOCKER_PASSWORD }}
+        ${{ env.REGISTRY }}
+
+    # Docker registry doesn't support extra sub paths, so convert to hyphens.
+    # e.g. configure-event/api -> configure-event-api
+    - uses: mad9000/actions-find-and-replace-string@2
+      id: name
+      with:
+        source: ${{ matrix.service }}
+        find: '/'
+        replace: '-'
+
+    - name: Build image
+      run: >-
+        docker build
+        --build-arg EBS_SERVICE=${{ matrix.service }}
+        --tag ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.name.outputs.value }}:latest
+        --tag ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.name.outputs.value }}:${{ github.sha }}
+        .
+
+    - name: Push image
+      run: >-
+        docker image push
+        --all-tags
+        ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ steps.name.outputs.value }}
+
+    - name: Reload on K8S
+      env:
+        K8S_API_URL: https://partner-k8s-api.dev.merit.uw.systems/reload
+        K8S_PAYLOAD: '{"deployment":"${{ steps.name.outputs.value }}","namespace":"${{ env.NAMESPACE }}", "gitsha":"${{ github.sha }}"}'
+      run: |
+        test "$(curl -o /dev/null -w '%{http_code}' -s -X POST -k -d '${{env.K8S_PAYLOAD}}' -H 'Content-Type: application/json' -H 'Authorization: ${{secrets.PARTNER_K8S_DEV_TOKEN}}' '${{env.K8S_API_URL}}')" -eq "200"

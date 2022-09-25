@@ -24,7 +24,7 @@ func NewCalculation(Id string, equation string, discriminator string, result str
 		Id:            Id,
 		Equation:      equation,
 		Discriminator: discriminator,
-		Result:        result,
+		X1:            result,
 		Status:        doc.Initialized,
 	}
 }

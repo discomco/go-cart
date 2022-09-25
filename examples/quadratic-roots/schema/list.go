@@ -17,5 +17,6 @@ type Calculation struct {
 	Status        doc.Status `json:"status"`
 	Equation      string     `json:"equation"`
 	Discriminator string     `json:"discriminator"`
-	Result        string     `json:"result"`
+	X1            string     `json:"x1"`
+	X2            string     `json:"x2"`
 }
