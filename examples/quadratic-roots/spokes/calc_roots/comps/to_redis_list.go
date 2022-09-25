@@ -2,28 +2,28 @@ package comps
 
 import (
 	"github.com/discomco/go-cart/examples/quadratic-roots/schema"
-	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/calc_roots/behavior"
-	behavior2 "github.com/discomco/go-cart/sdk/behavior"
+	calc_roots_behavior "github.com/discomco/go-cart/examples/quadratic-roots/spokes/calc_roots/behavior"
+	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/comps"
-	schema2 "github.com/discomco/go-cart/sdk/schema"
+	sdk_schema "github.com/discomco/go-cart/sdk/schema"
 )
 
 const (
-	ToRedisListProjectionName = "toRedisList.Calculation_Initialized"
+	ToRedisListProjectionName = "toRedisList.RootsCalculated"
 )
 
 type IToRedisList interface {
-	comps.IGenProjection[behavior.IEvt, schema.QuadraticList]
+	comps.IGenProjection[calc_roots_behavior.IEvt, schema.QuadraticList]
 }
 
 func ToRedisList(
-	newListStore behavior2.StoreFtor[schema.QuadraticList],
-	evt2List behavior2.Evt2DocFunc[behavior.IEvt, schema.QuadraticList],
-	newList schema2.DocFtor[schema.QuadraticList],
+	newListStore sdk_behavior.StoreFtor[schema.QuadraticList],
+	evt2List sdk_behavior.Evt2DocFunc[calc_roots_behavior.IEvt, schema.QuadraticList],
+	newList sdk_schema.DocFtor[schema.QuadraticList],
 ) IToRedisList {
-	return comps.NewProjection[behavior.IEvt, schema.QuadraticList](
+	return comps.NewProjection[calc_roots_behavior.IEvt, schema.QuadraticList](
 		ToRedisListProjectionName,
-		behavior.EvtTopic,
+		calc_roots_behavior.EvtTopic,
 		newListStore,
 		evt2List,
 		newList,

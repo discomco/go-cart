@@ -15,15 +15,23 @@ var cMutex = &sync.Mutex{}
 var singleton interface{}
 
 type cache[T schema.ISchema] struct {
-	client *redis.Client
+	client      *redis.Client
+	setMutex    *sync.Mutex
+	delMutex    *sync.Mutex
+	getMutex    *sync.Mutex
+	existsMutex *sync.Mutex
 }
 
 func (c *cache[T]) Exists(ctx context.Context, key string) (bool, error) {
+	c.existsMutex.Lock()
+	defer c.existsMutex.Unlock()
 	cmd := c.client.Exists(ctx, key)
 	return cmd.Val() != 0, cmd.Err()
 }
 
 func (c *cache[T]) Get(ctx context.Context, key string) (*T, error) {
+	c.getMutex.Lock()
+	defer c.getMutex.Unlock()
 	cmd := c.client.Get(ctx, key)
 	data, err := cmd.Bytes()
 	if err != nil {
@@ -38,6 +46,8 @@ func (c *cache[T]) Get(ctx context.Context, key string) (*T, error) {
 }
 
 func (c *cache[T]) Set(ctx context.Context, key string, value T) (string, error) {
+	c.setMutex.Lock()
+	defer c.setMutex.Unlock()
 	v, err := json.Marshal(value)
 	if err != nil {
 		return "NOK", err
@@ -47,6 +57,8 @@ func (c *cache[T]) Set(ctx context.Context, key string, value T) (string, error)
 }
 
 func (c *cache[T]) Delete(ctx context.Context, key string) (*T, error) {
+	c.delMutex.Lock()
+	defer c.delMutex.Unlock()
 	ref, err := c.Get(ctx, key)
 	if err != nil {
 		return nil, err
@@ -60,7 +72,12 @@ func (c *cache[T]) Delete(ctx context.Context, key string) (*T, error) {
 }
 
 func newRedis[T schema.ISchema](cfg config.IAppConfig) (behavior.IModelStore[T], error) {
-	c := &cache[T]{}
+	c := &cache[T]{
+		setMutex:    &sync.Mutex{},
+		delMutex:    &sync.Mutex{},
+		getMutex:    &sync.Mutex{},
+		existsMutex: &sync.Mutex{},
+	}
 	opts, err := redis.ParseURL(cfg.GetRedisConfig().GetUrl())
 	if err != nil {
 		log.Fatal(err)

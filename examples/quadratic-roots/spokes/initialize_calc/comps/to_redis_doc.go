@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	ProjectionName = "toRedisDoc.CalculationInitialized"
+	ToRedisDocProjectionName = "toRedisDoc.CalculationInitialized"
 )
 
 type IToRedisDoc interface {
@@ -22,7 +22,7 @@ func ToRedisDoc(
 	newDoc sdk_schema.DocFtor[schema.QuadraticDoc],
 ) IToRedisDoc {
 	return comps.NewProjection[behavior.IEvt, schema.QuadraticDoc](
-		ProjectionName,
+		ToRedisDocProjectionName,
 		behavior.EvtTopic,
 		newStore,
 		evt2Doc,

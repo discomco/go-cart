@@ -1,14 +1,10 @@
 package cartwheel
 
 import (
-	"github.com/discomco/go-cart/examples/quadratic-roots/behavior/builder"
-	"github.com/discomco/go-cart/examples/quadratic-roots/behavior/ftor"
-	"github.com/discomco/go-cart/examples/quadratic-roots/drivers/redis"
-	"github.com/discomco/go-cart/examples/quadratic-roots/schema"
+	calc_roots "github.com/discomco/go-cart/examples/quadratic-roots/spokes/calc_roots/spoke"
 	initialize_calc "github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/spoke"
 	"github.com/discomco/go-cart/sdk/container"
 	"github.com/discomco/go-cart/sdk/core/ioc"
-	"github.com/discomco/go-cart/sdk/drivers/eventstore_db"
 	"log"
 )
 
@@ -17,19 +13,8 @@ func BuildCartwheel(cfgPath string) ioc.IDig {
 	dig = dig.Inject(dig,
 		SingleApp,
 	).Inject(dig,
-		eventstore_db.EvtProjFtor,
-		eventstore_db.EventProjector,
-	).Inject(dig,
-		redis.DocStore,
-		redis.ListStore,
-	).Inject(dig,
-		schema.DocFtor,
-		schema.ListFtor,
-	).Inject(dig,
-		ftor.BehaviorFtor,
-		builder.BehaviorBuilder,
-	).Inject(dig,
 		initialize_calc.Spoke,
+		calc_roots.Spoke,
 	)
 	return resolveSpokes(dig)
 }
@@ -37,6 +22,7 @@ func BuildCartwheel(cfgPath string) ioc.IDig {
 func resolveSpokes(dig ioc.IDig) ioc.IDig {
 	err := dig.Invoke(func(
 		_ initialize_calc.ISpoke,
+		_ calc_roots.ISpoke,
 	) {
 	})
 	if err != nil {

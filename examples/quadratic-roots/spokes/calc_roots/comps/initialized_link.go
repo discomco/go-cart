@@ -2,7 +2,7 @@ package comps
 
 import (
 	"context"
-	behavior2 "github.com/discomco/go-cart/examples/quadratic-roots/spokes/calc_roots/behavior"
+	calc_roots_behavior "github.com/discomco/go-cart/examples/quadratic-roots/spokes/calc_roots/behavior"
 	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/calc_roots/contract"
 	"github.com/discomco/go-cart/examples/quadratic-roots/spokes/initialize_calc/behavior"
 	sdk_behavior "github.com/discomco/go-cart/sdk/behavior"
@@ -24,7 +24,10 @@ type initLink struct {
 
 func newInitLink(newCH comps.CmdHandlerFtor) *initLink {
 	l := &initLink{}
-	b := comps.NewBehaviorLink(InitializedLinkName, behavior.EvtTopic, l.linkFunc, newCH)
+	b := comps.NewBehaviorLink(
+		InitializedLinkName,
+		behavior.EvtTopic,
+		l.linkFunc, newCH)
 	l.BehaviorLink = b
 	return l
 }
@@ -39,7 +42,7 @@ func (l *initLink) linkFunc(ctx context.Context, evt sdk_behavior.IEvt) error {
 		return err
 	}
 	calcPl := contract.NewHopePayload()
-	calcCmd, err := behavior2.NewCmd(calcID, *calcPl)
+	calcCmd, err := calc_roots_behavior.NewCmd(calcID, *calcPl)
 	if err != nil {
 		return err
 	}
