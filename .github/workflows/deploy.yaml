@@ -25,8 +25,9 @@ jobs:
 
     - name: Docker login
       run: >-
+        echo ${{ secrets.CR_PAT }} |
         docker login
-        --username ${{ secrets.CR_PAT }}
+        --username USERNAME
         --password-stdin
         ${{ env.REGISTRY }}
 
