@@ -15,20 +15,20 @@ const (
 )
 
 type IInitializedLink interface {
-	comps.IBehaviorLink
+	comps.IPolicy
 }
 
 type initLink struct {
-	*comps.BehaviorLink
+	*comps.Policy
 }
 
 func newInitLink(newCH comps.CmdHandlerFtor) *initLink {
 	l := &initLink{}
-	b := comps.NewBehaviorLink(
+	b := comps.NewPolicy(
 		InitializedLinkName,
 		behavior.EvtTopic,
 		l.linkFunc, newCH)
-	l.BehaviorLink = b
+	l.Policy = b
 	return l
 }
 

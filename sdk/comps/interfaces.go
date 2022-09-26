@@ -1,13 +1,13 @@
 package comps
 
 import (
+	"context"
 	"github.com/discomco/go-cart/sdk/behavior"
 	"github.com/discomco/go-cart/sdk/config"
 	"github.com/discomco/go-cart/sdk/contract"
 	"github.com/discomco/go-cart/sdk/core/logger"
 	"github.com/discomco/go-cart/sdk/core/mediator"
 	"github.com/discomco/go-cart/sdk/schema"
-	"golang.org/x/net/context"
 	"time"
 )
 
@@ -114,9 +114,9 @@ type IDeactivate interface {
 	Deactivate(ctx context.Context) error
 }
 
-type IBehaviorLink interface {
+type IPolicy interface {
 	IMediatorReaction
-	IAmBehaviorLink()
+	IAmPolicy()
 }
 
 type IGenMediatorReaction[TEvt behavior.IEvt] interface {

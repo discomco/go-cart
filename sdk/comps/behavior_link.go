@@ -5,18 +5,18 @@ import (
 	"github.com/discomco/go-cart/sdk/schema"
 )
 
-type BehaviorLink struct {
+type Policy struct {
 	*EventReaction
 	NewCH CmdHandlerFtor
 }
 
-func NewBehaviorLink(
+func NewPolicy(
 	name schema.Name,
 	eventType behavior.EventType,
 	onEvt OnEvtFunc,
 	newCH CmdHandlerFtor,
-) *BehaviorLink {
-	dl := &BehaviorLink{
+) *Policy {
+	dl := &Policy{
 		NewCH: newCH,
 	}
 	eh := NewEventReaction(eventType, onEvt)
@@ -25,4 +25,4 @@ func NewBehaviorLink(
 	return dl
 }
 
-func (h *BehaviorLink) IAmBehaviorLink() {}
+func (h *Policy) IAmBehaviorLink() {}
