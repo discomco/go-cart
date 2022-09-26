@@ -15,7 +15,9 @@ RUN git config --global credential.helper \
 WORKDIR /usr/src/app
 COPY . /usr/src/app
 
-RUN go install -v ${GO_MODULE}/${PA_CONTEXT}/${CQRS_SERVICE}/cmd@latest
+#RUN go install -v ${GO_MODULE}/${PA_CONTEXT}/${CQRS_SERVICE}/cmd@latest
+
+RUN go build
 
 FROM alpine:3.15
 ARG CQRS_SERVICE=""
