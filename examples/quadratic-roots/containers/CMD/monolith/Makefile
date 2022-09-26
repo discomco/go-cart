@@ -31,4 +31,4 @@ build-dev: ## Build the project
 
 .PHONY: build-img
 build-img: ## Build the OCI image
-	docker build . --build-arg CR_PAT=${CR_PAT} -t local/quatratic-cmd
+	docker build . --build-arg CR_PAT=$(CR_PAT) -t local/quatratic-cmd
