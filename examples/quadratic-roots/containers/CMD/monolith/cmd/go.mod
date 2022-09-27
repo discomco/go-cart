@@ -1,3 +1,3 @@
-module github.com/discomco/go-cart/examples/quadratic-roots/containers/CMD/monolith/cmd
+module github.com/discomco/go-cart/examples/quadric-roots/containers/CMD/monolith/cmd
 
 go 1.18
