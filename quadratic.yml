@@ -1,0 +1,23 @@
+version: '3.5'
+
+services:
+
+   quadratic-cmd:
+     container_name: quadratic-cmd
+     image: local/qr-cmd
+     build:
+        context: .
+        args:
+          APP: ./examples/quadratic-roots/delivery/command/cartwheel
+     networks:
+       - dev-net
+     environment:
+       - CONFIG_PATH=/etc/config.yaml
+     volumes:
+       - ./examples/quadratic-roots/delivery/command/cartwheel/config/config.yaml:/etc/config.yaml:ro
+
+
+networks:
+  dev-net:
+    name: dev-net
+    driver: bridge

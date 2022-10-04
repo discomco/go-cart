@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	ToRedisListProjectionName = "toRedisList.RootsCalculated"
+	ToRedisListProjectionName = "projection(RootsCalculated.toRedisList)"
 )
 
 type IToRedisList interface {

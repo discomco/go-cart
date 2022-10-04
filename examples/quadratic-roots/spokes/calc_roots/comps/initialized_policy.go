@@ -11,32 +11,32 @@ import (
 )
 
 const (
-	InitializedLinkName = "link.Initialized.CalculateRoots"
+	InitializedPolicyName = "policy(Initialized ~> CalculateRoots)"
 )
 
-type IInitializedLink interface {
+type IInitializedPolicy interface {
 	comps.IPolicy
 }
 
-type initLink struct {
+type initializedPolicy struct {
 	*comps.Policy
 }
 
-func newInitLink(newCH comps.CmdHandlerFtor) *initLink {
-	l := &initLink{}
+func newInitializedPolicy(newCH comps.CmdHandlerFtor) *initializedPolicy {
+	l := &initializedPolicy{}
 	b := comps.NewPolicy(
-		InitializedLinkName,
+		InitializedPolicyName,
 		behavior.EvtTopic,
 		l.linkFunc, newCH)
 	l.Policy = b
 	return l
 }
 
-func InitializedLink(newCH comps.CmdHandlerFtor) IInitializedLink {
-	return newInitLink(newCH)
+func InitializedPolicy(newCH comps.CmdHandlerFtor) IInitializedPolicy {
+	return newInitializedPolicy(newCH)
 }
 
-func (l *initLink) linkFunc(ctx context.Context, evt sdk_behavior.IEvt) error {
+func (l *initializedPolicy) linkFunc(ctx context.Context, evt sdk_behavior.IEvt) error {
 	calcID, err := evt.GetBehaviorID()
 	if err != nil {
 		return err

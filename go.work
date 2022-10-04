@@ -1,8 +1,8 @@
 go 1.18
 
 use (
-	./sdk
-	./examples/robby
+	.
 	./examples/quadratic-roots
+	./examples/robby
+	./sdk
 )
-

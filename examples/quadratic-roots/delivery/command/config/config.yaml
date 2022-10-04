@@ -1,5 +1,5 @@
 service:
-  nameSpace: Quadratic Roots
+  nameSpace: (Quadratic Roots)
   subSystem: CMD
 grpc:
   port: :5001

@@ -2,14 +2,14 @@ package main
 
 import (
 	"flag"
-	"github.com/discomco/go-cart/examples/quadratic-roots/containers/CMD/monolith/cartwheel"
+	"github.com/discomco/go-cart/examples/quadratic-roots/delivery/command/cartwheel"
 	"os"
 )
 
 var configPath string
 
 func init() {
-	flag.StringVar(&configPath, "config", "", "EBS-ConfigureEvent-CMD config path")
+	flag.StringVar(&configPath, "config", "", "Quadric Roots config path")
 }
 
 func main() {

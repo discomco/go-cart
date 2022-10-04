@@ -1,8 +1,8 @@
-# The GO-CART SDK
+# Macula
 
 ## OUTLINE
 
-- [The GO-CART SDK](#the-go-cart-sdk)
+- [Macula](#macula)
   - [OUTLINE](#outline)
   - [DESCRIPTION](#description)
   - [MOTIVATIONS](#motivations)

@@ -27,8 +27,8 @@ func evtToList(evt IEvt, list *schema.QuadraticList) error {
 	status.SetStatus(&calcIt.Status, doc.RootsCalculated)
 	calcIt.Discriminator = fmt.Sprintf("%.2f", pl.Output.D)
 	if pl.Output.D < 0 {
-		calcIt.X1 = fmt.Sprintf("x1=%.2f+%.2fj", pl.Output.X1.Real, pl.Output.X1.Imaginary)
-		calcIt.X2 = fmt.Sprintf("x1=%.2f+%.2fj", pl.Output.X2.Real, pl.Output.X2.Imaginary)
+		calcIt.X1 = fmt.Sprintf("x1=%.2f+%.2fi", pl.Output.X1.Real, pl.Output.X1.Imaginary)
+		calcIt.X2 = fmt.Sprintf("x2=%.2f+%.2fi", pl.Output.X2.Real, pl.Output.X2.Imaginary)
 	} else {
 		calcIt.X1 = fmt.Sprintf("x1=%.2f", pl.Output.X1.Real)
 		calcIt.X2 = fmt.Sprintf("x2=%.2f", pl.Output.X2.Real)

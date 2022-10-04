@@ -13,7 +13,7 @@ import (
 	"sync"
 )
 
-const LinkName = "change_game_details.InitializedLink"
+const LinkName = "change_game_details.InitializedPolicy"
 
 type IInitializedLink interface {
 	comps.IPolicy

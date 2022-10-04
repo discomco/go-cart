@@ -13,8 +13,8 @@ func BuildCartwheel(cfgPath string) ioc.IDig {
 	dig = dig.Inject(dig,
 		SingleApp,
 	).Inject(dig,
-		initialize_calc.Spoke,
 		calc_roots.Spoke,
+		initialize_calc.Spoke,
 	)
 	return resolveSpokes(dig)
 }

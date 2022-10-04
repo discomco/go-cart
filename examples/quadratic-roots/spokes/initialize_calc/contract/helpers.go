@@ -6,7 +6,13 @@ import (
 )
 
 func RandomPayload() *Payload {
-	return NewPayload(1_000*rand.NormFloat64(), 1_000*rand.NormFloat64(), 1_000*rand.NormFloat64())
+	a := 0.0
+	b := 0.0
+	c := 0.0
+	a = 10 * rand.NormFloat64()
+	b = 10 * rand.NormFloat64()
+	c = 10 * rand.NormFloat64()
+	return NewPayload(a, b, c)
 }
 
 func RandomHope() (IHope, error) {

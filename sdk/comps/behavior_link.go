@@ -25,4 +25,4 @@ func NewPolicy(
 	return dl
 }
 
-func (h *Policy) IAmBehaviorLink() {}
+func (h *Policy) IAmPolicy() {}

@@ -109,7 +109,7 @@ func (er *EventReaction) reactWorker(ctx context.Context, topic string, fn inter
 				return errors.Wrap(err, "failed to register with mediator")
 			}
 			er.GetMediator().WaitAsync()
-			er.GetLogger().Infof("[%+v] links [%+v]", er.GetName(), er.evtType)
+			er.GetLogger().Infof("[%+v] observes [%+v]", er.GetName(), er.evtType)
 			return nil
 		}
 	}

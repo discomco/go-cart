@@ -1,6 +1,6 @@
 service:
   nameSpace: quadratic-roots
-  subSystem: CMD
+  subSystem: cmd
 grpc:
   port: :5001
   development: true
@@ -32,12 +32,12 @@ eventStoreDb:
   connectionString: "esdb://localhost:2113?tls=false"
 redis:
   url: "redis://localhost:6379/0"
-projection:
-  poolSize: 60
-  eventPrefix: "quadratic-"
-  group: "quadratic-roots-med"
-  name: "quadratic.Projector"
 nats:
   url: "nats://localhost:4222"
   user: "a"
   password: "a"
+projection:
+  poolSize: 60
+  eventPrefix: "quadratic-"
+  group: "quadratic-roots"
+  name: "mediator.Projector"
