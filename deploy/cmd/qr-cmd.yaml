@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+
+   quadratic-cmd:
+     container_name: quadratic-cmd
+     image: local/qr-cmd
+     build:
+        context: ../.
+        args:
+          APP: ./examples/quadratic-roots/containers/command/cartwheel
+     networks:
+       - dev-net
+     environment:
+       - CONFIG_PATH=/etc/config.yaml
+     volumes:
+       - ./cmd/config.yaml:/etc/config.yaml:ro

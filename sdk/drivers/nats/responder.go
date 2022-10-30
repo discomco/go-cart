@@ -16,6 +16,10 @@ import (
 	"sync"
 )
 
+const (
+	responderFmt = "NATS.Responder(%+v)"
+)
+
 type IResponder[THope contract.IHope, TCmd behavior.ICmd] interface {
 	comps.IResponder
 }
@@ -66,15 +70,11 @@ func NewResponder[THope contract.IHope, TCmd behavior.ICmd](
 	return newResponder[THope, TCmd](topic, h2c)
 }
 
-const (
-	ResponderFmt = "[%+v].NATSResponder"
-)
-
 func newResponder[THope contract.IHope, TCmd behavior.ICmd](
 	topic string,
 	hope2Cmd behavior.Hope2CmdFunc[THope, TCmd],
 ) (*Responder[THope, TCmd], error) {
-	name := fmt.Sprintf(ResponderFmt, topic)
+	name := fmt.Sprintf(responderFmt, topic)
 	r := &Responder[THope, TCmd]{
 		Topic:  topic,
 		mMutex: &sync.Mutex{},

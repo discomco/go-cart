@@ -180,7 +180,7 @@ func (a *behavior) Load(events []IEvt) error {
 
 var aMutex = &sync.Mutex{}
 
-// Apply push event to domain uncommitted events using IApplyEvt method
+// ApplyEvent push event to domain uncommitted events using IApplyEvt method
 func (a *behavior) ApplyEvent(event IEvt, isCommitted bool) error {
 	aMutex.Lock()
 	defer aMutex.Unlock()
@@ -362,7 +362,7 @@ func (a *behavior) KnowsEvt(topic EventType) bool {
 	return a.appliers[topic] != nil
 }
 
-// IsAggregateFound checks the version. If it is != 0, the behavior is found.
-func IsAggregateFound(aggregate IBehavior) bool {
-	return aggregate.GetVersion() != 0
+// IsBehaviorFound checks the version. If it is != 0, the behavior is found.
+func IsBehaviorFound(behavior IBehavior) bool {
+	return behavior.GetVersion() != 0
 }

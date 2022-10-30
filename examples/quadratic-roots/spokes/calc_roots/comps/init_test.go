@@ -30,7 +30,7 @@ func init() {
 	testEnv = buildTestEnv()
 }
 
-func localBuilder(ftor sdk_behavior.GenBehaviorFtor[schema.QuadraticDoc]) sdk_behavior.BehaviorBuilder {
+func buildLocalBehavior(ftor sdk_behavior.GenBehaviorFtor[schema.QuadraticDoc]) sdk_behavior.BehaviorBuilder {
 	return func() sdk_behavior.IBehavior {
 		agg := ftor()
 		agg.Inject(agg,
@@ -48,7 +48,7 @@ func buildTestEnv() ioc.IDig {
 		schema.DocFtor,
 		schema.ListFtor,
 		ftor.BehaviorFtor,
-		localBuilder,
+		buildLocalBehavior,
 	).Inject(dig,
 		behavior.EvtToDoc,
 		behavior.EvtToList,
@@ -65,12 +65,10 @@ func resolveTestEnv(dig ioc.IDig) ioc.IDig {
 		appLogger logger.IAppLogger,
 		newBeh sdk_behavior.BehaviorBuilder,
 		newCH comps.CmdHandlerFtor,
-		newRequester comps.GenRequesterFtor[contract.IHope],
 	) {
 		testLogger = appLogger
 		newTestCalculation = newBeh
 		newTestCH = newCH
-		newTestRequester = newRequester
 	}); err != nil {
 		log.Fatal(err)
 		panic(err)

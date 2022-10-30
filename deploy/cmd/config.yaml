@@ -8,7 +8,7 @@ http:
   port: :5007
   development: true
   basePath: /api/v1
-  appPath: /api/v1/sdk
+  appPath: /api/v1/qr-cmd
   debugErrorsResponse: true
   ignoreLogUrls: [ "metrics" ]
 probes:
@@ -25,8 +25,8 @@ logger:
   encoder: short-caller-console
 jaeger:
   enable: true
-  serviceName: sdk
-  hostPort: "localhost:6831"
+  serviceName: qr-cmd
+  hostPort: "jaeger:6831"
   logSpans: false
 eventStoreDb:
   connectionString: "esdb://eventstore:2113?tls=false"
@@ -34,9 +34,9 @@ redis:
   url: "redis://redis:6379/0"
 projection:
   poolSize: 60
-  eventPrefix: "quadratic-"
-  group: "quadratic-roots-med"
-  name: "quadratic.Projector"
+  eventPrefix: "qr-"
+  group: "qr-med"
+  name: "qr.Projector"
 nats:
   url: "nats://core-nats:4222"
   user: "a"

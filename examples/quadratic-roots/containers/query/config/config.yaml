@@ -1,6 +1,6 @@
 service:
-  nameSpace: quadratic-roots
-  subSystem: cmd
+  nameSpace: (Quadratic Roots Dev)
+  subSystem: QRY
 grpc:
   port: :5001
   development: true

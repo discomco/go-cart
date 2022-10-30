@@ -14,7 +14,7 @@ type QrySpoke struct {
 	tirol     tirol.ITirol
 }
 
-func (qs *QrySpoke) registerReactors(plugins []comps.ISpokePlugin) {
+func (qs *QrySpoke) registerPlugins(plugins []comps.ISpokePlugin) {
 	for _, plugin := range plugins {
 		switch plugin.(type) {
 		case comps.IQueryProvider:
@@ -49,7 +49,7 @@ func (qs *QrySpoke) downLocal(ctx context.Context) {
 
 func newQrySpoke(name schema.Name, path string) (*QrySpoke, error) {
 	f := &QrySpoke{}
-	b := NewSpoke(name, f.runLocal, f.downLocal, f.registerReactors)
+	b := NewSpoke(name, f.runLocal, f.downLocal, f.registerPlugins)
 	dig := ioc.SingleIoC()
 	err := dig.Invoke(func(tirol tirol.ITirol) {
 		f.tirol = tirol

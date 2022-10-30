@@ -1,6 +1,6 @@
 service:
-  nameSpace: (QuadraticRoots-DEV)
-  subSystem: CMDorQRY
+  nameSpace: (Quadratic Roots)
+  subSystem: CMD
 grpc:
   port: :5001
   development: true
@@ -29,15 +29,15 @@ jaeger:
   hostPort: "localhost:6831"
   logSpans: false
 eventStoreDb:
-  connectionString: "esdb://localhost:2113?tls=false"
+  connectionString: "esdb://eventstore:2113?tls=false"
 redis:
-  url: "redis://localhost:6379/0"
+  url: "redis://redis:6379/0"
 projection:
-  poolSize: 6
-  eventPrefix: "execgame-"
-  group: "robby-exec-game-med"
-  name: "MediatorProjector"
+  poolSize: 60
+  eventPrefix: "qr-"
+  group: "qr-med"
+  name: "qr.Projector"
 nats:
-  url: "nats://localhost:4222"
+  url: "nats://core-nats:4222"
   user: "a"
   password: "a"

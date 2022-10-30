@@ -5,13 +5,13 @@ import (
 	"github.com/discomco/go-cart/sdk/contract"
 )
 
-type FRaise func(context.Context, ICmd) (IEvt, contract.IFbk)
+type RaiseEventsFunc func(context.Context, ICmd) (IEvt, contract.IFbk)
 
 // TryCmd is the -base receiver for executor extensions
 type TryCmd struct {
 	behavior IBehavior
 	cmdType  CommandType
-	fRaise   FRaise
+	fRaise   RaiseEventsFunc
 }
 
 // TryCommand is the entry point for the TryCmd and is called by the composed behavior
@@ -35,7 +35,7 @@ func (e *TryCmd) GetCommandType() CommandType {
 
 // NewTryCmd returns a new Command Executor for cndType and allows you to supply an executor function.
 // It automatically registers the TryCmd into the Aggregate.
-func NewTryCmd(cmdType CommandType, raise FRaise) *TryCmd {
+func NewTryCmd(cmdType CommandType, raise RaiseEventsFunc) *TryCmd {
 	result := &TryCmd{
 		cmdType: cmdType,
 		fRaise:  raise,

@@ -23,7 +23,7 @@ type Requester[THope contract.IHope] struct {
 }
 
 const (
-	RequesterFmt = "[%+v].Requester"
+	RequesterFmt = "NATS.Requester(%+v)"
 )
 
 func (r *Requester[THope]) GetHopeType() contract.HopeType {
