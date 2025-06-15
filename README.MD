@@ -2,8 +2,7 @@
 
 ## OUTLINE
 
-- [Macula](#macula)
-  - [OUTLINE](#outline)
+- CartWheel Applications using Golang  
   - [DESCRIPTION](#description)
   - [MOTIVATIONS](#motivations)
   - [WHAT IS PURPOSEFUL ARCHITECTURE?](#what-is-purposeful-architecture)
