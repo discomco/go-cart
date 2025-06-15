@@ -1,4 +1,4 @@
-# Macula
+# CartWheel Applications using Golang
 
 ## OUTLINE
 
